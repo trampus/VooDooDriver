@@ -9,6 +9,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+/*
+ * SodaXML:
+ * This is a simple class for reading a soda xml test file into a SodaEvents class.
+ * 
+ */
+
 public class SodaXML {
 	
 	private Document doc = null;
@@ -16,6 +22,15 @@ public class SodaXML {
 	private SodaTypes sodaTypes = null;
 	private SodaEvents events = null;
 	
+	/*
+	 * SodaXML: Constructor
+	 * 
+	 * Input:
+	 * 	sodaTest: A full path to a soda test file.
+	 * 
+	 * Output:
+	 * 	None.
+	 */
 	public SodaXML(String sodaTest) {
 		File testFD = null;
 		DocumentBuilderFactory dbf = null;
