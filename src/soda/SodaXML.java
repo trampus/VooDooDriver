@@ -49,10 +49,33 @@ public class SodaXML {
 		}
 	}
 	
+	/*
+	 * getEvents:
+	 * 	This method returns the events that were created from the soda test file.
+	 * 
+	 * Input:
+	 * 	None.
+	 * 
+	 * Output:
+	 * 	returns a SodaEvents object.
+	 * 
+	 */
 	public SodaEvents getEvents() {
 		return this.events;
 	}
 	
+	/*
+	 * findElementAccessor:
+	 * 	This method finds an accessor for a given soda element.
+	 * 
+	 * Intput:
+	 * 	sodaelement: This is the element to find an accessor for.
+	 * accessor: This is the accessor to find for the given element.
+	 * 
+	 * Output:
+	 * 	returns a string with the given accessor if one exists, else null.
+	 * 
+	 */
 	private String findElementAccessor(SodaElements sodaelement, String accessor) {
 		String result = null;
 		int len = types.size() -1;
@@ -84,6 +107,19 @@ public class SodaXML {
 		return result;
 	}
 	
+	/*
+	 * processAttributes:
+	 * 	This method gets all of the attributes for a given soda element.
+	 * 
+	 * Intput:
+	 * 	map: This is the soda element's map.
+	 * node: This is the xml node for the given element.
+	 * 
+	 * Output:
+	 * 	returns a SodaHash object filled with the node's attributes if it has any.  If there are
+	 * 	no attributes then an empty SodaHash is returned.
+	 * 
+	 */
 	private SodaHash processAttributes(SodaHash map, Node node) {
 		int len = node.getAttributes().getLength();
 		
@@ -106,6 +142,16 @@ public class SodaXML {
 		return map;
 	}
 	
+	/*
+	 * parse:
+	 * 	This method parses all the xml nodes into a SodaEvents object.
+	 * 
+	 * Input:
+	 * 	node:  This is a node list from the soda xml test.
+	 * 
+	 * Output:
+	 * 	returns a SodaEvents object.
+	 */
 	private SodaEvents parse(NodeList node) {
 		SodaHash data = null;
 		SodaEvents dataList = null; 
