@@ -1,0 +1,7 @@
+<soda>
+	<browser url="www.google.com" />
+	<puts text="Print something cool here..." />
+   <textfield name="q" set="trampus" />
+   <button id="btnG" />
+   <browser action="close" />
+</soda>
