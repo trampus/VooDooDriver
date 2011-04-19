@@ -1,5 +1,6 @@
 <soda>
-	<browser url="www.google.com" />
+	<browser url="http://www.google.com" />
+	<wait timeout="6" />
 	<puts text="Print something cool here..." />
    <textfield name="q" set="trampus" />
    <button id="btnG" />

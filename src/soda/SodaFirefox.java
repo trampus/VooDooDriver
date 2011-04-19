@@ -7,17 +7,10 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.chrome.*;
 import org.openqa.selenium.ie.*;
 
-public class SodaFirefox extends SodaBrowser {
+public class SodaFirefox extends SodaBrowser implements SodaBrowserInterface {
 
-	private WebDriver driver = null;
-	
-	@Override
-	public void newBrowser(SodaSupportedBrowser browserType) {
-		try {
-			driver = new FirefoxDriver();
-		} catch (Exception exp) {
-			exp.printStackTrace();
-		}
+	public SodaFirefox() {
+		
 	}
-
+	
 }

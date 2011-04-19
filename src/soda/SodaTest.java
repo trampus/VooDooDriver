@@ -12,16 +12,21 @@ public class SodaTest {
 	private SodaSupportedBrowser BrowserType = null;
 	private WebDriver Driver = null;
 	private SodaBrowser Browser = null;
-	private String testFile = ""; 
+	private String testFile = "";
+	private SodaEventDriver eventDriver = null;
+	private SodaEvents events = null;
 	
-	public SodaTest(String testFile, SodaSupportedBrowser browser) {
+	public SodaTest(String testFile, SodaBrowser browser) {
 		boolean master_result = false;
-		BrowserType = browser;
+		this.Browser = browser;
 		this.testFile = testFile;
 		
 		master_result = loadTestFile();
 		
-		newDriver();
+		browser.newBrowser(SodaSupportedBrowser.FIREFOX);
+		
+		eventDriver = new SodaEventDriver(this.Browser, events);
+		
 	}
 	
 	private boolean loadTestFile() {
@@ -31,6 +36,7 @@ public class SodaTest {
 		try {
 			System.out.printf("Loading Soda Test: '%s'.\n", testFile);
 			xml = new SodaXML(testFile);
+			this.events = xml.getEvents();
 			System.out.printf("Finished.\n");
 		} catch (Exception exp) {
 			exp.printStackTrace();

@@ -13,6 +13,10 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 		
 	}
 	
+	public WebDriver getDriver() {
+		return this.Driver;
+	}
+	
 	public void newBrowser(SodaSupportedBrowser browserType) {
 		
 		try {
@@ -49,6 +53,11 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 	}
 	
 	public void url(String url) {
-		this.Driver.navigate().to(url);
+		try {
+			this.Driver.navigate().to(url);
+		} catch (Exception exp) {
+			exp.printStackTrace();
+		}
+		
 	}
 }
