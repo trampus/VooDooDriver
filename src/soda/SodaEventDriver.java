@@ -29,6 +29,8 @@ should not be interpreted as representing official policies, either expressed or
 
 package soda;
 
+import org.openqa.selenium.WebElement;
+
 public class SodaEventDriver {
 
 	private SodaEvents testEvents = null;
@@ -49,7 +51,7 @@ public class SodaEventDriver {
 		boolean result = false;
 		
 		for (int i = 0; i <= event_count; i++) {
-			result = handleSingleEvent(events.get(i));
+			result = handleSingleEvent(events.get(i), null);
 		}
 	}
 	
@@ -57,7 +59,7 @@ public class SodaEventDriver {
 		return testEvents;
 	}
 	
-	private boolean handleSingleEvent(SodaHash event) {
+	private boolean handleSingleEvent(SodaHash event, WebElement parent) {
 		boolean result = false;
 		
 		switch ((SodaElements)event.get("type")) {
@@ -148,6 +150,12 @@ public class SodaEventDriver {
 			exp.printStackTrace();
 		}
 
+		return result;
+	}
+	
+	private boolean textfieldEvent(SodaHash event, WebElement parent) {
+		boolean result = false;
+		
 		return result;
 	}
 	
