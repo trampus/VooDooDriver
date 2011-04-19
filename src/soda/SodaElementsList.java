@@ -30,7 +30,6 @@ should not be interpreted as representing official policies, either expressed or
 package soda;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class SodaElementsList extends ArrayList<SodaHash>{
 

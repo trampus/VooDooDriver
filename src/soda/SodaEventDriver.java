@@ -67,7 +67,6 @@ public class SodaEventDriver {
 		case PUTS:
 			result = putsEvent(event);
 			break;
-			
 		case WAIT:
 			result = waitEvent(event);
 			break;
@@ -83,18 +82,20 @@ public class SodaEventDriver {
 		if (event.containsKey("timeout")) {
 			Integer int_out = new Integer(event.get("timeout").toString());
 			default_timeout = int_out.intValue();
-			System.out.printf("TIMEOUT: Setting timeout to: %d seconds.\n", default_timeout);
+			System.out.printf("WAIT: Setting timeout to: %d seconds.\n", default_timeout);
+		} else {
+			System.out.printf("WAIT: default timeout: %d seconds.\n", default_timeout);
 		}
 		
 		default_timeout = default_timeout * 1000;
 		
 		try {
-			System.out.printf("TIMEOUT: waiting: '%d' seconds.\n", (default_timeout / 1000));
+			System.out.printf("WAIT: waiting: '%d' seconds.\n", (default_timeout / 1000));
 			Thread.sleep(default_timeout);
-			System.out.printf("TIMEOUT: finished.\n");
+			System.out.printf("WAIT: finished.\n");
 			result = true;
 		} catch (Exception exp) {
-		
+			exp.printStackTrace();
 			result = false;
 		}
 		

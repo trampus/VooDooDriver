@@ -113,7 +113,6 @@ public class SodaXML {
 		
 		for (int i = 0; i <= len; i++) {
 			if (types.get(i).get("type") == sodaelement) {
-				System.out.printf("Found type: %s\n", sodaelement.toString());
 				foundType = types.get(i);
 				break;
 			}
@@ -162,7 +161,6 @@ public class SodaXML {
 				
 				if (accessor != null) {
 					map.put("how", accessor);
-					System.out.printf("How: %s\n", accessor);
 				}
 				
 			}
