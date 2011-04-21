@@ -29,6 +29,8 @@ should not be interpreted as representing official policies, either expressed or
 
 package soda;
 
+import java.io.File;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -44,18 +46,23 @@ public class SodaTest {
 	private String testFile = "";
 	private SodaEventDriver eventDriver = null;
 	private SodaEvents events = null;
+	private SodaReporter reporter = null;
 	
 	public SodaTest(String testFile, SodaBrowser browser) {
 		boolean master_result = false;
 		this.Browser = browser;
 		this.testFile = testFile;
+		String report_name = "";
+		File tmp_file = new File(testFile);
 		
+		report_name = tmp_file.getName();
+		report_name = report_name.replaceAll(".xml$", "");
 		master_result = loadTestFile();
 		
 		browser.newBrowser(SodaSupportedBrowser.FIREFOX);
-		
-		eventDriver = new SodaEventDriver(this.Browser, events);
-		
+		this.reporter = new SodaReporter(report_name, "/Users/trichmond/reports");
+		eventDriver = new SodaEventDriver(this.Browser, events, this.reporter);
+		this.reporter.closeLog();
 	}
 	
 	private boolean loadTestFile() {

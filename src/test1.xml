@@ -4,6 +4,6 @@
 	<puts text="Print something cool here..." />
    <textfield name="q" set="trampus" />
    <button id="btnG" />
-   <wait timeout="10" />
+   <wait timeout="1" />
    <browser action="close" />
 </soda>

@@ -45,13 +45,13 @@ public class SodaReporter {
 	private int Exceptions = 0;
 	private int FailedAsserts = 0;
 	private int PassedAsserts = 0;
-	
-	//google-05-04-2011-15-07-results/Report-google.html
+	private DateFormat Dateformater = null;
 	
 	public SodaReporter(String reportName, String resultDir) {
-		DateFormat dateformat = new SimpleDateFormat("MM-DD-yyyy-hh-m-s-S");
+		DateFormat fd = new SimpleDateFormat("MM-DD-yyyy-hh-m-s-S");
+		this.Dateformater = new SimpleDateFormat("MM-DD-yyyy-hh-m-s.S");
 		Date now = new Date();
-		String date_str = dateformat.format(now);
+		String date_str = fd.format(now);
 		
 		if (resultDir != null) {
 			File dir = new File(resultDir);
@@ -72,8 +72,46 @@ public class SodaReporter {
 		} catch (Exception exp) {
 			exp.printStackTrace();
 		}
+	}
+	
+	private void _log(String msg) {
+		Date now = new Date();
+		String date_str = this.Dateformater.format(now);
+		String logstr = "[" + date_str + "]" + msg + "\n";
 		
+		try {
+			this.reportFD.write(logstr.getBytes());
+			System.out.printf("%s\n", msg);
+		} catch (Exception exp) {
+			exp.printStackTrace();
+		}
+	}
+	
+	public void closeLog() {
+		try {
+			this.reportFD.close();
+			this.reportFD = null;
+		} catch (Exception exp) {
+			exp.printStackTrace();
+		}
+	}
+	
+	public void Log(String msg) {
+		this._log("(*)" + msg);
+	}
+	
+	public void ReportError(String msg) {
 		
+	}
+	
+	protected void finalize() throws Throwable {
+	    try {
+	    	if (this.reportFD != null) {
+	    		this.reportFD.close();
+	    	}
+	    } finally {
+	        super.finalize();
+	    }
 	}
 	
 }

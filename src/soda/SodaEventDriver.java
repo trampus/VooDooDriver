@@ -37,10 +37,12 @@ public class SodaEventDriver {
 	private SodaEvents testEvents = null;
 	private SodaBrowser Browser = null;
 	private SodaHash sodaVars = null;
+	private SodaReporter report = null;
 	
-	public SodaEventDriver(SodaBrowser browser, SodaEvents events) {
+	public SodaEventDriver(SodaBrowser browser, SodaEvents events, SodaReporter reporter) {
 		testEvents = events;
 		this.Browser = browser;
+		this.report = reporter;
 		
 		sodaVars = new SodaHash();
 		
@@ -88,9 +90,11 @@ public class SodaEventDriver {
 		if (event.containsKey("timeout")) {
 			Integer int_out = new Integer(event.get("timeout").toString());
 			default_timeout = int_out.intValue();
-			System.out.printf("WAIT: Setting timeout to: %d seconds.\n", default_timeout);
+			String msg = String.format("WAIT: Setting timeout to: %d seconds.", default_timeout);
+			this.report.Log(msg);
 		} else {
-			System.out.printf("WAIT: default timeout: %d seconds.\n", default_timeout);
+			String msg = String.format("WAIT: default timeout: %d seconds.", default_timeout);
+			this.report.Log(msg);
 		}
 		
 		default_timeout = default_timeout * 1000;
