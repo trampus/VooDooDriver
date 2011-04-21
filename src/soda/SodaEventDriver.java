@@ -29,6 +29,7 @@ should not be interpreted as representing official policies, either expressed or
 
 package soda;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 public class SodaEventDriver {
@@ -72,6 +73,9 @@ public class SodaEventDriver {
 		case WAIT:
 			result = waitEvent(event);
 			break;
+		case TEXTFIELD:
+			result = textfieldEvent(event, parent);
+			
 		}
 		
 		return result;
@@ -153,8 +157,90 @@ public class SodaEventDriver {
 		return result;
 	}
 	
+	private WebElement findElement(SodaHash event, WebElement parent) {
+		WebElement element = null;
+		By by = null;
+		
+		try {
+			String how = event.get("how").toString();
+			
+			switch (SodaElementsHow.valueOf(how.toUpperCase())) {
+			case ID:
+				by = By.id(event.get(how).toString());
+				break;
+			case CLASS:
+				by = By.className(event.get(how).toString());
+				break;
+			case CSS:
+				by = By.cssSelector(event.get(how).toString());
+				break;
+			case LINK:
+				by = By.linkText(event.get(how).toString());
+				break;
+			case NAME:
+				by = By.name(event.get(how).toString());
+				break;
+			case PARLINK:
+				by = By.partialLinkText(event.get(how).toString());
+				break;
+			case TAGNAME:
+				by = By.tagName(event.get(how).toString());
+				break;
+			case XPATH:
+				by = By.xpath(event.get(how).toString());
+				break;
+			default:
+				System.err.printf("Error: findElement, unknown how: '%s'!\n", how);
+				break;
+			}
+			
+			if (parent == null) {
+				element = this.Browser.findElement(by);
+			} else {
+				element = parent.findElement(by);
+			}
+			
+		} catch (Exception exp) {
+			exp.printStackTrace();
+			element = null;
+		}
+		
+		return element;
+	}
+	
+	private boolean buttonEvent(SodaHash event, WebElement parent) {
+		boolean result = false;
+		WebElement element = null;
+		
+		try {
+			element = this.findElement(event, parent);
+			element.click();
+			result = true;
+		} catch (Exception exp) {
+			exp.printStackTrace();
+			result = false;
+		}
+		
+		return result;
+	}
+	
 	private boolean textfieldEvent(SodaHash event, WebElement parent) {
 		boolean result = false;
+		WebElement element = null;
+		
+		try {
+			element = this.findElement(event, parent);
+			if (event.containsKey("set")) {
+				System.out.printf("TEXTFIELD: Setting Value to: '%s'.\n", event.get("set").toString());
+				element.sendKeys(event.get("set").toString());
+				System.out.printf("TEXTFIELD: Finished.\n");
+			}
+			
+			result = true;
+		} catch (Exception exp) {
+			exp.printStackTrace();
+			result = false;
+		}
 		
 		return result;
 	}

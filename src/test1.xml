@@ -1,9 +1,9 @@
 <soda>
 	<browser url="http://www.google.com" />
 	<wait timeout="1" />
-	<wait />
 	<puts text="Print something cool here..." />
    <textfield name="q" set="trampus" />
    <button id="btnG" />
+   <wait timeout="10" />
    <browser action="close" />
 </soda>

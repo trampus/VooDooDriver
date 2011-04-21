@@ -30,8 +30,6 @@ should not be interpreted as representing official policies, either expressed or
 package soda;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;

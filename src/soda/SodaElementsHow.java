@@ -29,26 +29,13 @@ should not be interpreted as representing official policies, either expressed or
 
 package soda;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-
-public interface SodaBrowserInterface {
-
-	public void newBrowser(SodaSupportedBrowser browserType);
-	
-	public void refresh();
-	
-	public void back();
-	
-	public void forward();
-	
-	public void close();
-	
-	public void url(String url);
-	
-	public WebDriver getDriver();
-	
-	public WebElement findElement(By by);
-	
+public enum SodaElementsHow {
+	ID,
+	CLASS,
+	CSS,
+	LINK,
+	NAME,
+	PARLINK,
+	TAGNAME,
+	XPATH;
 }
