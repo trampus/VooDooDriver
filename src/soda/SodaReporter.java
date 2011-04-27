@@ -45,6 +45,7 @@ public class SodaReporter {
 	private int Exceptions = 0;
 	private int FailedAsserts = 0;
 	private int PassedAsserts = 0;
+	private int OtherErrors = 0;
 	private DateFormat Dateformater = null;
 	
 	public SodaReporter(String reportName, String resultDir) {
@@ -95,13 +96,14 @@ public class SodaReporter {
 			exp.printStackTrace();
 		}
 	}
-	
+
 	public void Log(String msg) {
 		this._log("(*)" + msg);
 	}
 	
 	public void ReportError(String msg) {
-		
+		this._log(String.format("(!)%s", msg));
+		this.OtherErrors += 1;
 	}
 	
 	protected void finalize() throws Throwable {

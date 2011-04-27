@@ -77,7 +77,10 @@ public class SodaEventDriver {
 			break;
 		case TEXTFIELD:
 			result = textfieldEvent(event, parent);
-			
+			break;
+		case BUTTON:
+			result = buttonEvent(event, parent);
+			break;
 		}
 		
 		return result;
@@ -90,19 +93,17 @@ public class SodaEventDriver {
 		if (event.containsKey("timeout")) {
 			Integer int_out = new Integer(event.get("timeout").toString());
 			default_timeout = int_out.intValue();
-			String msg = String.format("WAIT: Setting timeout to: %d seconds.", default_timeout);
-			this.report.Log(msg);
+			this.report.Log(String.format("WAIT: Setting timeout to: %d seconds.", default_timeout));
 		} else {
-			String msg = String.format("WAIT: default timeout: %d seconds.", default_timeout);
-			this.report.Log(msg);
+			this.report.Log(String.format("WAIT: default timeout: %d seconds.", default_timeout));
 		}
 		
 		default_timeout = default_timeout * 1000;
 		
 		try {
-			System.out.printf("WAIT: waiting: '%d' seconds.\n", (default_timeout / 1000));
+			this.report.Log(String.format("WAIT: waiting: '%d' seconds.\n", (default_timeout / 1000)));
 			Thread.sleep(default_timeout);
-			System.out.printf("WAIT: finished.\n");
+			this.report.Log("WAIT: finished.\n");
 			result = true;
 		} catch (Exception exp) {
 			exp.printStackTrace();
@@ -148,7 +149,7 @@ public class SodaEventDriver {
 					
 					switch (method) {
 					case BROWSER_url:
-						System.out.printf("URL: %s\n",event.get(key).toString());
+						this.report.Log(String.format("URL: %s\n",event.get(key).toString()));
 						this.Browser.url(event.get(key).toString());
 						break;
 					}
@@ -194,7 +195,7 @@ public class SodaEventDriver {
 				by = By.xpath(event.get(how).toString());
 				break;
 			default:
-				System.err.printf("Error: findElement, unknown how: '%s'!\n", how);
+				this.report.ReportError(String.format("Error: findElement, unknown how: '%s'!\n", how));
 				break;
 			}
 			
@@ -212,13 +213,37 @@ public class SodaEventDriver {
 		return element;
 	}
 	
+	/*
+	 * clickToBool -- method
+	 * 	This method converts a string into a boolean type.
+	 * 
+	 * Input:
+	 *  clickstr: a string containing "true" or "false".  Case doesn't matter.
+	 *  
+	 *  Output:
+	 *   returns a boolean type.
+	 */
+	private boolean clickToBool(String clickstr) {	
+		return Boolean.valueOf(clickstr).booleanValue();
+	}
+	
 	private boolean buttonEvent(SodaHash event, WebElement parent) {
 		boolean result = false;
 		WebElement element = null;
+		boolean click = true;
 		
 		try {
+			
 			element = this.findElement(event, parent);
-			element.click();
+			
+			if (event.containsKey("click")) {
+				click = this.clickToBool(event.get("click").toString());
+			}
+			
+			if (click) {
+				element.click();
+			}
+			
 			result = true;
 		} catch (Exception exp) {
 			exp.printStackTrace();
@@ -235,9 +260,9 @@ public class SodaEventDriver {
 		try {
 			element = this.findElement(event, parent);
 			if (event.containsKey("set")) {
-				System.out.printf("TEXTFIELD: Setting Value to: '%s'.\n", event.get("set").toString());
+				this.report.Log(String.format("TEXTFIELD: Setting Value to: '%s'.", event.get("set").toString()));
 				element.sendKeys(event.get("set").toString());
-				System.out.printf("TEXTFIELD: Finished.\n");
+				this.report.Log("TEXTFIELD: Finished.");
 			}
 			
 			result = true;
@@ -252,9 +277,8 @@ public class SodaEventDriver {
 	private boolean putsEvent(SodaHash event) {
 		boolean result = false;
 		
-		System.out.printf("SodaPuts: '%s'\n", event.get("text").toString());
+		this.report.Log(String.format("SodaPuts: '%s'\n", event.get("text").toString()));
 		result = true;
-		
 		return result;
 	}
 

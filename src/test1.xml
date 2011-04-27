@@ -1,9 +1,10 @@
 <soda>
-	<browser url="http://www.google.com" />
+	<browser url="http://192.168.50.223/sugar" />
 	<wait timeout="1" />
 	<puts text="Print something cool here..." />
-   <textfield name="q" set="trampus" />
-   <button id="btnG" />
-   <wait timeout="1" />
+   <textfield id="user_name" set="admin" />
+   <textfield id="user_password" set="admin" />
+   <button id="login_button" />
+   <wait timeout="5" />
    <browser action="close" />
 </soda>
