@@ -106,7 +106,7 @@ public class SodaEventDriver {
 			this.report.Log("WAIT: finished.\n");
 			result = true;
 		} catch (Exception exp) {
-			exp.printStackTrace();
+			this.report.ReportException(exp);
 			result = false;
 		}
 		
@@ -156,7 +156,7 @@ public class SodaEventDriver {
 				}
 			}
 		} catch (Exception exp) {
-			exp.printStackTrace();
+			this.report.ReportException(exp);
 		}
 
 		return result;
@@ -206,7 +206,7 @@ public class SodaEventDriver {
 			}
 			
 		} catch (Exception exp) {
-			exp.printStackTrace();
+			this.report.ReportException(exp);
 			element = null;
 		}
 		
@@ -246,7 +246,7 @@ public class SodaEventDriver {
 			
 			result = true;
 		} catch (Exception exp) {
-			exp.printStackTrace();
+			this.report.ReportException(exp);
 			result = false;
 		}
 		
@@ -267,7 +267,7 @@ public class SodaEventDriver {
 			
 			result = true;
 		} catch (Exception exp) {
-			exp.printStackTrace();
+			this.report.ReportException(exp);
 			result = false;
 		}
 		

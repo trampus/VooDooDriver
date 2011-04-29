@@ -106,6 +106,39 @@ public class SodaReporter {
 		this.OtherErrors += 1;
 	}
 	
+	/*
+	 * ReportException -- Method
+	 * 	This method formats a java exception class into a SODA log entry.  Both the message and the stack
+	 * 	trace are reformatted and printed to the SODA log file, and the console.
+	 * 
+	 * Input:
+	 * 	e: The exception that happened.
+	 * 
+	 * Output:
+	 * 	None.
+	 * 
+	 */
+	public void ReportException(Exception e) {
+		this.Exceptions += 1;
+		String msg = "--Exception Backtrace: ";
+		StackTraceElement[] trace = e.getStackTrace();
+		String message = "";
+		
+		String[] msg_lines = e.getMessage().split("\\n");
+		for (int i = 0; i <= msg_lines.length -1; i++) {
+			message += msg_lines[i] + "  ";
+		}
+		
+		this._log("(!)Exception raised: " + message);
+		
+		for (int i = 0; i <= trace.length -1; i++) {
+			String tmp = trace[i].toString();
+			msg += "--" + tmp;
+		}
+		
+		this._log("(!)" + msg);
+	}
+	
 	protected void finalize() throws Throwable {
 	    try {
 	    	if (this.reportFD != null) {
