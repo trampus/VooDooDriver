@@ -28,7 +28,10 @@ should not be interpreted as representing official policies, either expressed or
  */
 
 import soda.SodaBrowser;
+import soda.SodaCSV;
+import soda.SodaCSVData;
 import soda.SodaFirefox;
+import soda.SodaReporter;
 import soda.SodaSupportedBrowser;
 import soda.SodaTest;
 
@@ -39,12 +42,19 @@ public class SodaSuite {
 	 */
 	public static void main(String[] args) {
 		String sodaTest = "/Users/trichmond/Documents/workspace/Soda-Project/src/test1.xml";
+		String sodaCSV = "/Users/trichmond/Documents/workspace/Soda-Project/data.csv";
 		SodaTest testobj = null;
 		SodaBrowser browser = null;
+		SodaCSV csv = null;
+		SodaCSVData csv_data = null;
+		SodaReporter reporter = null;
 		
 		System.out.printf("Starting SodaSuite...\n");
 		
 		try {
+			reporter = new SodaReporter("csv-test", "/Users/trichmond");
+			csv = new SodaCSV(sodaCSV, reporter);
+			csv_data = csv.getData();
 			
 			browser = new SodaFirefox();
 			testobj = new SodaTest(sodaTest, browser);
