@@ -30,6 +30,7 @@ should not be interpreted as representing official policies, either expressed or
 package soda;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -67,6 +68,68 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 		}
 	}
 	
+	public Object executeJS(String script, WebElement element) {
+		Object result = null;
+		JavascriptExecutor js =  (JavascriptExecutor)this.Driver;
+		
+		result = js.executeScript(script, element);
+		
+		return result;
+	}
+	
+	public String fire_event(WebElement element, String eventType) {
+		String result = "";
+		String eventjs_src = "";
+		JavascriptEventTypes type = null;
+		eventType = eventType.toLowerCase();
+		String tmp_type = eventType.replaceAll("on", "");
+		
+		try {
+			UIEvents.valueOf(tmp_type.toUpperCase());
+			type = JavascriptEventTypes.UIEvent;
+		} catch (Exception exp) {
+			type = null;
+		}
+		
+		if (type == null) {
+			try {
+				HTMLEvents.valueOf(tmp_type.toUpperCase());
+				type = JavascriptEventTypes.HTMLEvent;
+			} catch (Exception exp) {
+				type = null;
+			}
+		}
+		
+		if (type == null) {
+			return null;
+		}
+		
+		switch (type) {
+		case HTMLEvent:
+			
+			break;
+		case UIEvent:
+			eventjs_src = this.generateUIEvent(UIEvents.valueOf(tmp_type.toUpperCase()));
+			break;
+		}
+		
+		System.out.printf("Event: %s\n", eventjs_src);
+		result = this.executeJS(eventjs_src, element).toString();
+		System.out.printf("Result: %s\n", result);
+		return result;
+	}
+	
+	private String generateUIEvent(UIEvents type) {
+		String result = "var ele = arguments[0];\n"; 
+		result += "var evObj = document.createEvent('MouseEvents');\n";
+		result += "evObj.initMouseEvent( '" + type.toString().toLowerCase() + "', true, true, window, 1, 12, 345, 7, 220,"+ 
+         "false, false, true, false, 0, null );\n";
+		result += "ele.dispatchEvent(evObj);\n";
+		result += "return 0;\n";
+		
+		return result;
+	}
+	
 	public void refresh() {
 		this.Driver.navigate().refresh();
 	}
@@ -83,8 +146,37 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 		this.Driver.close();
 	}
 	
-	public WebElement findElement(By by) {
-		return this.Driver.findElement(by);
+	/*
+	 * findElement -- method
+	 * 	This method finds a given WebElement.  The retryTime is used to keep looking for the
+	 * 	element until the timeout has happened.
+	 * 
+	 * Input:
+	 * 	by: this is how we find the element.
+	 * 	retryTime: This is how many seconds we would wait for the element to showup in the dom
+	 *		before giving up on the search.
+	 *
+	 *	Output:
+	 *	returns null on failure to find the element, else a WebElement is returned.
+	 * 
+	 */
+	public WebElement findElement(By by, int retryTime) {
+		WebElement result = null;
+		long end = System.currentTimeMillis() + retryTime * 1000;
+		
+		while (System.currentTimeMillis() < end) {
+			try {
+				result = this.Driver.findElement(by);
+			} catch (Exception exp) {
+				result = null;
+			}
+			
+			if (result != null) {
+				break;
+			}
+		}
+		
+		return result;
 	}
 	
 	public void url(String url) {

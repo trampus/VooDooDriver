@@ -49,6 +49,6 @@ public interface SodaBrowserInterface {
 	
 	public WebDriver getDriver();
 	
-	public WebElement findElement(By by);
+	public WebElement findElement(By by, int retryTime);
 	
 }

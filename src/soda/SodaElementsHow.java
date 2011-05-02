@@ -34,6 +34,7 @@ public enum SodaElementsHow {
 	CLASS,
 	CSS,
 	LINK,
+	TEXT,
 	NAME,
 	PARLINK,
 	TAGNAME,

@@ -29,8 +29,13 @@ should not be interpreted as representing official policies, either expressed or
 
 package soda;
 
+import java.lang.reflect.Method;
+
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.RenderedWebElement;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebElement;
 
 public class SodaEventDriver {
 
@@ -81,7 +86,51 @@ public class SodaEventDriver {
 		case BUTTON:
 			result = buttonEvent(event, parent);
 			break;
+		case CSV:
+			result = csvEvent(event, parent);
+			break;
+		case LINK:
+			result = linkEvent(event, parent);
+			break;
 		}
+		
+		return result;
+	}
+	
+	private boolean linkEvent(SodaHash event, WebElement parent) {
+		boolean result = false;
+		boolean click = true;
+		WebElement element = null;
+		
+		try {
+			element = this.findElement(event, parent);
+			
+			
+			if (event.containsKey("click")) {
+				click = this.clickToBool(event.get("click").toString());
+			}
+			
+			if (click) {
+				element.click();
+			}			
+			
+			if (event.containsKey("jscriptevent")) {
+				this.Browser.fire_event(element, event.get("jscriptevent").toString());
+				//String tmp = this.Browser.executeJS("return arguments[0].innerHTML;", element).toString();
+				//System.out.printf("OUTPUT: %s\n", tmp);
+			}
+			
+		} catch (Exception exp) {
+			this.report.ReportException(exp);
+			result = false;
+		}
+		
+		
+		return result;
+	}
+	
+	private boolean csvEvent(SodaHash event, WebElement parent) {
+		boolean result = false;
 		
 		return result;
 	}
@@ -182,6 +231,9 @@ public class SodaEventDriver {
 			case LINK:
 				by = By.linkText(event.get(how).toString());
 				break;
+			case TEXT:
+				by = By.linkText(event.get(how).toString());
+				break;
 			case NAME:
 				by = By.name(event.get(how).toString());
 				break;
@@ -200,7 +252,7 @@ public class SodaEventDriver {
 			}
 			
 			if (parent == null) {
-				element = this.Browser.findElement(by);
+				element = this.Browser.findElement(by, 5);
 			} else {
 				element = parent.findElement(by);
 			}
