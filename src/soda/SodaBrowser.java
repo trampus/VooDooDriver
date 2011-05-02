@@ -66,6 +66,7 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 		} catch (Exception exp) {
 			exp.printStackTrace();
 		}
+		
 	}
 	
 	public Object executeJS(String script, WebElement element) {

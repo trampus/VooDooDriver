@@ -27,6 +27,8 @@ should not be interpreted as representing official policies, either expressed or
  
  */
 
+import java.util.Date;
+
 import soda.SodaBrowser;
 import soda.SodaCSV;
 import soda.SodaCSVData;
@@ -52,12 +54,21 @@ public class SodaSuite {
 		System.out.printf("Starting SodaSuite...\n");
 		
 		try {
+			/*
 			reporter = new SodaReporter("csv-test", "/Users/trichmond");
 			csv = new SodaCSV(sodaCSV, reporter);
 			csv_data = csv.getData();
+			*/
 			
 			browser = new SodaFirefox();
+			
+			long start = System.currentTimeMillis();
 			testobj = new SodaTest(sodaTest, browser);
+			long stop = System.currentTimeMillis();
+			long diff = stop - start;
+			int seconds = (int) ((diff / 1000) % 60);
+			System.out.printf("Total Run Time in Seconds: %d\n", seconds);
+			
 		} catch(Exception exp) {
 			exp.printStackTrace();
 		}

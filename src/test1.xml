@@ -5,13 +5,12 @@
    <textfield id="user_password" set="admin" />
    <button id="login_button" />
    <link id="moduleTab_Accounts" jscriptevent="onmouseover" click="false" />
-   <!--  <wait timeout="3" /> -->
    <link text="Create Account" />
    <textfield id="name" set="Trampus" />
-   <textfield id="website" set="http://www.twistedminds.org" />
+   <textfield id="website" set="www.twistedminds.org" />
    <textfield id="Accounts0emailAddress0" set="trampus@twistedminds.org" />
    <textfield id="description" set="Trampus was here!!!" />
    <button name="button" />
-   <wait timeout="9" />
+   <link text="Log Out" />
    <browser action="close" />
 </soda>
