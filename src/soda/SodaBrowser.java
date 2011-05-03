@@ -57,12 +57,25 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 		
 	}
 	
+    public void alertHack(boolean alert) {
+    	
+    }
+	
 	public Object executeJS(String script, WebElement element) {
 		Object result = null;
 		JavascriptExecutor js =  (JavascriptExecutor)this.Driver;
 		
-		result = js.executeScript(script, element);
+		if (element != null) {
+			result = js.executeScript(script, element);
+		} else {
+			result = js.executeScript(script);
+		}
 		
+		if (result == null) {
+			result = "null";
+		}
+		
+		System.out.printf("Event Result: %s\n", result.toString());
 		return result;
 	}
 	

@@ -61,15 +61,14 @@ public class SodaSuite {
 			csv_data = csv.getData();
 			*/
 			
-			browser = new SodaChrome();
-			//browser = new SodaFirefox();
+			//browser = new SodaChrome();
+			browser = new SodaFirefox();
 			browser.newBrowser();
 			
-			long start = System.currentTimeMillis();
-			
+			long start = System.currentTimeMillis();		
 			testobj = new SodaTest(sodaTest, browser);
-			
 			long stop = System.currentTimeMillis();
+			
 			long diff = stop - start;
 			int seconds = (int) ((diff / 1000) % 60);
 			System.out.printf("Total Run Time in Seconds: %d\n", seconds);

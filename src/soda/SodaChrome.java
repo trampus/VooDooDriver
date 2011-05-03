@@ -49,11 +49,12 @@ public class SodaChrome extends SodaBrowser {
 		result += "evObj.initMouseEvent('" + type.toString().toLowerCase() + "', true, true, window, 1, 12, 345, 7, 220,"+ 
          "false, false, true, false, 0, null );\n";
 		result += "ele.dispatchEvent(evObj);\n";
-		result += "return 0;\n";
-		
-		System.out.printf("FOOVAR!!!\n");
 		
 		return result;
 	}
 
+	public void alertHack(boolean alert) {
+		
+	}
+	
 }

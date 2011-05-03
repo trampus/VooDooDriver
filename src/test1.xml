@@ -1,18 +1,26 @@
 <soda>
-	<browser url="http://192.168.50.142/sugar" />
+	<browser url="http://192.168.50.142/sugar-1" />
 	<puts text="Print something cool here..." />
    <textfield id="user_name" set="admin" />
    <textfield id="user_password" set="admin" />
    <button id="login_button" />
-   <wait timeout="5" />
+   
    <link id="moduleTab_Accounts" jscriptevent="onmouseover" click="false" />
-   <wait timeout="2" />
    <link text="Create Account" />
    <textfield id="name" set="Trampus" />
    <textfield id="website" set="www.twistedminds.org" />
    <textfield id="Accounts0emailAddress0" set="trampus@twistedminds.org" />
    <textfield id="description" set="Trampus was here!!!" />
    <button name="button" />
+   
+   <link id="moduleTab_Accounts" jscriptevent="onmouseover" click="false" />
+   <link text="View Accounts" />
+   <checkbox id="massall" click="true" />
+   <link id="actions_link" />
+   <link text="Delete" alert="true" />
+   
+   <wait timeout="5" />
+   
    <link text="Log Out" />
    <browser action="close" />
 </soda>

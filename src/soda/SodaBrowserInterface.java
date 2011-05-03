@@ -55,4 +55,6 @@ public interface SodaBrowserInterface {
 	
 	public String generateUIEvent(UIEvents type);
 	
+	public void alertHack(boolean alert);
+	
 }

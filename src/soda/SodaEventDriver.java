@@ -92,6 +92,40 @@ public class SodaEventDriver {
 		case LINK:
 			result = linkEvent(event, parent);
 			break;
+		case CHECKBOX:
+			result = checkboxEvent(event, parent);
+			break;
+		}
+		
+		return result;
+	}
+	
+	private boolean checkboxEvent(SodaHash event, WebElement parent) {
+		boolean result = false;
+		boolean click = false;
+		WebElement element = null;
+		
+		
+		try {
+			element = this.findElement(event, parent);			
+			if (event.containsKey("click")) {
+				click = this.clickToBool(event.get("click").toString());
+				if (click) {
+					element.click();
+				}
+			}
+			
+			if (event.containsKey("set")) {
+				int val = Integer.valueOf(event.get("set").toString());
+				if (val == 0) {
+					element.clear();
+				} else {
+					element.setSelected();
+				}
+			}
+			
+		} catch (Exception exp) {
+			this.report.ReportException(exp);
 		}
 		
 		return result;
@@ -104,7 +138,10 @@ public class SodaEventDriver {
 		
 		try {
 			element = this.findElement(event, parent);
-			
+			if (event.containsKey("alert")) {
+				boolean alert = this.clickToBool(event.get("alert").toString());
+				this.Browser.alertHack(alert);
+			}
 			
 			if (event.containsKey("click")) {
 				click = this.clickToBool(event.get("click").toString());
@@ -112,14 +149,14 @@ public class SodaEventDriver {
 			
 			if (click) {
 				element.click();
-			}			
+			}
 			
 			if (event.containsKey("jscriptevent")) {
 				System.out.printf("Firing JS Event...\n");
 				this.Browser.fire_event(element, event.get("jscriptevent").toString());
 				System.out.printf("Done with JS event...\n");
 				System.out.printf("Sleeping for 4...\n");
-				Thread.sleep(4000);
+				Thread.sleep(2000);
 				System.out.printf("Sleep done...\n");
 			}
 			
