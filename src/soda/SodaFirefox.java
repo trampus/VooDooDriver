@@ -45,9 +45,17 @@ public class SodaFirefox extends SodaBrowser implements SodaBrowserInterface {
 	}
 	
 	/*
+	 * alertHack -- method
+	 * 	This method stomps on the existing alert & confirm dialog code to keep the dialog from
+	 * 	popping up.  This is a total hack, but I have yet to see any better way to handle this
+	 * 	on all platforms.  Hackie hack!
 	 * 
-	 * (non-Javadoc)
-	 * @see soda.SodaBrowser#alertHack(boolean)
+	 * Input:
+	 * 	alert: true/false, which ok's or cancels the dialog.
+	 * 
+	 * Output:
+	 * 	None.
+	 * 
 	 */
 	public void alertHack(boolean alert) {
 		String alert_js = "var old_alert = window.alert;\n" +
@@ -57,8 +65,6 @@ public class SodaFirefox extends SodaBrowser implements SodaBrowserInterface {
             "var result = 0;\n"+
             "result;\n";
 
-		System.out.printf("(*)JS:\n%s\n", alert_js);
-		
 		this.executeJS(alert_js, null);
 	}
 }
