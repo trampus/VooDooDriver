@@ -34,17 +34,26 @@ import org.openqa.selenium.chrome.ChromeDriver;
 
 public class SodaChrome extends SodaBrowser {
 	
-	private WebDriver browser = null; 
+	public SodaChrome() {
 	
-	@Override
-	public void newBrowser(SodaSupportedBrowser browserType) {
-		try {
-			browser = new ChromeDriver();
-		} catch (Exception exp) {
-			exp.printStackTrace();
-		}
 	}
 	
+	public void newBrowser() {
+		this.setDriver(new ChromeDriver()); 
+	}
 	
+	// this is causing chrome to hang forever! //
+	public String generateUIEvent(UIEvents type) {
+		String result = "var ele = arguments[0];\n"; 
+		result += "var evObj = document.createEvent('MouseEvents');\n";
+		result += "evObj.initMouseEvent('" + type.toString().toLowerCase() + "', true, true, window, 1, 12, 345, 7, 220,"+ 
+         "false, false, true, false, 0, null );\n";
+		result += "ele.dispatchEvent(evObj);\n";
+		result += "return 0;\n";
+		
+		System.out.printf("FOOVAR!!!\n");
+		
+		return result;
+	}
 
 }

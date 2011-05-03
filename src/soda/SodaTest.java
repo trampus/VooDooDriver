@@ -59,7 +59,6 @@ public class SodaTest {
 		report_name = report_name.replaceAll(".xml$", "");
 		master_result = loadTestFile();
 		
-		browser.newBrowser(SodaSupportedBrowser.FIREFOX);
 		this.reporter = new SodaReporter(report_name, "/Users/trichmond/reports");
 		eventDriver = new SodaEventDriver(this.Browser, events, this.reporter);
 		this.reporter.closeLog();

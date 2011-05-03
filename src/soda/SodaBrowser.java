@@ -45,27 +45,15 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 		
 	}
 	
+	public void setDriver(WebDriver driver) {
+		this.Driver = driver;
+	}
+	
 	public WebDriver getDriver() {
 		return this.Driver;
 	}
 	
-	public void newBrowser(SodaSupportedBrowser browserType) {
-		
-		try {
-			switch (browserType) {
-			case FIREFOX:
-				this.Driver = new FirefoxDriver();
-				break;
-			case IE:
-				this.Driver = new InternetExplorerDriver();
-				break;
-			case CHROME:
-				this.Driver = new ChromeDriver();
-			}
-			
-		} catch (Exception exp) {
-			exp.printStackTrace();
-		}
+	public void newBrowser() {
 		
 	}
 	
@@ -117,10 +105,11 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 		System.out.printf("Event: %s\n", eventjs_src);
 		result = this.executeJS(eventjs_src, element).toString();
 		System.out.printf("Result: %s\n", result);
+		
 		return result;
 	}
 	
-	private String generateUIEvent(UIEvents type) {
+	public String generateUIEvent(UIEvents type) {
 		String result = "var ele = arguments[0];\n"; 
 		result += "var evObj = document.createEvent('MouseEvents');\n";
 		result += "evObj.initMouseEvent( '" + type.toString().toLowerCase() + "', true, true, window, 1, 12, 345, 7, 220,"+ 

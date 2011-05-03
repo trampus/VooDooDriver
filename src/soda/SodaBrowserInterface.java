@@ -35,7 +35,7 @@ import org.openqa.selenium.WebElement;
 
 public interface SodaBrowserInterface {
 
-	public void newBrowser(SodaSupportedBrowser browserType);
+	public void newBrowser();
 	
 	public void refresh();
 	
@@ -50,5 +50,9 @@ public interface SodaBrowserInterface {
 	public WebDriver getDriver();
 	
 	public WebElement findElement(By by, int retryTime);
+	
+	public void setDriver(WebDriver driver);
+	
+	public String generateUIEvent(UIEvents type);
 	
 }

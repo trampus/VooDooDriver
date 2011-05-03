@@ -115,9 +115,12 @@ public class SodaEventDriver {
 			}			
 			
 			if (event.containsKey("jscriptevent")) {
+				System.out.printf("Firing JS Event...\n");
 				this.Browser.fire_event(element, event.get("jscriptevent").toString());
-				//String tmp = this.Browser.executeJS("return arguments[0].innerHTML;", element).toString();
-				//System.out.printf("OUTPUT: %s\n", tmp);
+				System.out.printf("Done with JS event...\n");
+				System.out.printf("Sleeping for 4...\n");
+				Thread.sleep(4000);
+				System.out.printf("Sleep done...\n");
 			}
 			
 		} catch (Exception exp) {
