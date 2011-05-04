@@ -27,15 +27,11 @@ should not be interpreted as representing official policies, either expressed or
  
  */
 
-import java.util.Date;
-
 import soda.SodaBrowser;
 import soda.SodaCSV;
 import soda.SodaCSVData;
-import soda.SodaChrome;
 import soda.SodaFirefox;
 import soda.SodaReporter;
-import soda.SodaSupportedBrowser;
 import soda.SodaTest;
 
 public class SodaSuite {

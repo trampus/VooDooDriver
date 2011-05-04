@@ -30,6 +30,7 @@ should not be interpreted as representing official policies, either expressed or
 package soda;
 
 import java.lang.reflect.Method;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.openqa.selenium.By;
@@ -88,7 +89,7 @@ public class SodaEventDriver {
 			result = buttonEvent(event, parent);
 			break;
 		case CSV:
-			result = csvEvent(event, parent);
+			result = csvEvent(event);
 			break;
 		case LINK:
 			result = linkEvent(event, parent);
@@ -104,11 +105,27 @@ public class SodaEventDriver {
 		return result;
 	}
 	
+	/*
+	 * 
+	 */
 	private String replaceString(String str) {
-		String result = "";
+		String result = str;
 		Pattern patt = null;
+		Matcher matcher = null;
 		
-		//patt = Pattern.compile("{@[\w\.]+\}");
+		patt = Pattern.compile("\\{@[\\w\\.]+\\}", Pattern.CASE_INSENSITIVE);
+		matcher = patt.matcher(str);
+		
+		while (matcher.find()) {
+			String m = matcher.group();
+			String tmp = m;
+			tmp = tmp.replace("{@", "");
+			tmp = tmp.replace("}", "");
+			if (this.sodaVars.containsKey(tmp)) {	
+				String value = this.sodaVars.get(tmp).toString();
+				result = result.replace(m, value);
+			}
+		}
 		
 		return result;
 	}
@@ -222,10 +239,25 @@ public class SodaEventDriver {
 		return result;
 	}
 	
-	private boolean csvEvent(SodaHash event, WebElement parent) {
+	private boolean csvEvent(SodaHash event) {
 		boolean result = false;
+		SodaCSV csv = null;
+		SodaCSVData csv_data = null;
+		String var_name = event.get("var").toString();
 		
+		csv = new SodaCSV(event.get("file").toString(), this.report);
+		csv_data = csv.getData();
 		
+		for (int i = 0; i <= csv_data.size() -1; i++) {
+			int keys_len = csv_data.get(i).keySet().size() -1;
+			
+			for (int key_index = 0; key_index <= keys_len; key_index++) {
+				String key = csv_data.get(i).keySet().toArray()[key_index].toString();
+				String sodavar_name = var_name + "." + key;
+				String sodavar_value = csv_data.get(i).get(key).toString();
+				this.sodaVars.put(sodavar_name, sodavar_value);
+			}
+		}
 		
 		return result;
 	}
@@ -423,8 +455,11 @@ public class SodaEventDriver {
 	
 	private boolean putsEvent(SodaHash event) {
 		boolean result = false;
+		String msg = "";
 		
-		this.report.Log(String.format("SodaPuts: '%s'\n", event.get("text").toString()));
+		msg = this.replaceString(event.get("text").toString());
+		
+		this.report.Log(String.format("SodaPuts: '%s'\n", msg));
 		result = true;
 		return result;
 	}
