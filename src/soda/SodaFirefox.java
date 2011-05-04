@@ -60,9 +60,9 @@ public class SodaFirefox extends SodaBrowser implements SodaBrowserInterface {
 	public void alertHack(boolean alert) {
 		String alert_js = "var old_alert = window.alert;\n" +
 			"var old_confirm = window.confirm;\n" +
-            "window.alert = function() {return " + alert + ";};\n"+
-            "window.confirm = function() {return " + alert + ";};\n"+
-            "var result = 0;\n"+
+            "window.alert = function() {return " + alert + ";};\n" +
+            "window.confirm = function() {return " + alert + ";};\n" +
+            "var result = 0;\n" +
             "result;\n";
 
 		this.executeJS(alert_js, null);

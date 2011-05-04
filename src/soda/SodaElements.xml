@@ -35,6 +35,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <accessor_attributes>
          <accessor type="string">set</accessor>
          <accessor type="string">var</accessor>
+         <accessor type="string">unset</accessor>
       </accessor_attributes> 
    </var>
 

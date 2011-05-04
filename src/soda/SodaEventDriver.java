@@ -30,6 +30,7 @@ should not be interpreted as representing official policies, either expressed or
 package soda;
 
 import java.lang.reflect.Method;
+import java.util.regex.Pattern;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -95,6 +96,59 @@ public class SodaEventDriver {
 		case CHECKBOX:
 			result = checkboxEvent(event, parent);
 			break;
+		case VAR:
+			result = varEvent(event);
+			break;
+		}
+		
+		return result;
+	}
+	
+	private String replaceString(String str) {
+		String result = "";
+		Pattern patt = null;
+		
+		//patt = Pattern.compile("{@[\w\.]+\}");
+		
+		return result;
+	}
+	
+	/*
+	 * varEvent -- method
+	 * 	This method sets a SODA var that can then be used in the follow script.
+	 * 
+	 * Input:
+	 * 	event: A Soda event.
+	 * 
+	 * Output:
+	 * 	returns true on success or false on fail.
+	 * 
+	 */
+	private boolean varEvent(SodaHash event) {
+		boolean result = false;
+		String var_name = "";
+		String var_value = "";
+		
+		try {
+			if (event.containsKey("set")) {
+				var_name = event.get("var").toString();
+				var_value = event.get("set").toString();
+				this.sodaVars.put(var_name, var_value);
+				this.report.Log("Setting SODA variable: '"+ var_name + "' => '" + var_value + "'.");
+			}
+			
+			if (event.containsKey("unset")) {
+				var_name = event.get("var").toString();
+				this.report.Log("Unsetting SODA variable: '" + var_name + "'.");
+				if (!this.sodaVars.containsKey(var_name)) {
+					this.report.Log("SODA variable: '" + var_name + "' not found, nothing to unset.");
+				} else {
+					this.sodaVars.remove(var_name);
+				}
+			}
+		} catch (Exception exp) {
+			this.report.ReportException(exp);
+			result = false;
 		}
 		
 		return result;
@@ -105,9 +159,8 @@ public class SodaEventDriver {
 		boolean click = false;
 		WebElement element = null;
 		
-		
 		try {
-			element = this.findElement(event, parent);			
+			element = this.findElement(event, parent);
 			if (event.containsKey("click")) {
 				click = this.clickToBool(event.get("click").toString());
 				if (click) {
@@ -171,6 +224,8 @@ public class SodaEventDriver {
 	
 	private boolean csvEvent(SodaHash event, WebElement parent) {
 		boolean result = false;
+		
+		
 		
 		return result;
 	}
@@ -372,10 +427,6 @@ public class SodaEventDriver {
 		this.report.Log(String.format("SodaPuts: '%s'\n", event.get("text").toString()));
 		result = true;
 		return result;
-	}
-
-	private SodaHash replaceString(SodaHash event) {
-		return event;
 	}
 	
 }

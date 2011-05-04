@@ -1,6 +1,14 @@
 <soda>
+   <browser url="http://www.google.com" />
+   <!--  
 	<browser url="http://192.168.50.142/sugar-1" />
+	-->
+	
 	<puts text="Print something cool here..." />
+	<var var="trampus" set="666" />
+	<puts text="This is the beast: {@trampus}" />
+	
+	<!--  
    <textfield id="user_name" set="admin" />
    <textfield id="user_password" set="admin" />
    <button id="login_button" />
@@ -22,5 +30,6 @@
    <wait timeout="5" />
    
    <link text="Log Out" />
+   -->
    <browser action="close" />
 </soda>

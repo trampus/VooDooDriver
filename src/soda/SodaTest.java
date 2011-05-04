@@ -87,31 +87,6 @@ public class SodaTest {
 		return result;
 	}
 	
-	private void newDriver() {
-		
-		switch(BrowserType) {
-			case FIREFOX:
-				Browser = new SodaFirefox();
-			break;
-			
-			case CHROME:
-				System.out.printf("(*)Creating New Chrome browser...\n");
-				Driver = new ChromeDriver();
-				System.out.printf("(*)Finished.\n");
-			break;
-			
-			case IE:
-				System.out.printf("(*)Creating New IE browser...\n");
-				Driver = new InternetExplorerDriver();
-				System.out.printf("(*)Finished.\n");
-			break;
-			
-			default:
-				Driver = new FirefoxDriver();
-			break;
-		}
-	}
-	
 	public boolean runTest() {
 		boolean result = false;
 		
@@ -120,7 +95,6 @@ public class SodaTest {
 	
 	private boolean processEvents() {
 		boolean result = false;
-		
 		
 		return result;
 	}
