@@ -29,15 +29,10 @@ should not be interpreted as representing official policies, either expressed or
 
 package soda;
 
-import java.lang.reflect.Method;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.RenderedWebElement;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.RemoteWebElement;
 
 public class SodaEventDriver {
 
@@ -244,6 +239,7 @@ public class SodaEventDriver {
 		SodaCSV csv = null;
 		SodaCSVData csv_data = null;
 		String var_name = event.get("var").toString();
+		//children
 		
 		csv = new SodaCSV(event.get("file").toString(), this.report);
 		csv_data = csv.getData();
@@ -256,6 +252,10 @@ public class SodaEventDriver {
 				String sodavar_name = var_name + "." + key;
 				String sodavar_value = csv_data.get(i).get(key).toString();
 				this.sodaVars.put(sodavar_name, sodavar_value);
+			}
+			
+			if (event.containsKey("children")) {
+				this.processEvents((SodaEvents)event.get("children"));
 			}
 		}
 		

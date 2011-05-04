@@ -5,8 +5,16 @@
 	-->
 	
 	<csv file="/Users/trichmond/Documents/workspace/Soda-Project/data.csv" var="testdata" />
-	
 	<puts text="First Name: {@testdata.first}" />
+	<puts text="Last Name: {@testdata.last}" />
+	<puts text="Email    : {@testdata.email}" />
+	
+	<csv file="/Users/trichmond/Documents/workspace/Soda-Project/data2.csv" var="foo">
+	   <puts text="First Name: {@foo.first}" />
+	   <puts text="Last Name: {@foo.last}" />
+	   <puts text="Email    : {@foo.email}" />	
+	</csv>
+	
 	<puts text="Print something cool here..." />
 	<var var="trampus" set="666" />
 	<puts text="This is the beast: {@trampus}" />
