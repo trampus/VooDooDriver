@@ -325,7 +325,7 @@ public class SodaEventDriver {
 					
 					switch (method) {
 					case BROWSER_url:
-						this.report.Log(String.format("URL: %s\n",event.get(key).toString()));
+						this.report.Log(String.format("URL: '%s'",event.get(key).toString()));
 						this.Browser.url(event.get(key).toString());
 						break;
 					}
@@ -459,7 +459,7 @@ public class SodaEventDriver {
 		
 		msg = this.replaceString(event.get("text").toString());
 		
-		this.report.Log(String.format("SodaPuts: '%s'\n", msg));
+		this.report.Log(msg);
 		result = true;
 		return result;
 	}

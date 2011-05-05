@@ -49,8 +49,8 @@ public class SodaReporter {
 	private DateFormat Dateformater = null;
 	
 	public SodaReporter(String reportName, String resultDir) {
-		DateFormat fd = new SimpleDateFormat("MM-DD-yyyy-hh-m-s-S");
-		this.Dateformater = new SimpleDateFormat("MM-DD-yyyy-hh-m-s.S");
+		DateFormat fd = new SimpleDateFormat("MM-d-yyyy-hh-m-s-S");
+		this.Dateformater = new SimpleDateFormat("MM-d-yyyy-hh-m-s.S");
 		Date now = new Date();
 		String date_str = fd.format(now);
 		
@@ -77,7 +77,8 @@ public class SodaReporter {
 	
 	private void _log(String msg) {
 		Date now = new Date();
-		String date_str = this.Dateformater.format(now);
+		DateFormat df = new SimpleDateFormat("MM/d/yyyy-hh:m:s.S");
+		String date_str = df.format(now);
 		String logstr = "[" + date_str + "]" + msg + "\n";
 		
 		try {
