@@ -1,4 +1,4 @@
-first,last,email
-trampus,richmond,me@somewhere.com
-
+first,last,email,www,desc
+trampus,richmond,me@somewhere.com,www.twistedminds.org,this is something
+foo,bar,foo@bar.com,www.twistedminds.org,this is something else...
 

@@ -439,8 +439,9 @@ public class SodaEventDriver {
 		try {
 			element = this.findElement(event, parent);
 			if (event.containsKey("set")) {
-				this.report.Log(String.format("TEXTFIELD: Setting Value to: '%s'.", event.get("set").toString()));
-				element.sendKeys(event.get("set").toString());
+				String value = this.replaceString(event.get("set").toString());
+				this.report.Log(String.format("TEXTFIELD: Setting Value to: '%s'.", value));
+				element.sendKeys(value);
 				this.report.Log("TEXTFIELD: Finished.");
 			}
 			
