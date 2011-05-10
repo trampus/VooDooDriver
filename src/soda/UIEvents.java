@@ -29,6 +29,12 @@ should not be interpreted as representing official policies, either expressed or
 
 package soda;
 
+/**
+ * This enum defines all supported SODA javascript UIEvent types.
+ * 
+ * @author trampus
+ *
+ */
 public enum UIEvents {
 	CLICK,
 	MOUSEDOWN,

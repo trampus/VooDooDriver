@@ -27,6 +27,9 @@ should not be interpreted as representing official policies, either expressed or
  
  */
 
+import jargs.gnu.CmdLineParser;
+import soda.SodaBlockList;
+import soda.SodaBlockListParser;
 import soda.SodaBrowser;
 import soda.SodaCSV;
 import soda.SodaCSVData;
@@ -36,9 +39,12 @@ import soda.SodaTest;
 
 public class SodaSuite {
 
-	/**
-	 * @param args
-	 */
+	public static void printUsage() {
+		String msg = "This is the help message!\n";
+		
+		System.out.printf("%s\n", msg);
+	}
+	
 	public static void main(String[] args) {
 		String sodaTest = "/Users/trichmond/Documents/workspace/Soda-Project/src/test1.xml";
 		String sodaCSV = "/Users/trichmond/Documents/workspace/Soda-Project/data.csv";
@@ -47,17 +53,39 @@ public class SodaSuite {
 		SodaCSV csv = null;
 		SodaCSVData csv_data = null;
 		SodaReporter reporter = null;
+		CmdLineParser cmdParser = null;
+		Boolean help = null;
+		String blockListFile = null;
+		SodaBlockList blockList = null;
 		
 		System.out.printf("Starting SodaSuite...\n");
 		
 		try {
-			/*
-			reporter = new SodaReporter("csv-test", "/Users/trichmond");
-			csv = new SodaCSV(sodaCSV, reporter);
-			csv_data = csv.getData();
-			*/
+			cmdParser = new CmdLineParser();
+			CmdLineParser.Option optHelp = cmdParser.addBooleanOption("help");
+			CmdLineParser.Option optBlockedListFile = cmdParser.addStringOption("blocklist");
 			
-			//browser = new SodaChrome();
+			cmdParser.parse(args);
+			
+			help = (Boolean)cmdParser.getOptionValue(optHelp);
+			if (help != null) {
+				printUsage();
+				System.exit(0);
+			}
+			
+			blockListFile = cmdParser.getOptionValue(optBlockedListFile).toString();
+			if (blockListFile != null) {
+				SodaBlockListParser sbp = new SodaBlockListParser(blockListFile);
+				blockList = sbp.parse();
+				for (int i = 0; i <= blockList.size() -1; i++) {
+					System.out.printf("(*)Blocking Test File: %s\n", blockList.get(i));
+				}
+				System.exit(0);
+			} else {
+				System.out.printf("(*)No Block list file to parse.\n");
+				blockList = new SodaBlockList();
+			}
+
 			browser = new SodaFirefox();
 			browser.newBrowser();
 			

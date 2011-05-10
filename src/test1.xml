@@ -16,7 +16,6 @@
    <textfield id="user_password" set="admin" />
    <button id="login_button" />
    
-   
    <csv file="/Users/trichmond/Documents/workspace/Soda-Project/data.csv" var="foo">
 	   <link id="moduleTab_Accounts" jscriptevent="onmouseover" click="false" />
 	   <link text="Create Account" />
@@ -33,9 +32,7 @@
    <link id="actions_link" />
    <link text="Delete" alert="true" />
    
-   <wait timeout="5" />
-   
+   <wait timeout="2" />  
    <link text="Log Out" />
-   <browser action="close" />
-   
+   <browser action="close" /> 
 </soda>
