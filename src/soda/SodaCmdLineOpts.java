@@ -34,12 +34,12 @@ import java.util.ArrayList;
 public class SodaCmdLineOpts {
 
 	private SodaHash options = null;
-	private ArrayList<SodaHash> gvars = null;
+	private SodaHash gvars = null;
 	private ArrayList<String> tests = null;
 	private ArrayList<String> suites = null;
 	private String flavor = null;
 	private Boolean saveHtml = false;
-	private ArrayList<SodaHash> hijacks = null;
+	private SodaHash hijacks = null;
 	private String resultDir = null;
 	private String blocklistFile = null;
 	private Boolean version = false;
@@ -51,16 +51,13 @@ public class SodaCmdLineOpts {
 	public SodaCmdLineOpts(String[] args) {
 		
 		try {
+			this.gvars = new SodaHash();
+			this.hijacks = new SodaHash();
+			
 			for (int i = 0; i <= args.length -1; i++) {
 				if (args[i].contains("--hijack")) {
-					if (hijacks == null) {
-						hijacks = new ArrayList<SodaHash>();
-					}
 					this.handleHijackValue(args[i]);
 				} else if(args[i].contains("--gvar")) {
-					if (gvars == null) {
-						gvars = new ArrayList<SodaHash>();
-					}
 					this.handleGvarsValue(args[i]);
 				} else if (args[i].contains("--suite")) {
 					if (this.suites == null)  {
@@ -128,19 +125,16 @@ public class SodaCmdLineOpts {
 	
 	private void handleGvarsValue(String str) {
 		str = str.replace("--gvar=", "");
-		SodaHash tmp = new SodaHash();
 		String[] data = str.split("::");
-		tmp.put(data[0], data[1]);
-		this.gvars.add(tmp);
-		System.out.printf("(*)GVar: %s => %s\n", data[0], data[1]);
+		this.gvars.put("global."+data[0], data[1]);
+		System.out.printf("(*)GVar: %s => %s\n", "global."+data[0], data[1]);
 	}
 	
 	private void handleHijackValue(String str) {
 		str = str.replace("--hijack=", "");
 		SodaHash tmp = new SodaHash();
 		String[] data = str.split("::");
-		tmp.put(data[0], data[1]);
-		this.hijacks.add(tmp);
+		this.hijacks.put(data[0], data[1]);
 		System.out.printf("(*)HiJack: %s => %s\n", data[0], data[1]);
 	}
 

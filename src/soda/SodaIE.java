@@ -29,62 +29,15 @@ should not be interpreted as representing official policies, either expressed or
 
 package soda;
 
-import java.io.File;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.chrome.*;
-import org.openqa.selenium.ie.*;
-
-public class SodaTest {
-
-	private SodaSupportedBrowser BrowserType = null;
-	private WebDriver Driver = null;
-	private SodaBrowser Browser = null;
-	private String testFile = "";
-	private SodaEventDriver eventDriver = null;
-	private SodaEvents events = null;
-	private SodaReporter reporter = null;
+public class SodaIE extends SodaBrowser implements SodaBrowserInterface {
 	
-	public SodaTest(String testFile, SodaBrowser browser, SodaHash gvars) {
-		boolean master_result = false;
-		this.Browser = browser;
-		this.testFile = testFile;
-		String report_name = "";
-		File tmp_file = new File(testFile);
+	public SodaIE() {
 		
-		report_name = tmp_file.getName();
-		report_name = report_name.replaceAll(".xml$", "");
-		master_result = loadTestFile();
-		
-		this.reporter = new SodaReporter(report_name, "/Users/trichmond/reports");
-		eventDriver = new SodaEventDriver(this.Browser, events, this.reporter, gvars);
-		this.reporter.closeLog();
 	}
 	
-	private boolean loadTestFile() {
-		boolean result = false;
-		SodaXML xml = null;
-		
-		try {
-			System.out.printf("Loading Soda Test: '%s'.\n", testFile);
-			xml = new SodaXML(testFile);
-			this.events = xml.getEvents();
-			System.out.printf("Finished.\n");
-		} catch (Exception exp) {
-			exp.printStackTrace();
-			result = false;
-		}
-		
-		return result;
+	public void newBrowser() {
+		this.setDriver(new InternetExplorerDriver());
 	}
-	
-	public boolean runTest() {
-		boolean result = false;
-		
-		return result;
-	}
-	
 }

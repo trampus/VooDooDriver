@@ -35,9 +35,11 @@ import soda.SodaBlockListParser;
 import soda.SodaBrowser;
 import soda.SodaCSV;
 import soda.SodaCSVData;
+import soda.SodaChrome;
 import soda.SodaCmdLineOpts;
 import soda.SodaFirefox;
 import soda.SodaHash;
+import soda.SodaIE;
 import soda.SodaReporter;
 import soda.SodaSupportedBrowser;
 import soda.SodaTest;
@@ -117,10 +119,8 @@ public class SodaSuite {
 				System.out.printf("(!)Exiting!\n\n");
 				System.exit(2);
 			}
-			
-			System.exit(0);
-			
-			blockListFile = cmdOpts.get("blockfilelist").toString();
+/*			
+			blockListFile = cmdOpts.get("blocklistfile").toString();
 			if (blockListFile != null) {
 				SodaBlockListParser sbp = new SodaBlockListParser(blockListFile);
 				blockList = sbp.parse();
@@ -134,12 +134,24 @@ public class SodaSuite {
 				System.out.printf("(*)No Block list file to parse.\n");
 				blockList = new SodaBlockList();
 			}
-
-			browser = new SodaFirefox();
+*/
+			
+			switch (browserType) {
+			case FIREFOX:
+				browser = new SodaFirefox();
+				break;
+			case CHROME:
+				browser = new SodaChrome();
+				break;
+			case IE:
+				browser = new SodaIE();
+				break;
+			}
+			
 			browser.newBrowser();
 			
 			long start = System.currentTimeMillis();		
-			testobj = new SodaTest(sodaTest, browser);
+			testobj = new SodaTest(sodaTest, browser, (SodaHash)cmdOpts.get("gvars"));
 			long stop = System.currentTimeMillis();
 			
 			long diff = stop - start;

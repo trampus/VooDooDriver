@@ -1,4 +1,5 @@
 <soda>
+   <puts text="{@global.nothing}" />
    <browser url="http://www.google.com" />  
 	<browser url="http://192.168.50.142/sugar-1" />
 	

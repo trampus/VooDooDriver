@@ -40,13 +40,25 @@ public class SodaEventDriver {
 	private SodaBrowser Browser = null;
 	private SodaHash sodaVars = null;
 	private SodaReporter report = null;
+	private SodaHash globalVars = null;
 	
-	public SodaEventDriver(SodaBrowser browser, SodaEvents events, SodaReporter reporter) {
+	public SodaEventDriver(SodaBrowser browser, SodaEvents events, SodaReporter reporter, SodaHash gvars) {
 		testEvents = events;
 		this.Browser = browser;
 		this.report = reporter;
+		this.globalVars = gvars;
 		
 		sodaVars = new SodaHash();
+		
+		if (gvars != null) {
+			int len = gvars.keySet().size() -1;
+			
+			for (int i = 0; i <= len -1; i++) {
+				String key = gvars.keySet().toArray()[i].toString();
+				String value = gvars.get(key).toString();
+				this.sodaVars.put(key, value);
+			}
+		}
 		
 		processEvents(events);
 	}
