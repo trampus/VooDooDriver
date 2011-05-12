@@ -107,6 +107,10 @@ public class SodaReporter {
 		this.OtherErrors += 1;
 	}
 	
+	public void ReportBlocked() {
+		this.Blocked = 1;
+	}
+	
 	/*
 	 * ReportException -- Method
 	 * 	This method formats a java exception class into a SODA log entry.  Both the message and the stack

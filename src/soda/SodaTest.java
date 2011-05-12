@@ -30,6 +30,7 @@ should not be interpreted as representing official policies, either expressed or
 package soda;
 
 import java.io.File;
+import java.text.Format;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -47,11 +48,18 @@ public class SodaTest {
 	private SodaEventDriver eventDriver = null;
 	private SodaEvents events = null;
 	private SodaReporter reporter = null;
+	private SodaHash GVars = null;
+	private SodaHash HiJacks = null;
+	private SodaBlockList blocked = null;
 	
-	public SodaTest(String testFile, SodaBrowser browser, SodaHash gvars, SodaHash hijacks) {
+	public SodaTest(String testFile, SodaBrowser browser, SodaHash gvars, SodaHash hijacks, 
+			SodaBlockList blocklist) {
 		boolean master_result = false;
 		this.Browser = browser;
 		this.testFile = testFile;
+		this.HiJacks = hijacks;
+		this.GVars = gvars;
+		this.blocked = blocklist;
 		String report_name = "";
 		File tmp_file = new File(testFile);
 		
@@ -60,8 +68,6 @@ public class SodaTest {
 		master_result = loadTestFile();
 		
 		this.reporter = new SodaReporter(report_name, "/Users/trichmond/reports");
-		eventDriver = new SodaEventDriver(this.Browser, events, this.reporter, gvars, hijacks);
-		this.reporter.closeLog();
 	}
 	
 	private boolean loadTestFile() {
@@ -83,6 +89,38 @@ public class SodaTest {
 	
 	public boolean runTest() {
 		boolean result = false;
+		
+		result = CheckTestBlocked();
+		if (!result) {
+			eventDriver = new SodaEventDriver(this.Browser, events, this.reporter, this.GVars, this.HiJacks);
+		}
+		
+		this.reporter.closeLog();
+		return result;
+	}
+	
+	private boolean CheckTestBlocked() {
+		boolean result = false;
+		File fd = null;
+		String test_file = this.testFile;
+		
+		fd = new File(test_file);
+		test_file = fd.getName();
+		test_file = test_file.substring(0, test_file.length() -4);
+
+		for (int i = 0; i <= this.blocked.size() -1; i++) {
+			String blocked_file = this.blocked.get(i).get("testfile").toString();
+			if (test_file.equals(blocked_file)) {
+				result = true;
+				String module_name = this.blocked.get(i).get("modulename").toString();
+				String bug_number = this.blocked.get(i).get("bugnumber").toString();
+				String reason = this.blocked.get(i).get("reason").toString();
+				String msg = String.format("Test is currently blocked, Bug Number: '%s', Module Name: '%s'"+
+						", Reason: %s", bug_number, module_name, reason);
+				this.reporter.Log(msg);
+				break;
+			}
+		}
 		
 		return result;
 	}

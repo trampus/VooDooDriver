@@ -1,0 +1,15 @@
+<soda>
+   <block>
+      <testfile>test1</testfile>
+      <bugnumber>666</bugnumber>
+      <reason>Requires new suites for setup and cleanup of releases.</reason>
+      <modulename>None-module</modulename>
+   </block>
+
+   <block>
+      <testfile>test2</testfile>
+      <bugnumber>555</bugnumber>
+      <reason>Requires new suites for setup and cleanup of releases.</reason>
+      <modulename>Other-module</modulename>
+   </block>
+</soda>

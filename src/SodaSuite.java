@@ -70,6 +70,7 @@ public class SodaSuite {
 		"   --skipcsserrors: This tells soda to not report on css errors.\n\n"+
 		"   --testdelay: This forces a 10 second delay in between tests that run in a"+
 		" suite.\n\n"+
+		"   --blocklistfile: This is the XML file containing tests to block from running.\n\n"+
 		"   --version: Print the Soda Version string.\n\n";
 		
 		System.out.printf("%s\n", msg);
@@ -119,7 +120,7 @@ public class SodaSuite {
 				System.out.printf("(!)Exiting!\n\n");
 				System.exit(2);
 			}
-/*			
+			
 			blockListFile = cmdOpts.get("blocklistfile").toString();
 			if (blockListFile != null) {
 				SodaBlockListParser sbp = new SodaBlockListParser(blockListFile);
@@ -134,7 +135,6 @@ public class SodaSuite {
 				System.out.printf("(*)No Block list file to parse.\n");
 				blockList = new SodaBlockList();
 			}
-*/
 			
 			switch (browserType) {
 			case FIREFOX:
@@ -151,7 +151,9 @@ public class SodaSuite {
 			browser.newBrowser();
 			
 			long start = System.currentTimeMillis();		
-			testobj = new SodaTest(sodaTest, browser, (SodaHash)cmdOpts.get("gvars"), (SodaHash)cmdOpts.get("hijacks"));
+			testobj = new SodaTest(sodaTest, browser, (SodaHash)cmdOpts.get("gvars"), 
+					(SodaHash)cmdOpts.get("hijacks"), blockList);
+			testobj.runTest();
 			long stop = System.currentTimeMillis();
 			
 			long diff = stop - start;

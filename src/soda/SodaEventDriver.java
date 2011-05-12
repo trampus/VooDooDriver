@@ -299,9 +299,9 @@ public class SodaEventDriver {
 		default_timeout = default_timeout * 1000;
 		
 		try {
-			this.report.Log(String.format("WAIT: waiting: '%d' seconds.\n", (default_timeout / 1000)));
+			this.report.Log(String.format("WAIT: waiting: '%d' seconds.", (default_timeout / 1000)));
 			Thread.sleep(default_timeout);
-			this.report.Log("WAIT: finished.\n");
+			this.report.Log("WAIT: finished.");
 			result = true;
 		} catch (Exception exp) {
 			this.report.ReportException(exp);
