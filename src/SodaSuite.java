@@ -27,25 +27,55 @@ should not be interpreted as representing official policies, either expressed or
  
  */
 
+import java.io.File;
+
 import jargs.gnu.CmdLineParser;
 import soda.SodaBlockList;
 import soda.SodaBlockListParser;
 import soda.SodaBrowser;
 import soda.SodaCSV;
 import soda.SodaCSVData;
+import soda.SodaCmdLineOpts;
 import soda.SodaFirefox;
+import soda.SodaHash;
 import soda.SodaReporter;
+import soda.SodaSupportedBrowser;
 import soda.SodaTest;
 
 public class SodaSuite {
 
+	public static String VERSION = "0.0.1";
+	
 	public static void printUsage() {
-		String msg = "This is the help message!\n";
+		String msg = "SodaSuite\n"+
+		"Usage: SodaSuite --browser=\"firefox\" --test=\"sodatest1.xml\""+
+		" --test=\"sodatest2.xml\" ...\n\n"+
+		"Required Flags:\n"+
+		"   --browser: This is any of the following supported web browser name.\n"+
+		"      [ firefox, safari, ie ]\n\n"+
+		"   --test: This is a soda test file.  This argument can be used more then"+
+		"once when there are more then one soda tests to run.\n\n"+
+		"   --savehtml: This flag will cause html pages to be saved when there is an"+
+		" error testing the page.\n\n"+
+		"   --hijack: This is a key/value pair that is used to hi jack any csv file\n"+
+		"      values of the same name.  The key and value are split using \"::\"\n"+  
+		"      Example: --hijack=\"username::sugaruser\"\n\n"+
+		"   --resultdir: This allows you to override the default results directory.\n\n"+
+		"   --gvar: This is a global var key/value pair to be injected into Soda.\n"+
+		"      The key and value are split using \"::\"\n"+
+		"      Example: --gvar=\"slayerurl::http://www.slayer.net\"\n\n"+
+		"   --suite: This is a Soda suite xml test file.\n\n"+
+		"   --skipcsserrors: This tells soda to not report on css errors.\n\n"+
+		"   --testdelay: This forces a 10 second delay in between tests that run in a"+
+		" suite.\n\n"+
+		"   --version: Print the Soda Version string.\n\n";
 		
 		System.out.printf("%s\n", msg);
 	}
 	
 	public static void main(String[] args) {
+		String sodaConfigFile = "soda-config.xml";
+		File sodaConfigFD = null;
 		String sodaTest = "/Users/trichmond/Documents/workspace/Soda-Project/src/test1.xml";
 		String sodaCSV = "/Users/trichmond/Documents/workspace/Soda-Project/data.csv";
 		SodaTest testobj = null;
@@ -53,34 +83,53 @@ public class SodaSuite {
 		SodaCSV csv = null;
 		SodaCSVData csv_data = null;
 		SodaReporter reporter = null;
-		CmdLineParser cmdParser = null;
-		Boolean help = null;
 		String blockListFile = null;
 		SodaBlockList blockList = null;
+		SodaCmdLineOpts opts = null;
+		SodaHash cmdOpts = null;
+		SodaSupportedBrowser browserType = null;
 		
 		System.out.printf("Starting SodaSuite...\n");
-		
 		try {
-			cmdParser = new CmdLineParser();
-			CmdLineParser.Option optHelp = cmdParser.addBooleanOption("help");
-			CmdLineParser.Option optBlockedListFile = cmdParser.addStringOption("blocklist");
+			opts = new SodaCmdLineOpts(args);
+			cmdOpts = opts.getOptions();
 			
-			cmdParser.parse(args);
+			sodaConfigFD = new File(sodaConfigFile);
+			if (sodaConfigFD.exists()) {
+				System.out.printf("(*)Found SodaSuite config file: %s\n", sodaConfigFile);
+				SodaConfigParser scp = new SodaConfigParser(sodaConfigFD);
+			}
 			
-			help = (Boolean)cmdParser.getOptionValue(optHelp);
-			if (help != null) {
+			if ((Boolean)cmdOpts.get("help")) {
 				printUsage();
 				System.exit(0);
 			}
 			
-			blockListFile = cmdParser.getOptionValue(optBlockedListFile).toString();
+			if ((Boolean)cmdOpts.get("version")) {
+				System.out.printf("(*)SodaSuite Version: %s\n", SodaSuite.VERSION);
+				System.exit(0);
+			}
+			
+			try {
+				browserType = SodaSupportedBrowser.valueOf(cmdOpts.get("browser").toString().toUpperCase());
+			} catch (Exception expBrowser) {
+				System.out.printf("(!)Unsupported browser: '%s'!\n", cmdOpts.get("browser").toString());
+				System.out.printf("(!)Exiting!\n\n");
+				System.exit(2);
+			}
+			
+			System.exit(0);
+			
+			blockListFile = cmdOpts.get("blockfilelist").toString();
 			if (blockListFile != null) {
 				SodaBlockListParser sbp = new SodaBlockListParser(blockListFile);
 				blockList = sbp.parse();
+				
+				// debug printing, will remove later //
 				for (int i = 0; i <= blockList.size() -1; i++) {
 					System.out.printf("(*)Blocking Test File: %s\n", blockList.get(i));
 				}
-				System.exit(0);
+
 			} else {
 				System.out.printf("(*)No Block list file to parse.\n");
 				blockList = new SodaBlockList();
