@@ -151,7 +151,7 @@ public class SodaSuite {
 			browser.newBrowser();
 			
 			long start = System.currentTimeMillis();		
-			testobj = new SodaTest(sodaTest, browser, (SodaHash)cmdOpts.get("gvars"));
+			testobj = new SodaTest(sodaTest, browser, (SodaHash)cmdOpts.get("gvars"), (SodaHash)cmdOpts.get("hijacks"));
 			long stop = System.currentTimeMillis();
 			
 			long diff = stop - start;

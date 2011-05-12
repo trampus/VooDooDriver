@@ -48,7 +48,7 @@ public class SodaTest {
 	private SodaEvents events = null;
 	private SodaReporter reporter = null;
 	
-	public SodaTest(String testFile, SodaBrowser browser, SodaHash gvars) {
+	public SodaTest(String testFile, SodaBrowser browser, SodaHash gvars, SodaHash hijacks) {
 		boolean master_result = false;
 		this.Browser = browser;
 		this.testFile = testFile;
@@ -60,7 +60,7 @@ public class SodaTest {
 		master_result = loadTestFile();
 		
 		this.reporter = new SodaReporter(report_name, "/Users/trichmond/reports");
-		eventDriver = new SodaEventDriver(this.Browser, events, this.reporter, gvars);
+		eventDriver = new SodaEventDriver(this.Browser, events, this.reporter, gvars, hijacks);
 		this.reporter.closeLog();
 	}
 	

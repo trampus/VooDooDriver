@@ -75,7 +75,6 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 			result = "null";
 		}
 		
-		System.out.printf("Event Result: %s\n", result.toString());
 		return result;
 	}
 	

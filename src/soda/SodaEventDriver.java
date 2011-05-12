@@ -41,12 +41,15 @@ public class SodaEventDriver {
 	private SodaHash sodaVars = null;
 	private SodaReporter report = null;
 	private SodaHash globalVars = null;
+	private SodaHash hijacks = null;
 	
-	public SodaEventDriver(SodaBrowser browser, SodaEvents events, SodaReporter reporter, SodaHash gvars) {
+	public SodaEventDriver(SodaBrowser browser, SodaEvents events, SodaReporter reporter, SodaHash gvars,
+			SodaHash hijacks) {
 		testEvents = events;
 		this.Browser = browser;
 		this.report = reporter;
 		this.globalVars = gvars;
+		this.hijacks = hijacks;
 		
 		sodaVars = new SodaHash();
 		
@@ -128,7 +131,11 @@ public class SodaEventDriver {
 			String tmp = m;
 			tmp = tmp.replace("{@", "");
 			tmp = tmp.replace("}", "");
-			if (this.sodaVars.containsKey(tmp)) {	
+			
+			if (this.hijacks.containsKey(tmp)) {
+				String value = this.hijacks.get(tmp).toString();
+				result = result.replace(m, value);
+			} else if (this.sodaVars.containsKey(tmp)) {	
 				String value = this.sodaVars.get(tmp).toString();
 				result = result.replace(m, value);
 			}
@@ -229,12 +236,10 @@ public class SodaEventDriver {
 			}
 			
 			if (event.containsKey("jscriptevent")) {
-				System.out.printf("Firing JS Event...\n");
+				this.report.Log("Firing Javascript Event: "+ event.get("jscriptevent").toString());
 				this.Browser.fire_event(element, event.get("jscriptevent").toString());
-				System.out.printf("Done with JS event...\n");
-				System.out.printf("Sleeping for 4...\n");
-				Thread.sleep(2000);
-				System.out.printf("Sleep done...\n");
+				Thread.sleep(1000);
+				this.report.Log("Javascript event finished.");
 			}
 			
 		} catch (Exception exp) {
@@ -263,6 +268,11 @@ public class SodaEventDriver {
 				String key = csv_data.get(i).keySet().toArray()[key_index].toString();
 				String sodavar_name = var_name + "." + key;
 				String sodavar_value = csv_data.get(i).get(key).toString();
+				
+				if (this.hijacks.containsKey(sodavar_name)) {
+					sodavar_value = this.hijacks.get(sodavar_name).toString();
+					this.report.Log("Hijacking SodaVar: '" + sodavar_name+"' => '" +sodavar_value+"'.");
+				}
 				this.sodaVars.put(sodavar_name, sodavar_value);
 			}
 			

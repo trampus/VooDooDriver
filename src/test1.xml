@@ -1,4 +1,6 @@
 <soda>
+   <var var="notit" set="666" />
+   <puts text="HIJACK: {@notit}" />
    <puts text="{@global.nothing}" />
    <browser url="http://www.google.com" />  
 	<browser url="http://192.168.50.142/sugar-1" />
@@ -25,7 +27,8 @@
 	   <textfield id="Accounts0emailAddress0" set="{@foo.email}" />
 	   <textfield id="description" set="{@foo.desc}" />
 	   <button name="button" />
-   </csv>
+	   <wait timeout="2" />
+    </csv>
    
    <link id="moduleTab_Accounts" jscriptevent="onmouseover" click="false" />
    <link text="View Accounts" />
