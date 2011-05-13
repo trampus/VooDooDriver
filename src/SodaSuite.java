@@ -28,8 +28,6 @@ should not be interpreted as representing official policies, either expressed or
  */
 
 import java.io.File;
-
-import jargs.gnu.CmdLineParser;
 import soda.SodaBlockList;
 import soda.SodaBlockListParser;
 import soda.SodaBrowser;

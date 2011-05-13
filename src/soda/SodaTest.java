@@ -95,6 +95,10 @@ public class SodaTest {
 			eventDriver = new SodaEventDriver(this.Browser, events, this.reporter, this.GVars, this.HiJacks);
 		}
 		
+		if (!this.Browser.getBrowserCloseState()) {
+			this.Browser.close();
+		}
+		
 		this.reporter.closeLog();
 		return result;
 	}
@@ -116,7 +120,7 @@ public class SodaTest {
 				String bug_number = this.blocked.get(i).get("bugnumber").toString();
 				String reason = this.blocked.get(i).get("reason").toString();
 				String msg = String.format("Test is currently blocked, Bug Number: '%s', Module Name: '%s'"+
-						", Reason: %s", bug_number, module_name, reason);
+						", Reason: '%s'", bug_number, module_name, reason);
 				this.reporter.Log(msg);
 				break;
 			}

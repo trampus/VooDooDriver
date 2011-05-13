@@ -129,16 +129,20 @@ public class SodaReporter {
 		StackTraceElement[] trace = e.getStackTrace();
 		String message = "";
 		
-		String[] msg_lines = e.getMessage().split("\\n");
-		for (int i = 0; i <= msg_lines.length -1; i++) {
-			message += msg_lines[i] + "  ";
-		}
-		
-		this._log("(!)Exception raised: " + message);
-		
-		for (int i = 0; i <= trace.length -1; i++) {
-			String tmp = trace[i].toString();
-			msg += "--" + tmp;
+		if (e.getMessage() != null) {
+			String[] msg_lines = e.getMessage().split("\\n");
+			for (int i = 0; i <= msg_lines.length -1; i++) {
+				message += msg_lines[i] + "  ";
+			}
+			
+			this._log("(!)Exception raised: " + message);
+			
+			for (int i = 0; i <= trace.length -1; i++) {
+				String tmp = trace[i].toString();
+				msg += "--" + tmp;
+			}
+		} else {
+			msg = "Something really bad happened here and the exception is null!!!";
 		}
 		
 		this._log("(!)" + msg);

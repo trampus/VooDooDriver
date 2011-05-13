@@ -1,1 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<project name="soda-java" default="dist" basedir=".">
+    <description>
+        simple example build file for building soda-java into a jar file.
+    </description>
+   
+   <!-- set global properties for this build -->
+   <property name="src" location="src"/>
+   <property name="build" location="build"/>
+   <property name="dist"  location="dist"/>
+   <property name="lib" location="./lib"/>
+	
+   <pathconvert property="jars.classes" pathsep=" ">
+      <mapper>
+         <chainedmapper>
+            <!-- remove absolute path -->
+            <flattenmapper />
+            <!-- add lib/ prefix -->
+            <globmapper from="*" to="lib/*" />
+         </chainedmapper>
+      </mapper>
+      
+   	<path>
+   	   <!-- lib.home contains all jar files, in several subdirectories -->
+   	   <fileset dir="${lib}/libs">
+   	      <include name="**/*.jar" />
+   	   </fileset>
+   	</path>
+   </pathconvert>
+
+   <target name="init" depends="clean">
+      <!-- Create the time stamp -->
+      <tstamp/>
+      <!-- Create the build directory structure used by compile -->
+   	<echo>FOOBAR: ${libs.project}</echo>
+      <mkdir dir="${build}"/>
+  </target>
+
+   <target name="clean">
+      <delete failonerror="false">
+         <fileset dir="${build}" />
+      </delete>
+      
+      <delete failonerror="false">
+         <fileset dir="${dist}" />
+      </delete>
+
+      <delete dir="${build}" failonerror="false" />
+      <delete dir="${dist}" failonerror="false" />
+   </target>
+   
+   <target name="compile" depends="init" description="compile the source " >
+      <javac srcdir="${src}" destdir="${build}">
+         <classpath>
+            <pathelement path="${classpath}"/>
+            <fileset dir="lib">
+               <include name="**/*.jar"/>
+            </fileset>
+         </classpath>
+      </javac>
+   </target>
+   
+   <target name="dist" depends="compile" description="generate the distribution" >
+      <!-- Create the distribution directory -->
+      <mkdir dir="${dist}" />
+      <mkdir dir="${dist}/lib"/>
+      
+      <copy todir="${dist}/lib">
+         <fileset dir="lib/libs" />
+      </copy>
+      
+      
+      <jar jarfile="${dist}/soda-suite.jar" basedir="${build}">
+         <fileset dir="${lib}">
+            <include name="**/*.jar" />
+         </fileset>
+         
+         <manifest>
+            <attribute name="Main-Class" value="SodaSuite"/>
+            <attribute name="Class-Path" value="${jars.classes}"/>
+         </manifest>
+      </jar>
+  </target>
+</project>

@@ -40,9 +40,18 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 public abstract class SodaBrowser implements SodaBrowserInterface {
 	
 	private WebDriver Driver = null;
+	private boolean closed = true;
 	
 	public SodaBrowser() {
 		
+	}
+	
+	public void setBrowserClosed() {
+		this.closed = true;
+	}
+	
+	public boolean getBrowserCloseState() {
+		return this.closed;
 	}
 	
 	public void setDriver(WebDriver driver) {
@@ -146,6 +155,7 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 	
 	public void close() {
 		this.Driver.close();
+		this.setBrowserClosed();
 	}
 	
 	/*
