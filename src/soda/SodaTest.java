@@ -87,16 +87,28 @@ public class SodaTest {
 		return result;
 	}
 	
-	public boolean runTest() {
+	public boolean runTest(boolean isSuitetest) {
 		boolean result = false;
 		
 		result = CheckTestBlocked();
 		if (!result) {
 			eventDriver = new SodaEventDriver(this.Browser, events, this.reporter, this.GVars, this.HiJacks);
+			while(eventDriver.runner.isAlive()) {
+				System.out.printf("Thread is Alive!\n");
+				try {
+					Thread.sleep(2000);
+				} catch (Exception exp) {
+					exp.printStackTrace();
+					System.exit(-1);
+				}
+			}
+			
 		}
 		
-		if (!this.Browser.getBrowserCloseState()) {
-			this.Browser.close();
+		if (!isSuitetest) {
+			if (!this.Browser.getBrowserCloseState()) {
+				this.Browser.close();
+			}
 		}
 		
 		this.reporter.closeLog();

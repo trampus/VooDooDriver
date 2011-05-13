@@ -28,6 +28,13 @@ should not be interpreted as representing official policies, either expressed or
  */
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.net.InetAddress;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
 import soda.SodaBlockList;
 import soda.SodaBlockListParser;
 import soda.SodaBrowser;
@@ -91,21 +98,12 @@ public class SodaSuite {
 		SodaCmdLineOpts opts = null;
 		SodaHash cmdOpts = null;
 		SodaSupportedBrowser browserType = null;
+		ArrayList<String> SodaSuitesList = null;
 		
 		System.out.printf("Starting SodaSuite...\n");
 		try {
 			opts = new SodaCmdLineOpts(args);
 			cmdOpts = opts.getOptions();
-			
-			SodaSuiteParser suiteP = new SodaSuiteParser("suite.xml");
-			SodaTestList tmp = suiteP.getTests();
-			
-			for (int i = 0; i <= tmp.size() -1; i++) {
-				String t = tmp.get(i);
-				System.out.printf("File: %s\n", t);
-			}
-			
-			System.exit(0);
 			
 			sodaConfigFD = new File(sodaConfigFile);
 			if (sodaConfigFD.exists()) {
@@ -135,16 +133,25 @@ public class SodaSuite {
 			if (blockListFile != null) {
 				SodaBlockListParser sbp = new SodaBlockListParser(blockListFile);
 				blockList = sbp.parse();
-				
-				// debug printing, will remove later //
-				for (int i = 0; i <= blockList.size() -1; i++) {
-					System.out.printf("(*)Blocking Test File: %s\n", blockList.get(i));
-				}
-
 			} else {
 				System.out.printf("(*)No Block list file to parse.\n");
 				blockList = new SodaBlockList();
 			}
+			
+			
+			String resultdir = cmdOpts.get("resultdir").toString();
+			SodaSuitesList = (ArrayList<String>)cmdOpts.get("suites");
+			if (!SodaSuitesList.isEmpty()) {
+				if (resultdir == null) {
+					System.out.printf("(!)Error: Missing command line flag --resultdir!\n");
+					System.out.printf("--)--resultdir is needed when running SODA suites.\n\n");
+					System.exit(3);
+				}
+				
+				//RunSuites(SodaSuitesList, resultdir);
+			}
+			
+			//System.exit(0);
 			
 			switch (browserType) {
 			case FIREFOX:
@@ -160,13 +167,10 @@ public class SodaSuite {
 			
 			browser.newBrowser();
 			
-			//if (cmdOpts.get("tests")
-			
-			
 			long start = System.currentTimeMillis();
 			testobj = new SodaTest(sodaTest, browser, (SodaHash)cmdOpts.get("gvars"), 
 					(SodaHash)cmdOpts.get("hijacks"), blockList);
-			testobj.runTest();
+			testobj.runTest(false);
 			long stop = System.currentTimeMillis();
 			
 			long diff = stop - start;
@@ -179,5 +183,69 @@ public class SodaSuite {
 		
 		System.out.printf("SodaSuite Finished.\n");
 	}
-
+	
+	private static void RunSuites(ArrayList<String> suites, String resultdir) {
+		int len = suites.size() -1;
+		File resultFD = null;
+		String report_file_name = resultdir;
+		String hostname = "";
+		FileOutputStream suiteRptFD = null;
+		
+		resultFD = new File(resultdir);
+		if (!resultFD.exists()) {
+			System.out.printf("(*)Result directory doesn't exists, trying to create dir: '%s'\n", resultdir);
+			
+			try {
+				resultFD.mkdirs();
+			} catch (Exception exp) {
+				System.out.printf("(!)Error: Failed to create reportdir: '%s'!\n", resultdir);
+				System.out.printf("(!)Exception: %s\n", exp.getMessage());
+				System.exit(3);
+			}
+		}
+		
+		try {
+			InetAddress addr = InetAddress.getLocalHost();
+			hostname = addr.getHostName();
+			addr.getHostAddress();
+			
+			if (hostname.isEmpty()) {
+				hostname = addr.getHostAddress();
+			}
+		} catch (Exception exp) {
+			System.out.printf("(!)Error: %s!\n", exp.getMessage());
+			System.exit(4);
+		}
+		
+		DateFormat fd = new SimpleDateFormat("MM-d-yyyy-hh-m-s.S");
+		String date_str = fd.format(new Date());
+		report_file_name += "/"+ hostname + "-" + date_str + ".xml";
+		
+		try {
+			suiteRptFD = new FileOutputStream(report_file_name);
+			System.out.printf("(*)Report: %s\n", report_file_name);
+		} catch (Exception exp) {
+			System.out.printf("(!)Error: %s!\n", exp.getMessage());
+			System.exit(5);
+		}
+		
+		for (int i = 0; i <= len; i++) {
+			String suite_name = suites.get(i);
+			String suite_base_name = "";
+			File suite_fd = new File(suite_name);
+			suite_base_name = suite_fd.getName();
+			suite_fd = null;	
+			System.out.printf("(*)Executing Suite: %s\n", suite_base_name);
+			System.out.printf("(*)Parsing Suite file...\n");
+			SodaSuiteParser suiteP = new SodaSuiteParser(suite_name);
+			SodaTestList suite_test_list = suiteP.getTests();
+			
+			for (int test_index = 0; test_index <= suite_test_list.size() -1; test_index++) {
+				String current_test = suite_test_list.get(test_index);
+				System.out.printf("(*)Executing Test: '%s'\n", current_test);
+			}
+		}
+		
+	}
+	
 }

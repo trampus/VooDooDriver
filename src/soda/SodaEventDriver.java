@@ -34,7 +34,7 @@ import java.util.regex.Pattern;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-public class SodaEventDriver {
+public class SodaEventDriver implements Runnable{
 
 	private SodaEvents testEvents = null;
 	private SodaBrowser Browser = null;
@@ -42,6 +42,8 @@ public class SodaEventDriver {
 	private SodaReporter report = null;
 	private SodaHash globalVars = null;
 	private SodaHash hijacks = null;
+	
+	Thread runner;
 	
 	public SodaEventDriver(SodaBrowser browser, SodaEvents events, SodaReporter reporter, SodaHash gvars,
 			SodaHash hijacks) {
@@ -63,7 +65,16 @@ public class SodaEventDriver {
 			}
 		}
 		
-		processEvents(events);
+		this.runner = new Thread(this, "SodaEventDriver-Thread");
+		runner.start();
+		
+		//processEvents(events);
+	}
+	
+	public void run() {
+		System.out.printf("Thread Running...\n");
+		processEvents(this.testEvents);
+		System.out.printf("Thread Done.\n");
 	}
 	
 	private void processEvents(SodaEvents events) {
