@@ -81,6 +81,10 @@ public class SodaReporter {
 		String date_str = df.format(now);
 		String logstr = "[" + date_str + "]" + msg + "\n";
 		
+		if (msg.isEmpty()) {
+			msg = "Found empty message!";
+		}
+		
 		try {
 			this.reportFD.write(logstr.getBytes());
 			System.out.printf("%s\n", msg);

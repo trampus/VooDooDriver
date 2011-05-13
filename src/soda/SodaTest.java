@@ -31,6 +31,7 @@ package soda;
 
 import java.io.File;
 import java.text.Format;
+import java.util.Date;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -51,6 +52,7 @@ public class SodaTest {
 	private SodaHash GVars = null;
 	private SodaHash HiJacks = null;
 	private SodaBlockList blocked = null;
+	private static final int ThreadTimeout = 60 * 5; // 5 minute timeout //
 	
 	public SodaTest(String testFile, SodaBrowser browser, SodaHash gvars, SodaHash hijacks, 
 			SodaBlockList blocklist) {
@@ -89,23 +91,47 @@ public class SodaTest {
 	
 	public boolean runTest(boolean isSuitetest) {
 		boolean result = false;
+		boolean watchdog = false;
 		
 		result = CheckTestBlocked();
 		if (!result) {
+			long current = 0;
 			eventDriver = new SodaEventDriver(this.Browser, events, this.reporter, this.GVars, this.HiJacks);
-			while(eventDriver.runner.isAlive()) {
-				System.out.printf("Thread is Alive!\n");
+			
+			while(eventDriver.isAlive() && watchdog != true) {
+				Date current_time = new Date();
+				Date thread_time = eventDriver.getThreadTime();
+				current = current_time.getTime();
+				long thread = thread_time.getTime();
+
+				current = (long)current / 1000;
+				thread = (long)thread / 1000;
+				long seconds = (current - thread);
+			
+				if (seconds > ThreadTimeout) {
+					watchdog = true;
+					eventDriver.stop();
+					String msg = String.format("Test watchdogged out after: '%d' seconds!\n", seconds);
+					this.reporter.ReportError(msg);
+					
+					try {
+						eventDriver.getThread().join();				
+					} catch (Exception exp) {
+						this.reporter.ReportException(exp);
+					}
+					break;
+				}
+				
 				try {
-					Thread.sleep(2000);
+					Thread.sleep(4000);
 				} catch (Exception exp) {
 					exp.printStackTrace();
 					System.exit(-1);
 				}
 			}
-			
 		}
 		
-		if (!isSuitetest) {
+		if (isSuitetest != true) {
 			if (!this.Browser.getBrowserCloseState()) {
 				this.Browser.close();
 			}

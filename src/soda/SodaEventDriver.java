@@ -29,12 +29,13 @@ should not be interpreted as representing official policies, either expressed or
 
 package soda;
 
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-public class SodaEventDriver implements Runnable{
+public class SodaEventDriver implements Runnable {
 
 	private SodaEvents testEvents = null;
 	private SodaBrowser Browser = null;
@@ -42,8 +43,9 @@ public class SodaEventDriver implements Runnable{
 	private SodaReporter report = null;
 	private SodaHash globalVars = null;
 	private SodaHash hijacks = null;
-	
-	Thread runner;
+	private Date threadTime = null;
+	private volatile Thread runner;
+	private volatile Boolean threadStop = false;
 	
 	public SodaEventDriver(SodaBrowser browser, SodaEvents events, SodaReporter reporter, SodaHash gvars,
 			SodaHash hijacks) {
@@ -65,16 +67,62 @@ public class SodaEventDriver implements Runnable{
 			}
 		}
 		
+		this.threadTime = new Date();
 		this.runner = new Thread(this, "SodaEventDriver-Thread");
 		runner.start();
+	}
+	
+	public boolean isAlive() {
+		return this.runner.isAlive();
+	}
+	
+	public Thread getThread() {
+		return this.runner;
+	}
+	
+	public void stop() {
+		synchronized(this.threadStop) {
+			this.threadStop = true;
+			this.runner.interrupt();
+		}
+	}
+	
+	public boolean isStopped() {
+		boolean result = false;
 		
-		//processEvents(events);
+		synchronized(this.threadStop) {
+			result = this.threadStop;
+		}
+		
+		return result;
 	}
 	
 	public void run() {
 		System.out.printf("Thread Running...\n");
-		processEvents(this.testEvents);
-		System.out.printf("Thread Done.\n");
+		this.threadTime = new Date();
+		int i = 0;
+		int event_count = this.testEvents.size() -1;
+		
+		while ( (!this.runner.isInterrupted()) && (i <= event_count)) {
+			handleSingleEvent(this.testEvents.get(i), null);
+			i += 1;
+		}
+	}
+	
+	private void resetThreadTime() {
+		synchronized (this.threadTime) {
+			this.threadTime = new Date();
+		}
+	}
+	
+	public Date getThreadTime() {
+		Date tmp = null;
+		
+		synchronized (this.threadTime) {
+			tmp = this.threadTime;
+		}
+		
+		return tmp;
 	}
 	
 	private void processEvents(SodaEvents events) {
@@ -82,6 +130,9 @@ public class SodaEventDriver implements Runnable{
 		boolean result = false;
 		
 		for (int i = 0; i <= event_count; i++) {
+			if (isStopped()) {
+				break;
+			}
 			result = handleSingleEvent(events.get(i), null);
 		}
 	}
@@ -92,6 +143,12 @@ public class SodaEventDriver implements Runnable{
 	
 	private boolean handleSingleEvent(SodaHash event, WebElement parent) {
 		boolean result = false;
+		
+		if (isStopped()) {
+			return result;
+		}
+		
+		this.resetThreadTime();
 		
 		switch ((SodaElements)event.get("type")) {
 		case BROWSER: 
@@ -123,16 +180,17 @@ public class SodaEventDriver implements Runnable{
 			break;
 		}
 		
+		this.resetThreadTime();
+		
 		return result;
 	}
 	
-	/*
-	 * 
-	 */
 	private String replaceString(String str) {
 		String result = str;
 		Pattern patt = null;
 		Matcher matcher = null;
+		
+		this.resetThreadTime();
 		
 		patt = Pattern.compile("\\{@[\\w\\.]+\\}", Pattern.CASE_INSENSITIVE);
 		matcher = patt.matcher(str);
@@ -151,6 +209,8 @@ public class SodaEventDriver implements Runnable{
 				result = result.replace(m, value);
 			}
 		}
+		
+		this.resetThreadTime();
 		
 		return result;
 	}
@@ -201,6 +261,8 @@ public class SodaEventDriver implements Runnable{
 		boolean click = false;
 		WebElement element = null;
 		
+		this.resetThreadTime();
+		
 		try {
 			element = this.findElement(event, parent);
 			if (event.containsKey("click")) {
@@ -223,6 +285,8 @@ public class SodaEventDriver implements Runnable{
 			this.report.ReportException(exp);
 		}
 		
+		this.resetThreadTime();
+		
 		return result;
 	}
 	
@@ -230,6 +294,8 @@ public class SodaEventDriver implements Runnable{
 		boolean result = false;
 		boolean click = true;
 		WebElement element = null;
+		
+		this.resetThreadTime();
 		
 		try {
 			element = this.findElement(event, parent);
@@ -258,6 +324,7 @@ public class SodaEventDriver implements Runnable{
 			result = false;
 		}
 		
+		this.resetThreadTime();
 		
 		return result;
 	}
@@ -267,7 +334,8 @@ public class SodaEventDriver implements Runnable{
 		SodaCSV csv = null;
 		SodaCSVData csv_data = null;
 		String var_name = event.get("var").toString();
-		//children
+
+		this.resetThreadTime();
 		
 		csv = new SodaCSV(event.get("file").toString(), this.report);
 		csv_data = csv.getData();
@@ -292,12 +360,16 @@ public class SodaEventDriver implements Runnable{
 			}
 		}
 		
+		this.resetThreadTime();
+		
 		return result;
 	}
 	
 	private boolean waitEvent(SodaHash event) {
 		boolean result = false;
 		int default_timeout = 5;
+		
+		this.resetThreadTime();
 		
 		if (event.containsKey("timeout")) {
 			Integer int_out = new Integer(event.get("timeout").toString());
@@ -311,20 +383,30 @@ public class SodaEventDriver implements Runnable{
 		
 		try {
 			this.report.Log(String.format("WAIT: waiting: '%d' seconds.", (default_timeout / 1000)));
-			Thread.sleep(default_timeout);
+			int wait_seconds = default_timeout / 1000;
+			
+			for (int i = 0; i <= wait_seconds -1; i++) {
+				if (isStopped()) {
+					break;
+				}
+				Thread.sleep(1000);
+			}
+			
 			this.report.Log("WAIT: finished.");
 			result = true;
-		} catch (Exception exp) {
-			this.report.ReportException(exp);
+		} catch (InterruptedException exp) {
 			result = false;
 		}
 		
+		this.resetThreadTime();
 		return result;
 	}
 
 	private boolean browserEvent(SodaHash event) {
 		boolean result = false;
 		SodaBrowserActions browser_action = null;
+		
+		this.resetThreadTime();
 		
 		try {
 			if (event.containsKey("action")) {
@@ -368,12 +450,16 @@ public class SodaEventDriver implements Runnable{
 			this.report.ReportException(exp);
 		}
 
+		this.resetThreadTime();
+		
 		return result;
 	}
 	
 	private WebElement findElement(SodaHash event, WebElement parent) {
 		WebElement element = null;
 		By by = null;
+		
+		this.resetThreadTime();
 		
 		try {
 			String how = event.get("how").toString();
@@ -422,6 +508,8 @@ public class SodaEventDriver implements Runnable{
 			element = null;
 		}
 		
+		this.resetThreadTime();
+		
 		return element;
 	}
 	
@@ -444,6 +532,8 @@ public class SodaEventDriver implements Runnable{
 		WebElement element = null;
 		boolean click = true;
 		
+		this.resetThreadTime();
+		
 		try {
 			
 			element = this.findElement(event, parent);
@@ -462,12 +552,16 @@ public class SodaEventDriver implements Runnable{
 			result = false;
 		}
 		
+		this.resetThreadTime();
+		
 		return result;
 	}
 	
 	private boolean textfieldEvent(SodaHash event, WebElement parent) {
 		boolean result = false;
 		WebElement element = null;
+		
+		this.resetThreadTime();
 		
 		try {
 			element = this.findElement(event, parent);
@@ -484,6 +578,8 @@ public class SodaEventDriver implements Runnable{
 			result = false;
 		}
 		
+		this.resetThreadTime();
+		
 		return result;
 	}
 	
@@ -491,10 +587,15 @@ public class SodaEventDriver implements Runnable{
 		boolean result = false;
 		String msg = "";
 		
+		this.resetThreadTime();
+		
 		msg = this.replaceString(event.get("text").toString());
 		
 		this.report.Log(msg);
 		result = true;
+		
+		this.resetThreadTime();
+		
 		return result;
 	}
 	

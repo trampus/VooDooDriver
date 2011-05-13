@@ -182,6 +182,7 @@ public class SodaSuite {
 		}
 		
 		System.out.printf("SodaSuite Finished.\n");
+		System.exit(0);
 	}
 	
 	private static void RunSuites(ArrayList<String> suites, String resultdir) {
