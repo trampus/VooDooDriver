@@ -32,7 +32,6 @@
       <!-- Create the time stamp -->
       <tstamp/>
       <!-- Create the build directory structure used by compile -->
-   	<echo>FOOBAR: ${libs.project}</echo>
       <mkdir dir="${build}"/>
   </target>
 
@@ -68,7 +67,6 @@
       <copy todir="${dist}/lib">
          <fileset dir="lib/libs" />
       </copy>
-      
       
       <jar jarfile="${dist}/soda-suite.jar" basedir="${build}">
          <fileset dir="${lib}">
