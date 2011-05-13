@@ -39,6 +39,7 @@ import soda.SodaFirefox;
 import soda.SodaHash;
 import soda.SodaIE;
 import soda.SodaReporter;
+import soda.SodaSuiteParser;
 import soda.SodaSupportedBrowser;
 import soda.SodaTest;
 
@@ -95,6 +96,10 @@ public class SodaSuite {
 			opts = new SodaCmdLineOpts(args);
 			cmdOpts = opts.getOptions();
 			
+			SodaSuiteParser suiteP = new SodaSuiteParser("suite.xml");
+			
+			System.exit(0);
+			
 			sodaConfigFD = new File(sodaConfigFile);
 			if (sodaConfigFD.exists()) {
 				System.out.printf("(*)Found SodaSuite config file: %s\n", sodaConfigFile);
@@ -148,7 +153,10 @@ public class SodaSuite {
 			
 			browser.newBrowser();
 			
-			long start = System.currentTimeMillis();		
+			//if (cmdOpts.get("tests")
+			
+			
+			long start = System.currentTimeMillis();
 			testobj = new SodaTest(sodaTest, browser, (SodaHash)cmdOpts.get("gvars"), 
 					(SodaHash)cmdOpts.get("hijacks"), blockList);
 			testobj.runTest();
