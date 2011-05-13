@@ -42,6 +42,7 @@ import soda.SodaReporter;
 import soda.SodaSuiteParser;
 import soda.SodaSupportedBrowser;
 import soda.SodaTest;
+import soda.SodaTestList;
 
 public class SodaSuite {
 
@@ -97,6 +98,12 @@ public class SodaSuite {
 			cmdOpts = opts.getOptions();
 			
 			SodaSuiteParser suiteP = new SodaSuiteParser("suite.xml");
+			SodaTestList tmp = suiteP.getTests();
+			
+			for (int i = 0; i <= tmp.size() -1; i++) {
+				String t = tmp.get(i);
+				System.out.printf("File: %s\n", t);
+			}
 			
 			System.exit(0);
 			

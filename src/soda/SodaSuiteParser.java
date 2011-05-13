@@ -30,13 +30,16 @@ should not be interpreted as representing official policies, either expressed or
 package soda;
 
 import java.io.File;
+import java.util.Arrays;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 
 public class SodaSuiteParser {
+	
+	private SodaTestList tests = null;
 	
 	public SodaSuiteParser(String suitefile) {
 		Document doc = null;
@@ -45,6 +48,7 @@ public class SodaSuiteParser {
 		DocumentBuilder db = null;
 
 		try {
+			this.tests = new SodaTestList();
 			suiteFD = new File(suitefile);
 			dbf = DocumentBuilderFactory.newInstance();
 			db = dbf.newDocumentBuilder();
@@ -55,10 +59,12 @@ public class SodaSuiteParser {
 		}
 	}
 	
+	public SodaTestList getTests() {
+		return this.tests;
+	}
+	
 	private void parse(NodeList nodes) {
 		int len = nodes.getLength() -1;
-		
-		System.out.printf("PARSING SUITE!\n");
 		
 		for (int i = 0; i <= len; i++) {
 			String name = nodes.item(i).getNodeName();
@@ -66,7 +72,25 @@ public class SodaSuiteParser {
 				continue;
 			}
 			
-			System.out.printf("Node Name: %s\n", name);
+			NamedNodeMap attrs = nodes.item(i).getAttributes();
+			int atts_len = attrs.getLength() -1;
+			for (int x = 0; x <= atts_len; x++) {
+				String attr_name = attrs.item(x).getNodeName();
+				String attr_value = attrs.item(x).getNodeValue();
+				File fd_tmp = null;
+				
+				if (attr_name.contains("fileset")) {
+					fd_tmp = new File(attr_value);
+					String base_path = fd_tmp.getAbsolutePath();
+					String[] files = fd_tmp.list();
+					Arrays.sort(files);
+					for (int findex = 0; findex <= files.length -1; findex++) {
+						this.tests.add(base_path+"/"+files[findex]);
+					}
+				} else {
+					this.tests.add(attr_value);
+				}
+			}
 		}
 	}
 	
