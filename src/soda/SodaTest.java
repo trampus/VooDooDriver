@@ -63,6 +63,11 @@ public class SodaTest {
 		master_result = loadTestFile();
 		
 		this.reporter = new SodaReporter(report_name, "/Users/trichmond/reports");
+		this.Browser.setReporter(this.reporter);
+	}
+	
+	public SodaReporter getReporter() {
+		return this.reporter;
 	}
 	
 	private boolean loadTestFile() {

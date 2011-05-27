@@ -33,6 +33,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
 
 public class SodaFirefox extends SodaBrowser implements SodaBrowserInterface {
 	
@@ -41,7 +42,14 @@ public class SodaFirefox extends SodaBrowser implements SodaBrowserInterface {
 	}
 	
 	public void newBrowser() {
-		this.setDriver(new FirefoxDriver());
+		FirefoxDriver fd = null;
+		FirefoxProfile fp = null;
+		
+		fp = new FirefoxProfile();
+		fp.setPreference("browser.link.open_newwindow", 3);
+		fp.setPreference("browser.link.open_newwindow.restriction", 0);
+		fd = new FirefoxDriver(fp);
+		this.setDriver(fd);
 	}
 	
 	/*

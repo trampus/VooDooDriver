@@ -45,9 +45,23 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 	
 	private WebDriver Driver = null;
 	private boolean closed = true;
+	private String profile = null;
+	private SodaReporter reporter = null;
 	
 	public SodaBrowser() {
 		
+	}
+	
+	public void setReporter(SodaReporter rep) {
+		this.reporter = rep;
+	}
+	
+	public void setProfile(String profile) {
+		this.profile = profile;
+	}
+	
+	public String getProfile() {
+		return this.profile;
 	}
 	
 	public void setBrowserClosed() {
@@ -127,9 +141,7 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 			break;
 		}
 		
-		System.out.printf("Event: %s\n", eventjs_src);
 		result = this.executeJS(eventjs_src, element).toString();
-		System.out.printf("Result: %s\n", result);
 		
 		return result;
 	}
@@ -168,17 +180,13 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 	
 	public boolean Assert(String value) {
 		boolean result = false;
-		
-		System.out.printf("Missing browser Assert!\n");
-		
+		result = this.reporter.Assert(value, this.Driver.getPageSource());
 		return result;
 	}
 	
 	public boolean AssertNot(String value) {
 		boolean result = false;
-		
-		System.out.printf("Missing! browser AssertNot!\n");
-		
+		result = this.reporter.AssertNot(value, this.Driver.getPageSource());
 		return result;
 	}
 	

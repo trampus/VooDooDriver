@@ -64,4 +64,8 @@ public interface SodaBrowserInterface {
 	public boolean Assert(String value);
 	
 	public boolean AssertNot(String value);
+	
+	public void setProfile(String profile);
+	
+	public String getProfile();
 }

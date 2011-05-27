@@ -78,6 +78,7 @@ public class SodaSuite {
 		"   --testdelay: This forces a 10 second delay in between tests that run in a"+
 		" suite.\n\n"+
 		"   --blocklistfile: This is the XML file containing tests to block from running.\n\n"+
+		"	--profile: This is the browser profile name use start the browser with.\n\n"+
 		"   --version: Print the Soda Version string.\n\n";
 		
 		System.out.printf("%s\n", msg);
@@ -150,9 +151,11 @@ public class SodaSuite {
 				RunSuites(SodaSuitesList, resultdir, browserType, (SodaHash)cmdOpts.get("gvars"), 
 						(SodaHash)cmdOpts.get("hijacks"), blockList);
 			}
-			
-			System.exit(-1);
-			
+		} catch (Exception exp) {
+			exp.printStackTrace();
+		}
+		
+			/*
 			switch (browserType) {
 			case FIREFOX:
 				browser = new SodaFirefox();
@@ -167,6 +170,7 @@ public class SodaSuite {
 			
 			browser.newBrowser();
 			
+			
 			long start = System.currentTimeMillis();
 			testobj = new SodaTest(sodaTest, browser, (SodaHash)cmdOpts.get("gvars"), 
 					(SodaHash)cmdOpts.get("hijacks"), blockList);
@@ -180,6 +184,8 @@ public class SodaSuite {
 		} catch(Exception exp) {
 			exp.printStackTrace();
 		}
+		
+		*/
 		
 		System.out.printf("SodaSuite Finished.\n");
 		System.exit(0);

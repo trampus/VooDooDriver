@@ -231,10 +231,15 @@ public class SodaEventDriver implements Runnable {
 	
 	private boolean divEvent(SodaHash event, WebElement parent) {
 		boolean result = false;
+		boolean required = true;
 		WebElement element = null;
 		
+		if (event.containsKey("required")) {
+			required = this.clickToBool(event.get("required").toString());
+		}
+		
 		try {
-			element = this.findElement(event, parent);
+			element = this.findElement(event, parent, required);
 			
 			if (event.containsKey("assert")) {
 				String src = element.getText();
@@ -338,12 +343,22 @@ public class SodaEventDriver implements Runnable {
 	private boolean checkboxEvent(SodaHash event, WebElement parent) {
 		boolean result = false;
 		boolean click = false;
+		boolean required = true;
 		WebElement element = null;
 		
 		this.resetThreadTime();
 		
+		if (event.containsKey("required")) {
+			required = this.clickToBool(event.get("required").toString());
+		}
+		
 		try {
-			element = this.findElement(event, parent);
+			element = this.findElement(event, parent, required);
+			if (element == null) {
+				result = false;
+				return result;
+			}
+			
 			if (event.containsKey("click")) {
 				click = this.clickToBool(event.get("click").toString());
 				if (click) {
@@ -372,13 +387,23 @@ public class SodaEventDriver implements Runnable {
 	private boolean linkEvent(SodaHash event, WebElement parent) {
 		boolean result = false;
 		boolean click = true;
+		boolean required = true;
 		WebElement element = null;
 		
 		this.resetThreadTime();
 		
+		if (event.containsKey("required")) {
+			required = this.clickToBool(event.get("required").toString());
+		}
+		
 		try {
 			this.report.Log("Link Event Started.");
-			element = this.findElement(event, parent);
+			element = this.findElement(event, parent, required);
+			if (element == null) {
+				result = false;
+				return result;
+			}
+
 			if (event.containsKey("alert")) {
 				boolean alert = this.clickToBool(event.get("alert").toString());
 				this.report.Log(String.format("Setting Alert Hack to: '%s'", alert));
@@ -570,7 +595,7 @@ public class SodaEventDriver implements Runnable {
 		return result;
 	}
 	
-	private WebElement findElement(SodaHash event, WebElement parent) {
+	private WebElement findElement(SodaHash event, WebElement parent, boolean required) {
 		WebElement element = null;
 		By by = null;
 		boolean href = false;
@@ -644,8 +669,13 @@ public class SodaEventDriver implements Runnable {
 		
 		if (element == null) {
 			String val = event.get(how).toString();
-			String msg = String.format("Failed to find element: '%s' => '%s'", how, val);
-			this.report.ReportError(msg);
+			if (required) {
+				String msg = String.format("Failed to find element: '%s' => '%s'", how, val);
+				this.report.ReportError(msg);
+			} else {
+				String msg = String.format("Failed to find element, but required => 'false' : '%s' => '%s'", how, val);
+				this.report.Log(msg);
+			}
 		}
 		
 		return element;
@@ -702,14 +732,24 @@ public class SodaEventDriver implements Runnable {
 	
 	private boolean buttonEvent(SodaHash event, WebElement parent) {
 		boolean result = false;
-		WebElement element = null;
 		boolean click = true;
+		boolean required = true;
+		WebElement element = null;
+		
 		
 		this.resetThreadTime();
 		
+		if (event.containsKey("required")) {
+			required = this.clickToBool(event.get("required").toString());
+		}
+		
 		try {
 			
-			element = this.findElement(event, parent);
+			element = this.findElement(event, parent, required);
+			if (element == null) {
+				result = false;
+				return result;
+			}
 			
 			if (event.containsKey("click")) {
 				click = this.clickToBool(event.get("click").toString());
@@ -732,12 +772,22 @@ public class SodaEventDriver implements Runnable {
 	
 	private boolean textfieldEvent(SodaHash event, WebElement parent) {
 		boolean result = false;
+		boolean required = true;
 		WebElement element = null;
 		
 		this.resetThreadTime();
 		
+		if (event.containsKey("required")) {
+			required = this.clickToBool(event.get("required").toString());
+		}
+		
 		try {
-			element = this.findElement(event, parent);
+			element = this.findElement(event, parent, required);
+			if (element == null) {
+				result = false;
+				return result;
+			}
+			
 			if (event.containsKey("set")) {
 				String value = this.replaceString(event.get("set").toString());
 				this.report.Log(String.format("TEXTFIELD: Setting Value to: '%s'.", value));

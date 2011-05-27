@@ -34,6 +34,8 @@ import java.io.FileOutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SodaReporter {
 
@@ -152,18 +154,89 @@ public class SodaReporter {
 		this._log("(!)" + msg);
 	}
 	
+	private boolean isRegex(String str) {
+		boolean result = false;
+		Pattern p = Pattern.compile("^\\/");
+		Matcher m = p.matcher(str);
+		
+		p = Pattern.compile("\\/$|\\/\\w+$");
+		Matcher m2 = p.matcher(str);
+		
+		if (m.find() && m2.find()) {
+			result = true;
+		} else {
+			result = false;
+		}
+
+		return result;
+	}
+	
 	public boolean Assert(String value, String src) {
 		boolean result = false;
+		String msg = "";
 		
-		System.out.printf("Asserting: '%s' => '%s'\n", value, src);
+		if (isRegex(value)) {
+			System.out.printf("(*)IS REGEX!\n");
+			value = value.replaceAll("\\", "\\\\");
+			if (src.matches(value)) {
+				this.PassedAsserts += 1;
+				msg = String.format("Assert Passed, Found: '%s'.", value);
+				this.Log(msg);
+				result = true;
+			} else {
+				this.FailedAsserts += 1;
+				msg = String.format("(!)Assert Failed for find: '%s'!", value);
+				this._log(msg);
+				result = false;
+			}
+		} else {
+			if (src.contains(value)) {
+				this.PassedAsserts += 1;
+				msg = String.format("Assert Passed, Found: '%s'.", value);
+				this.Log(msg);
+				result = true;				
+			} else {
+				this.FailedAsserts += 1;
+				msg = String.format("(!)Assert Failed for find: '%s'!", value);
+				this._log(msg);
+				result = false;
+			}
+		}
 		
 		return result;
 	}
 	
 	public boolean AssertNot(String value, String src) {
 		boolean result = false;
+		String msg = "";
 		
-		System.out.printf("Assert Noting: '%s' => '%s'\n", value, src);
+		if (isRegex(value)) {
+			System.out.printf("(*)IS REGEX!\n");
+			value = value.replaceAll("\\", "\\\\");
+			if (src.matches(value)) {
+				this.FailedAsserts += 1;
+				msg = String.format("(!)Assert Failed, Found Unexpected text: '%s'.", value);
+				this._log(msg);	
+				result = false;
+			} else {
+				this.PassedAsserts += 1;
+				msg = String.format("Assert Failed for find: '%s' as expected.", value);
+				this.Log(msg);
+				result = true;
+			}
+		} else {
+			if (src.contains(value)) {
+				this.FailedAsserts += 1;
+				msg = String.format("(!)Assert Passed, Found: '%s'.", value);
+				this._log(msg);
+				result = false;
+			} else {
+				this.PassedAsserts += 1;
+				msg = String.format("Assert Failed for find: '%s' as expected.", value);
+				this.Log(msg);
+				result = true;
+			}
+		}
 		
 		return result;
 	}
