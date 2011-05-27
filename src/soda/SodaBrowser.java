@@ -29,6 +29,10 @@ should not be interpreted as representing official policies, either expressed or
 
 package soda;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -158,6 +162,34 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 		this.setBrowserClosed();
 	}
 	
+	public String getPageSource() {
+		return this.Driver.getPageSource();
+	}
+	
+	public boolean Assert(String value) {
+		boolean result = false;
+		
+		System.out.printf("Missing browser Assert!\n");
+		
+		return result;
+	}
+	
+	public boolean AssertNot(String value) {
+		boolean result = false;
+		
+		System.out.printf("Missing! browser AssertNot!\n");
+		
+		return result;
+	}
+	
+	public boolean assertPage() {
+		boolean result = false;
+		
+		System.out.printf("Missing! browser assertPage!\n");
+		
+		return result;
+	}
+	
 	/*
 	 * findElement -- method
 	 * 	This method finds a given WebElement.  The retryTime is used to keep looking for the
@@ -197,6 +229,5 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 		} catch (Exception exp) {
 			exp.printStackTrace();
 		}
-		
 	}
 }

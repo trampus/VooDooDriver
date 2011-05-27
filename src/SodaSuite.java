@@ -129,7 +129,7 @@ public class SodaSuite {
 				System.exit(2);
 			}
 			
-			blockListFile = cmdOpts.get("blocklistfile").toString();
+			blockListFile = (String)cmdOpts.get("blocklistfile");
 			if (blockListFile != null) {
 				SodaBlockListParser sbp = new SodaBlockListParser(blockListFile);
 				blockList = sbp.parse();
@@ -138,8 +138,7 @@ public class SodaSuite {
 				blockList = new SodaBlockList();
 			}
 			
-			
-			String resultdir = cmdOpts.get("resultdir").toString();
+			String resultdir = (String)cmdOpts.get("resultdir");
 			SodaSuitesList = (ArrayList<String>)cmdOpts.get("suites");
 			if (!SodaSuitesList.isEmpty()) {
 				if (resultdir == null) {
@@ -148,10 +147,11 @@ public class SodaSuite {
 					System.exit(3);
 				}
 				
-				//RunSuites(SodaSuitesList, resultdir);
+				RunSuites(SodaSuitesList, resultdir, browserType, (SodaHash)cmdOpts.get("gvars"), 
+						(SodaHash)cmdOpts.get("hijacks"), blockList);
 			}
 			
-			//System.exit(0);
+			System.exit(-1);
 			
 			switch (browserType) {
 			case FIREFOX:
@@ -185,12 +185,16 @@ public class SodaSuite {
 		System.exit(0);
 	}
 	
-	private static void RunSuites(ArrayList<String> suites, String resultdir) {
+	private static void RunSuites(ArrayList<String> suites, String resultdir, SodaSupportedBrowser browserType,
+			SodaHash gvars, SodaHash hijacks, SodaBlockList blockList) {
 		int len = suites.size() -1;
 		File resultFD = null;
 		String report_file_name = resultdir;
 		String hostname = "";
 		FileOutputStream suiteRptFD = null;
+		SodaBrowser browser = null;
+		
+		System.out.printf("(*)Running Suite files now...\n");
 		
 		resultFD = new File(resultdir);
 		if (!resultFD.exists()) {
@@ -230,12 +234,27 @@ public class SodaSuite {
 			System.exit(5);
 		}
 		
+		switch (browserType) {
+		case FIREFOX:
+			browser = new SodaFirefox();
+			break;
+		case CHROME:
+			browser = new SodaChrome();
+			break;
+		case IE:
+			browser = new SodaIE();
+			break;
+		}
+		
+		browser.newBrowser();
+		
 		for (int i = 0; i <= len; i++) {
 			String suite_name = suites.get(i);
 			String suite_base_name = "";
 			File suite_fd = new File(suite_name);
 			suite_base_name = suite_fd.getName();
-			suite_fd = null;	
+			suite_fd = null;
+			SodaTest testobj = null;
 			System.out.printf("(*)Executing Suite: %s\n", suite_base_name);
 			System.out.printf("(*)Parsing Suite file...\n");
 			SodaSuiteParser suiteP = new SodaSuiteParser(suite_name);
@@ -244,6 +263,9 @@ public class SodaSuite {
 			for (int test_index = 0; test_index <= suite_test_list.size() -1; test_index++) {
 				String current_test = suite_test_list.get(test_index);
 				System.out.printf("(*)Executing Test: '%s'\n", current_test);
+				testobj = new SodaTest(current_test, browser, gvars, hijacks, blockList);
+				testobj.runTest(false);
+				
 			}
 		}
 		

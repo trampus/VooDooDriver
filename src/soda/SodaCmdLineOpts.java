@@ -47,6 +47,7 @@ public class SodaCmdLineOpts {
 	private Boolean testdelay = false;
 	private Boolean skipcssErrors = false;
 	private Boolean help = false;
+	private String profile = null;
 	
 	public SodaCmdLineOpts(String[] args) {
 		
@@ -99,6 +100,9 @@ public class SodaCmdLineOpts {
 					System.out.printf("(*)Skip CSS Errors: %s\n", this.skipcssErrors);
 				} else if (args[i].contains("--help")) {
 					this.help = true;
+				} else if (args[i].contains("--help")) {
+					this.profile = args[i];
+					System.out.printf("(*)Browser Profile: %s\n", this.profile);
 				}
 			}
 			
@@ -116,6 +120,7 @@ public class SodaCmdLineOpts {
 			this.options.put("gvars", this.gvars);
 			this.options.put("hijacks", this.hijacks);
 			this.options.put("help", this.help);
+			this.options.put("profile", this.profile);
 			
 		} catch (Exception exp) {
 			exp.printStackTrace();

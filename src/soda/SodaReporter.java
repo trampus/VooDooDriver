@@ -152,6 +152,22 @@ public class SodaReporter {
 		this._log("(!)" + msg);
 	}
 	
+	public boolean Assert(String value, String src) {
+		boolean result = false;
+		
+		System.out.printf("Asserting: '%s' => '%s'\n", value, src);
+		
+		return result;
+	}
+	
+	public boolean AssertNot(String value, String src) {
+		boolean result = false;
+		
+		System.out.printf("Assert Noting: '%s' => '%s'\n", value, src);
+		
+		return result;
+	}
+	
 	protected void finalize() throws Throwable {
 	    try {
 	    	if (this.reportFD != null) {

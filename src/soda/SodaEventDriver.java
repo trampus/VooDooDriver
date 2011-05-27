@@ -29,7 +29,9 @@ should not be interpreted as representing official policies, either expressed or
 
 package soda;
 
+import java.io.File;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.openqa.selenium.By;
@@ -58,11 +60,12 @@ public class SodaEventDriver implements Runnable {
 		sodaVars = new SodaHash();
 		
 		if (gvars != null) {
-			int len = gvars.keySet().size() -1;
+			int len = gvars.keySet().size();
 			
 			for (int i = 0; i <= len -1; i++) {
 				String key = gvars.keySet().toArray()[i].toString();
 				String value = gvars.get(key).toString();
+				System.out.printf("--)'%s' => '%s'\n", key, value);
 				this.sodaVars.put(key, value);
 			}
 		}
@@ -125,7 +128,7 @@ public class SodaEventDriver implements Runnable {
 		return tmp;
 	}
 	
-	private void processEvents(SodaEvents events) {
+	private void processEvents(SodaEvents events, WebElement parent) {
 		int event_count = events.size() -1;
 		boolean result = false;
 		
@@ -133,7 +136,7 @@ public class SodaEventDriver implements Runnable {
 			if (isStopped()) {
 				break;
 			}
-			result = handleSingleEvent(events.get(i), null);
+			result = handleSingleEvent(events.get(i), parent);
 		}
 	}
 	
@@ -178,6 +181,15 @@ public class SodaEventDriver implements Runnable {
 		case VAR:
 			result = varEvent(event);
 			break;
+		case SCRIPT:
+			result = scriptEvent(event);
+			break;
+		case DIV:
+			result = divEvent(event, parent);
+			break;
+		default:
+			System.out.printf("(*)Unknown command: '%s'!\n", event.get("type").toString());
+			System.exit(1);
 		}
 		
 		this.resetThreadTime();
@@ -204,14 +216,81 @@ public class SodaEventDriver implements Runnable {
 			if (this.hijacks.containsKey(tmp)) {
 				String value = this.hijacks.get(tmp).toString();
 				result = result.replace(m, value);
+				break;
 			} else if (this.sodaVars.containsKey(tmp)) {	
 				String value = this.sodaVars.get(tmp).toString();
 				result = result.replace(m, value);
+				break;
 			}
 		}
 		
 		this.resetThreadTime();
 		
+		return result;
+	}
+	
+	private boolean divEvent(SodaHash event, WebElement parent) {
+		boolean result = false;
+		WebElement element = null;
+		
+		try {
+			element = this.findElement(event, parent);
+			
+			if (event.containsKey("assert")) {
+				String src = element.getText();
+				String value = event.get("assert").toString();
+				value = this.replaceString(value);
+				this.report.Assert(value, src);
+			}
+			
+			if (event.containsKey("assertnot")) {
+				String src = element.getText();
+				String value = event.get("assertnot").toString();
+				value = this.replaceString(value);
+				this.report.AssertNot(value, src);
+			}
+			
+			if (event.containsKey("children")) {
+				this.processEvents((SodaEvents)event.get("children"), element);
+			}
+			
+			result = true;
+		} catch (Exception exp) {
+			this.report.ReportException(exp);
+			result = false;
+		}
+		
+		return result;
+	}
+	
+	private boolean scriptEvent(SodaHash event) {
+		boolean result = false;
+		SodaXML xml = null;
+		String testfile = "";	
+		File fd = null;
+		SodaEvents newEvents = null;
+		
+		testfile = event.get("file").toString();
+		testfile = this.replaceString(testfile);
+		
+		try {
+			fd = new File(testfile);
+			if (!fd.exists()) {
+				String msg = String.format("Failed to find file: '%s'!", testfile);
+				this.report.ReportError(msg);
+				return false;
+			}
+			fd = null;
+			
+			xml = new SodaXML(testfile);
+			newEvents = xml.getEvents();
+			this.processEvents(newEvents, null);
+			
+		} catch (Exception exp) {
+			exp.printStackTrace();
+			result = false;
+		}
+	
 		return result;
 	}
 	
@@ -298,9 +377,11 @@ public class SodaEventDriver implements Runnable {
 		this.resetThreadTime();
 		
 		try {
+			this.report.Log("Link Event Started.");
 			element = this.findElement(event, parent);
 			if (event.containsKey("alert")) {
 				boolean alert = this.clickToBool(event.get("alert").toString());
+				this.report.Log(String.format("Setting Alert Hack to: '%s'", alert));
 				this.Browser.alertHack(alert);
 			}
 			
@@ -309,6 +390,9 @@ public class SodaEventDriver implements Runnable {
 			}
 			
 			if (click) {
+				String how = event.get("how").toString();
+				String value = event.get(how).toString();
+				this.report.Log(String.format("Clicking Link: '%s' => '%s'", how, value));
 				element.click();
 			}
 			
@@ -319,6 +403,7 @@ public class SodaEventDriver implements Runnable {
 				this.report.Log("Javascript event finished.");
 			}
 			
+			this.report.Log("Link Event Finished.");
 		} catch (Exception exp) {
 			this.report.ReportException(exp);
 			result = false;
@@ -334,10 +419,14 @@ public class SodaEventDriver implements Runnable {
 		SodaCSV csv = null;
 		SodaCSVData csv_data = null;
 		String var_name = event.get("var").toString();
+		String csv_filename = "";
 
 		this.resetThreadTime();
 		
-		csv = new SodaCSV(event.get("file").toString(), this.report);
+		csv_filename = event.get("file").toString();
+		csv_filename = replaceString(csv_filename);
+		
+		csv = new SodaCSV(csv_filename, this.report);
 		csv_data = csv.getData();
 		
 		for (int i = 0; i <= csv_data.size() -1; i++) {
@@ -356,7 +445,7 @@ public class SodaEventDriver implements Runnable {
 			}
 			
 			if (event.containsKey("children")) {
-				this.processEvents((SodaEvents)event.get("children"));
+				this.processEvents((SodaEvents)event.get("children"), null);
 			}
 		}
 		
@@ -438,11 +527,37 @@ public class SodaEventDriver implements Runnable {
 						continue;
 					}
 					
+					String value = "";
 					switch (method) {
 					case BROWSER_url:
-						this.report.Log(String.format("URL: '%s'",event.get(key).toString()));
-						this.Browser.url(event.get(key).toString());
+						String url = event.get(key).toString();
+						url = this.replaceString(url);
+						this.report.Log(String.format("URL: '%s'", url));
+						this.Browser.url(url);
 						break;
+					case BROWSER_assert:
+						value = event.get("assert").toString();
+						value = this.replaceString(value);
+						result = this.Browser.Assert(value);
+						
+						if (!result) {
+							String msg = String.format("Browser Assert Failed to find this in page: '%s'", value);
+							this.report.ReportError(msg);
+						}
+						break;
+					case BROWSER_assertnot:
+						value = event.get("assertnot").toString();
+						value = this.replaceString(value);
+						result = this.Browser.AssertNot(value);
+
+						if (!result) {
+							String msg = String.format("Browser AssertNot Found text in page: '%s'", value);
+							this.report.ReportError(msg);
+						}
+						break;
+					default:
+						System.out.printf("(!)ERROR: Unknown browser method: '%s'!\n", key_id);
+						System.exit(3);
 					}
 				}
 			}
@@ -458,11 +573,15 @@ public class SodaEventDriver implements Runnable {
 	private WebElement findElement(SodaHash event, WebElement parent) {
 		WebElement element = null;
 		By by = null;
+		boolean href = false;
+		boolean value = false;
+		String how = "";
+		
 		
 		this.resetThreadTime();
 		
 		try {
-			String how = event.get("how").toString();
+			how = event.get("how").toString();
 			
 			switch (SodaElementsHow.valueOf(how.toUpperCase())) {
 			case ID:
@@ -476,6 +595,10 @@ public class SodaEventDriver implements Runnable {
 				break;
 			case LINK:
 				by = By.linkText(event.get(how).toString());
+				break;
+			case HREF:
+				by = By.tagName("a");
+				href = true;
 				break;
 			case TEXT:
 				by = By.linkText(event.get(how).toString());
@@ -492,17 +615,26 @@ public class SodaEventDriver implements Runnable {
 			case XPATH:
 				by = By.xpath(event.get(how).toString());
 				break;
+			case VALUE:
+				value = true;
+				break;
 			default:
 				this.report.ReportError(String.format("Error: findElement, unknown how: '%s'!\n", how));
+				System.exit(4);
 				break;
 			}
 			
-			if (parent == null) {
-				element = this.Browser.findElement(by, 5);
-			} else {
-				element = parent.findElement(by);
+			if (href) {
+				element = this.findElementByHref(event.get("href").toString(), parent);
+			} else if (value) {
+				element = this.slowFindElement(event.get("do").toString(), event.get(how).toString());
+			}else {
+				if (parent == null) {	
+					element = this.Browser.findElement(by, 5);
+				} else {
+					element = parent.findElement(by);
+				}
 			}
-			
 		} catch (Exception exp) {
 			this.report.ReportException(exp);
 			element = null;
@@ -510,8 +642,49 @@ public class SodaEventDriver implements Runnable {
 		
 		this.resetThreadTime();
 		
+		if (element == null) {
+			String val = event.get(how).toString();
+			String msg = String.format("Failed to find element: '%s' => '%s'", how, val);
+			this.report.ReportError(msg);
+		}
+		
 		return element;
 	}
+	
+	private WebElement slowFindElement(String ele_type, String how) {
+		WebElement element = null;
+		String msg = "";
+		
+		msg = String.format("Looking for elements by value is very very slow!  You should never do this!");
+		this.report.Log(msg);
+		msg = String.format("Look for element: '%s' => '%s'.", ele_type, how);
+		this.report.Log(msg);
+		System.exit(-1);
+		return element;
+	}
+	
+	private WebElement findElementByHref(String href, WebElement parent) {
+		WebElement element = null;
+		List<WebElement> list = null;
+		
+		if (parent != null) {
+			list = parent.findElements(By.tagName("a"));
+		} else {
+			list = this.Browser.getDriver().findElements(By.tagName("a"));
+		}
+		
+		int len = list.size() -1;
+		for (int i = 0; i <= len; i++) {
+			String value = list.get(i).getAttribute("href");
+			if (href.compareTo(value) == 0) {
+				element = list.get(i);
+				break;
+			}
+		}
+		
+		return element;
+	}
+	
 	
 	/*
 	 * clickToBool -- method

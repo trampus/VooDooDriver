@@ -57,4 +57,11 @@ public interface SodaBrowserInterface {
 	
 	public void alertHack(boolean alert);
 	
+	public String getPageSource();
+	
+	public boolean assertPage();
+	
+	public boolean Assert(String value);
+	
+	public boolean AssertNot(String value);
 }

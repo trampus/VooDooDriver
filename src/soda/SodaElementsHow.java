@@ -38,5 +38,7 @@ public enum SodaElementsHow {
 	NAME,
 	PARLINK,
 	TAGNAME,
-	XPATH;
+	XPATH,
+	HREF,
+	VALUE;
 }
