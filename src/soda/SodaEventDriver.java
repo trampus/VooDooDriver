@@ -32,6 +32,7 @@ package soda;
 import java.io.File;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.openqa.selenium.By;
@@ -46,6 +47,7 @@ public class SodaEventDriver implements Runnable {
 	private SodaHash globalVars = null;
 	private SodaHash hijacks = null;
 	private Date threadTime = null;
+	private SodaHash webDrivers = null;
 	private volatile Thread runner;
 	private volatile Boolean threadStop = false;
 	
@@ -58,6 +60,7 @@ public class SodaEventDriver implements Runnable {
 		this.hijacks = hijacks;
 		
 		sodaVars = new SodaHash();
+		this.webDrivers = new SodaHash();
 		
 		if (gvars != null) {
 			int len = gvars.keySet().size();
@@ -187,12 +190,111 @@ public class SodaEventDriver implements Runnable {
 		case DIV:
 			result = divEvent(event, parent);
 			break;
+		case ATTACH:
+			result = attachEvent(event);
+			break;
 		default:
 			System.out.printf("(*)Unknown command: '%s'!\n", event.get("type").toString());
 			System.exit(1);
 		}
 		
 		this.resetThreadTime();
+		
+		return result;
+	}
+	
+	private boolean attachEvent(SodaHash event) {
+		boolean result = false;
+		Set<String> handles = null;
+		int len = 0;
+		boolean use_URL = false;
+		boolean is_REGEX = false;
+		String finder = "";
+		String found_handle = null;
+		
+		try {
+			this.report.Log("Starting attach event.");
+			String currentWindow = this.Browser.getDriver().getWindowHandle();
+			this.report.Log(String.format("Current Window Handle: '%s'.", currentWindow));
+			
+			if (event.containsKey("url")) {
+				use_URL = true;
+				finder = event.get("url").toString();
+			} else {
+				use_URL = false;
+				finder = event.get("title").toString();
+			}
+
+			finder = this.replaceString(finder);
+
+			if (this.report.isRegex(finder)) {
+				is_REGEX = true;
+			}
+				
+			handles = this.Browser.getDriver().getWindowHandles();
+			len = handles.size() -1;
+			for (int i = 0; i <= len; i++) {
+				String tmp_handle = handles.toArray()[i].toString();
+				String tmp_url = this.Browser.getDriver().switchTo().window(tmp_handle).getCurrentUrl();
+				String tmp_title = this.Browser.getDriver().switchTo().window(tmp_handle).getTitle();
+				this.report.Log(String.format("[%d]: Window Handle: '%s'", i, tmp_handle));
+				this.report.Log(String.format("[%d]: Window Title: '%s'", i, tmp_title));
+				this.report.Log(String.format("[%d]: Window URL: '%s'", i, tmp_url));
+				
+				if (!is_REGEX) {
+					if (!use_URL) {
+						if (tmp_title.equals(finder)) {
+							found_handle = tmp_handle;
+							this.report.Log(String.format("Found Window Title '%s'",finder));
+							break;
+						}
+					} else {
+						if (tmp_url.equals(finder)) {
+							found_handle = tmp_handle;
+							this.report.Log(String.format("Found Window URL '%s'",finder));
+							break;
+						}
+					}
+				} else {
+					if (!use_URL) {
+						Pattern p = Pattern.compile(finder);
+						Matcher m = p.matcher(tmp_title);
+						if (m.find()) {
+							found_handle = tmp_handle;
+							this.report.Log(String.format("Found Window Title '%s'", finder));
+							break;
+						}
+					} else {
+						Pattern p = Pattern.compile(finder);
+						Matcher m = p.matcher(tmp_url);
+						if (m.find()) {
+							found_handle = tmp_handle;
+							this.report.Log(String.format("Found Window URL '%s'",finder));
+							break;
+						}
+					}
+				}
+			} // end for loop //
+			
+			if (found_handle == null) {
+				String msg = String.format("Failed to find window matching: '%s!'", finder);
+				this.report.ReportError(msg);
+				result = false;
+				this.Browser.getDriver().switchTo().window(currentWindow);
+				return result;
+			}
+			
+			this.Browser.getDriver().switchTo().window(found_handle);
+			if (event.containsKey("children")) {
+				this.processEvents((SodaEvents)event.get("children"), null);
+			}
+			
+			this.Browser.getDriver().switchTo().window(currentWindow);
+			
+		} catch (Exception exp) {
+			exp.printStackTrace();
+			System.exit(0);
+		}
 		
 		return result;
 	}

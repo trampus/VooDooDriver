@@ -31,6 +31,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
    <timestamp>
    </timestamp>
 
+   <attach>
+      <accessor_attributes>
+         <accessor type="string">var</accessor>
+         <accessor type="string">title</accessor>
+         <accessor type="string">url</accessor>
+      </accessor_attributes>
+   </attach>
+
    <var>
       <accessor_attributes>
          <accessor type="string">set</accessor>

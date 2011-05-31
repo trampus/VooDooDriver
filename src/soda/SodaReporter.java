@@ -154,7 +154,7 @@ public class SodaReporter {
 		this._log("(!)" + msg);
 	}
 	
-	private boolean isRegex(String str) {
+	public boolean isRegex(String str) {
 		boolean result = false;
 		Pattern p = Pattern.compile("^\\/");
 		Matcher m = p.matcher(str);
@@ -171,13 +171,20 @@ public class SodaReporter {
 		return result;
 	}
 	
+	public String strToRegex(String val) {
+		String result = "";
+		val = val.replaceAll("\\\\", "\\\\\\\\");
+		
+		result = val;
+		return result;
+	}
+	
 	public boolean Assert(String value, String src) {
 		boolean result = false;
 		String msg = "";
 		
 		if (isRegex(value)) {
-			System.out.printf("(*)IS REGEX!\n");
-			value = value.replaceAll("\\", "\\\\");
+			value = this.strToRegex(value);
 			if (src.matches(value)) {
 				this.PassedAsserts += 1;
 				msg = String.format("Assert Passed, Found: '%s'.", value);
@@ -211,8 +218,7 @@ public class SodaReporter {
 		String msg = "";
 		
 		if (isRegex(value)) {
-			System.out.printf("(*)IS REGEX!\n");
-			value = value.replaceAll("\\", "\\\\");
+			value = this.strToRegex(value);
 			if (src.matches(value)) {
 				this.FailedAsserts += 1;
 				msg = String.format("(!)Assert Failed, Found Unexpected text: '%s'.", value);
