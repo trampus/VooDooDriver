@@ -90,7 +90,7 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 	
 	public Object executeJS(String script, WebElement element) {
 		Object result = null;
-		JavascriptExecutor js =  (JavascriptExecutor)this.Driver;
+		JavascriptExecutor js = (JavascriptExecutor)this.Driver;
 		
 		if (element != null) {
 			result = js.executeScript(script, element);

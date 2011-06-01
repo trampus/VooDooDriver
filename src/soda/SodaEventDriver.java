@@ -193,12 +193,51 @@ public class SodaEventDriver implements Runnable {
 		case ATTACH:
 			result = attachEvent(event);
 			break;
+		case TABLE:
+			result = tableEvent(event, parent);
+			break;
 		default:
 			System.out.printf("(*)Unknown command: '%s'!\n", event.get("type").toString());
 			System.exit(1);
 		}
 		
 		this.resetThreadTime();
+		
+		return result;
+	}
+	
+	private boolean tableEvent(SodaHash event, WebElement parent) {
+		boolean result = false;
+		boolean required = true;
+		WebElement element = null;
+		
+		if (event.containsKey("required")) {
+			required = this.clickToBool(event.get("required").toString());
+		}
+		
+		try {
+			element = this.findElement(event, parent, required);
+			if (event.containsKey("assert")) {
+				String src = element.getText();
+				String value = event.get("assert").toString();
+				value = this.replaceString(value);
+				this.report.Assert(value, src);
+			}
+			
+			if (event.containsKey("assertnot")) {
+				String src = element.getText();
+				String value = event.get("assertnot").toString();
+				value = this.replaceString(value);
+				this.report.AssertNot(value, src);
+			}
+			
+			if (event.containsKey("children")) {
+				this.processEvents((SodaEvents)event.get("children"), element);
+			}
+		} catch (Exception exp) {
+			this.report.ReportException(exp);
+			result = false;
+		}
 		
 		return result;
 	}
@@ -703,44 +742,46 @@ public class SodaEventDriver implements Runnable {
 		boolean href = false;
 		boolean value = false;
 		String how = "";
-		
+		String what = "";
 		
 		this.resetThreadTime();
 		
 		try {
 			how = event.get("how").toString();
+			what = event.get(how).toString(); 
+			what = this.replaceString(what);
 			
 			switch (SodaElementsHow.valueOf(how.toUpperCase())) {
 			case ID:
-				by = By.id(event.get(how).toString());
+				by = By.id(what);
 				break;
 			case CLASS:
-				by = By.className(event.get(how).toString());
+				by = By.className(what);
 				break;
 			case CSS:
-				by = By.cssSelector(event.get(how).toString());
+				by = By.cssSelector(what);
 				break;
 			case LINK:
-				by = By.linkText(event.get(how).toString());
+				by = By.linkText(what);
 				break;
 			case HREF:
 				by = By.tagName("a");
 				href = true;
 				break;
 			case TEXT:
-				by = By.linkText(event.get(how).toString());
+				by = By.linkText(what);
 				break;
 			case NAME:
-				by = By.name(event.get(how).toString());
+				by = By.name(what);
 				break;
 			case PARLINK:
-				by = By.partialLinkText(event.get(how).toString());
+				by = By.partialLinkText(what);
 				break;
 			case TAGNAME:
-				by = By.tagName(event.get(how).toString());
+				by = By.tagName(what);
 				break;
 			case XPATH:
-				by = By.xpath(event.get(how).toString());
+				by = By.xpath(what);
 				break;
 			case VALUE:
 				value = true;
@@ -754,7 +795,7 @@ public class SodaEventDriver implements Runnable {
 			if (href) {
 				element = this.findElementByHref(event.get("href").toString(), parent);
 			} else if (value) {
-				element = this.slowFindElement(event.get("do").toString(), event.get(how).toString());
+				element = this.slowFindElement(event.get("do").toString(), what, parent);
 			}else {
 				if (parent == null) {	
 					element = this.Browser.findElement(by, 5);
@@ -770,12 +811,11 @@ public class SodaEventDriver implements Runnable {
 		this.resetThreadTime();
 		
 		if (element == null) {
-			String val = event.get(how).toString();
 			if (required) {
-				String msg = String.format("Failed to find element: '%s' => '%s'", how, val);
+				String msg = String.format("Failed to find element: '%s' => '%s'", how, what);
 				this.report.ReportError(msg);
 			} else {
-				String msg = String.format("Failed to find element, but required => 'false' : '%s' => '%s'", how, val);
+				String msg = String.format("Failed to find element, but required => 'false' : '%s' => '%s'", how, what);
 				this.report.Log(msg);
 			}
 		}
@@ -783,15 +823,34 @@ public class SodaEventDriver implements Runnable {
 		return element;
 	}
 	
-	private WebElement slowFindElement(String ele_type, String how) {
+	private WebElement slowFindElement(String ele_type, String how, WebElement parent) {
 		WebElement element = null;
 		String msg = "";
+		String js = "";
 		
 		msg = String.format("Looking for elements by value is very very slow!  You should never do this!");
 		this.report.Log(msg);
 		msg = String.format("Look for element: '%s' => '%s'.", ele_type, how);
 		this.report.Log(msg);
-		System.exit(-1);
+		
+		
+		if (ele_type.contains("button")) {
+			System.out.printf("GOT A BUTTON!\n");
+			js = String.format("querySelector('input[type=button][value=%s],button[value=%s],"+
+					"input[type=submit][value=%s], input[type=reset][vaue=%s]', true);", how, how, how, how);
+		} else {
+			js = String.format("querySelector('input[type=%s][value=%s],%s[value=%s]', true)", 
+					ele_type, how, ele_type, how);
+		}
+		
+		if (parent == null) {
+			js = "return document." + js;
+			element = (WebElement)this.Browser.executeJS(js, null);
+		} else {
+			js = "return arguments[0]." + js;
+			element = (WebElement)this.Browser.executeJS(js, parent);
+		}
+		
 		return element;
 	}
 	
