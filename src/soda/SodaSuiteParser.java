@@ -85,7 +85,12 @@ public class SodaSuiteParser {
 					String[] files = fd_tmp.list();
 					Arrays.sort(files);
 					for (int findex = 0; findex <= files.length -1; findex++) {
-						this.tests.add(base_path+"/"+files[findex]);
+						if (files[findex].toLowerCase().matches(".*\\.xml")) {
+							this.tests.add(base_path+"/"+files[findex]);
+							System.out.printf("(*)Adding file to Soda Suite list: '%s'.\n", base_path+"/"+files[findex]);
+						} else {
+							System.out.printf("(!)Not adding file to Soda Suite list: '%s'.\n", base_path+"/"+files[findex]);
+						}
 					}
 				} else {
 					this.tests.add(attr_value);
