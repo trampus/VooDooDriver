@@ -70,6 +70,7 @@ public class SodaFirefox extends SodaBrowser implements SodaBrowserInterface {
 			"var old_confirm = window.confirm;\n" +
             "window.alert = function() {return " + alert + ";};\n" +
             "window.confirm = function() {return " + alert + ";};\n" +
+            "window.onbeforeunload = null;\n" +
             "var result = 0;\n" +
             "result;\n";
 

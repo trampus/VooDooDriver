@@ -30,6 +30,8 @@ should not be interpreted as representing official policies, either expressed or
 package soda;
 
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -37,6 +39,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
 
 public class SodaEventDriver implements Runnable {
 
@@ -52,14 +55,18 @@ public class SodaEventDriver implements Runnable {
 	private volatile Boolean threadStop = false;
 	
 	public SodaEventDriver(SodaBrowser browser, SodaEvents events, SodaReporter reporter, SodaHash gvars,
-			SodaHash hijacks) {
+			SodaHash hijacks, SodaHash oldvars) {
 		testEvents = events;
 		this.Browser = browser;
 		this.report = reporter;
 		this.globalVars = gvars;
 		this.hijacks = hijacks;
 		
-		sodaVars = new SodaHash();
+		if (oldvars != null) {
+			sodaVars = oldvars;
+		} else {
+			sodaVars = new SodaHash();
+		}
 		this.webDrivers = new SodaHash();
 		
 		if (gvars != null) {
@@ -73,9 +80,30 @@ public class SodaEventDriver implements Runnable {
 			}
 		}
 		
+		this.stampEvent();
 		this.threadTime = new Date();
 		this.runner = new Thread(this, "SodaEventDriver-Thread");
 		runner.start();
+	}
+	
+	public SodaHash getSodaVars() {
+		return this.sodaVars;
+	}
+	
+	public void appedSodaVars(SodaHash vars) {
+		int len = 0;
+		
+		if (vars == null) {
+			return;
+		}
+		
+		len = vars.keySet().size() -1;
+		for (int i = 0; i <= len; i++) {
+			String name = vars.keySet().toArray()[i].toString();
+			String value = vars.get(name).toString();
+			this.sodaVars.put(name, value);
+		}
+		
 	}
 	
 	public boolean isAlive() {
@@ -196,12 +224,125 @@ public class SodaEventDriver implements Runnable {
 		case TABLE:
 			result = tableEvent(event, parent);
 			break;
+		case FORM:
+			result = formEvent(event, parent);
+			break;
+		case SELECT:
+			result = selectEvent(event, parent);
+			break;
+		case STAMP:
+			result = stampEvent();
+			break;
+		case TIMESTAMP:
+			result = stampEvent();
+			break;			
+		case SPAN:
+			result = spanEvent(event, parent);
+			break;
 		default:
 			System.out.printf("(*)Unknown command: '%s'!\n", event.get("type").toString());
 			System.exit(1);
 		}
 		
 		this.resetThreadTime();
+		
+		return result;
+	}
+	
+	private boolean stampEvent() {
+		boolean result = false;
+		Date now = new Date();
+		DateFormat df = new SimpleDateFormat("yyMMdd_hhmmss");
+		String date_str = df.format(now);
+		
+		this.report.Log(String.format("Setting STAMP => '%s'.", date_str));
+		this.sodaVars.put("stamp", date_str);		
+		return result;
+	}
+	
+	private boolean spanEvent(SodaHash event, WebElement parent) {
+		boolean result = false;
+		boolean required = true;
+		Select element = null;
+		String setvalue = "";
+		String msg = "";
+		
+		if (event.containsKey("required")) {
+			required = this.clickToBool(event.get("required").toString());
+		}
+		
+		return result;
+	}
+	
+	private boolean selectEvent(SodaHash event, WebElement parent) {
+		boolean result = false;
+		boolean required = true;
+		WebElement element = null;
+		String setvalue = null;
+		String msg = "";
+		boolean was_set = false;
+		
+		this.report.Log("Select event Started.");
+		
+		if (event.containsKey("required")) {
+			required = this.clickToBool(event.get("required").toString());
+		}
+		
+		try {
+			List<WebElement> list = null;
+			element = this.findElement(event, parent, required);
+			list = element.findElements(By.tagName("option"));
+			int len = list.size() -1;
+			
+			if (event.containsKey("set")) {
+				setvalue = event.get("set").toString();
+				setvalue = this.replaceString(setvalue);
+			}
+			
+			if (setvalue != null) {
+				for (int i = 0; i <= len; i++) {
+					String tmp = list.get(i).getText();
+					if (setvalue.equals(tmp)) {
+						msg = String.format("Setting Select value to: '%s'.", setvalue);
+						this.report.Log(msg);
+						list.get(i).setSelected();
+						was_set = true;
+						break;
+					}
+				}
+				
+				if (!was_set) {
+					this.report.ReportError(String.format("Failed to find option in select with text matching: '%s'!", setvalue));
+				}
+			}
+		} catch (Exception exp) {
+			this.report.ReportException(exp);
+			result = false;
+		}
+		
+		this.report.Log("Select event finished.");
+		return result;
+	}
+	
+	private boolean formEvent(SodaHash event, WebElement parent) {
+		boolean result = false;
+		boolean required = true;
+		WebElement element = null;
+		
+		if (event.containsKey("required")) {
+			required = this.clickToBool(event.get("required").toString());
+		}
+		
+		try {
+			element = this.findElement(event, parent, required);
+			
+			if (event.containsKey("children")) {
+				this.processEvents((SodaEvents)event.get("children"), element);
+			}
+		} catch (Exception exp) {
+			this.report.ReportException(exp);
+			result = false;
+		}
 		
 		return result;
 	}
@@ -357,11 +498,9 @@ public class SodaEventDriver implements Runnable {
 			if (this.hijacks.containsKey(tmp)) {
 				String value = this.hijacks.get(tmp).toString();
 				result = result.replace(m, value);
-				break;
 			} else if (this.sodaVars.containsKey(tmp)) {	
 				String value = this.sodaVars.get(tmp).toString();
 				result = result.replace(m, value);
-				break;
 			}
 		}
 		
@@ -558,6 +697,7 @@ public class SodaEventDriver implements Runnable {
 			if (click) {
 				String how = event.get("how").toString();
 				String value = event.get(how).toString();
+				value = this.replaceString(value);
 				this.report.Log(String.format("Clicking Link: '%s' => '%s'", how, value));
 				element.click();
 			}
@@ -751,6 +891,14 @@ public class SodaEventDriver implements Runnable {
 			what = event.get(how).toString(); 
 			what = this.replaceString(what);
 			
+			if (how.matches("class") && what.matches(".*\\s+.*")) {
+				String elem_type = event.get("do").toString();
+				String old_how = how;
+				how = "css";
+				String css_sel = String.format("%s[%s=\"%s\"]",elem_type, old_how, what);
+				what = css_sel;
+			}
+			
 			switch (SodaElementsHow.valueOf(how.toUpperCase())) {
 			case ID:
 				by = By.id(what);
@@ -797,7 +945,7 @@ public class SodaEventDriver implements Runnable {
 			} else if (value) {
 				element = this.slowFindElement(event.get("do").toString(), what, parent);
 			}else {
-				if (parent == null) {	
+				if (parent == null) {
 					element = this.Browser.findElement(by, 5);
 				} else {
 					element = parent.findElement(by);
@@ -835,7 +983,6 @@ public class SodaEventDriver implements Runnable {
 		
 		
 		if (ele_type.contains("button")) {
-			System.out.printf("GOT A BUTTON!\n");
 			js = String.format("querySelector('input[type=button][value=%s],button[value=%s],"+
 					"input[type=submit][value=%s], input[type=reset][vaue=%s]', true);", how, how, how, how);
 		} else {
@@ -916,6 +1063,12 @@ public class SodaEventDriver implements Runnable {
 				click = this.clickToBool(event.get("click").toString());
 			}
 			
+			if (event.containsKey("alert")) {
+				boolean alert = this.clickToBool(event.get("alert").toString());
+				this.report.Log(String.format("Setting Alert Hack to: '%s'", alert));
+				this.Browser.alertHack(alert);
+			}
+			
 			if (click) {
 				element.click();
 			}
@@ -950,7 +1103,8 @@ public class SodaEventDriver implements Runnable {
 			}
 			
 			if (event.containsKey("set")) {
-				String value = this.replaceString(event.get("set").toString());
+				String value = event.get("set").toString();
+				value = this.replaceString(value);
 				this.report.Log(String.format("TEXTFIELD: Setting Value to: '%s'.", value));
 				element.sendKeys(value);
 				this.report.Log("TEXTFIELD: Finished.");

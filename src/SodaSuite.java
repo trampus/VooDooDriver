@@ -265,13 +265,14 @@ public class SodaSuite {
 			System.out.printf("(*)Parsing Suite file...\n");
 			SodaSuiteParser suiteP = new SodaSuiteParser(suite_name);
 			SodaTestList suite_test_list = suiteP.getTests();
+			SodaHash vars = null;
 			
 			for (int test_index = 0; test_index <= suite_test_list.size() -1; test_index++) {
 				String current_test = suite_test_list.get(test_index);
 				System.out.printf("(*)Executing Test: '%s'\n", current_test);
-				testobj = new SodaTest(current_test, browser, gvars, hijacks, blockList);
+				testobj = new SodaTest(current_test, browser, gvars, hijacks, blockList, vars);
 				testobj.runTest(false);
-				
+				vars = testobj.getSodaEventDriver().getSodaVars();
 			}
 		}
 		
