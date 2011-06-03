@@ -239,6 +239,9 @@ public class SodaEventDriver implements Runnable {
 		case SPAN:
 			result = spanEvent(event, parent);
 			break;
+		case HIDDEN:
+			result = hiddenEvent(event, parent);
+			break;
 		default:
 			System.out.printf("(*)Unknown command: '%s'!\n", event.get("type").toString());
 			System.exit(1);
@@ -248,6 +251,39 @@ public class SodaEventDriver implements Runnable {
 		
 		return result;
 	}
+	
+	private boolean hiddenEvent(SodaHash event, WebElement parent) {
+		boolean result = false;
+		boolean required = true;
+		WebElement element = null;
+		
+		this.report.Log("Hidden event Started.");
+		
+		if (event.containsKey("required")) {
+			required = this.clickToBool(event.get("required").toString());
+		}
+		
+		try {
+			element = this.findElement(event, parent, required);
+			if (event.containsKey("var")) {
+				String name = event.get("var").toString();
+				String value = element.getValue();
+				SodaHash tmp = new SodaHash();
+				tmp.put("set", value);
+				tmp.put("var", name);
+				this.varEvent(tmp);
+			}
+			
+			result = true;
+		} catch (Exception exp) {
+			this.report.ReportException(exp);
+			result = false;
+		}
+		
+		this.report.Log("Hidden event finished.");
+		return result;
+	}
+	
 	
 	private boolean stampEvent() {
 		boolean result = false;
@@ -263,12 +299,45 @@ public class SodaEventDriver implements Runnable {
 	private boolean spanEvent(SodaHash event, WebElement parent) {
 		boolean result = false;
 		boolean required = true;
-		Select element = null;
-		String setvalue = "";
-		String msg = "";
-		
+		WebElement element = null;
+
 		if (event.containsKey("required")) {
 			required = this.clickToBool(event.get("required").toString());
+		}
+		
+		try {
+			element = this.findElement(event, parent, required);
+			
+			if (event.containsKey("vartext")) {
+				String name = event.get("vartext").toString();
+				String value = element.getText();
+				SodaHash tmp = new SodaHash();
+				tmp.put("set", value);
+				tmp.put("var", name);
+				this.varEvent(tmp);
+			}
+			
+			if (event.containsKey("assert")) {
+				String src = element.getText();
+				this.report.Assert(event.get("assert").toString(), src);
+			}
+			
+			if (event.containsKey("assertnot")) {
+				String src = element.getText();
+				this.report.AssertNot(event.get("assertnot").toString(), src);
+			}
+			
+			if (event.containsKey("jscriptevent")) {
+				this.report.Log("Firing Javascript Event: "+ event.get("jscriptevent").toString());
+				this.Browser.fire_event(element, event.get("jscriptevent").toString());
+				Thread.sleep(1000);
+				this.report.Log("Javascript event finished.");
+			}
+			
+			result = true;
+		} catch (Exception exp) {
+			this.report.ReportException(exp);
+			result = false;
 		}
 		
 		return result;
@@ -598,13 +667,16 @@ public class SodaEventDriver implements Runnable {
 		try {
 			if (event.containsKey("set")) {
 				var_name = event.get("var").toString();
+				var_name = this.replaceString(var_name);
 				var_value = event.get("set").toString();
+				var_value = this.replaceString(var_value);
 				this.sodaVars.put(var_name, var_value);
 				this.report.Log("Setting SODA variable: '"+ var_name + "' => '" + var_value + "'.");
 			}
 			
 			if (event.containsKey("unset")) {
 				var_name = event.get("var").toString();
+				var_name = this.replaceString(var_name);
 				this.report.Log("Unsetting SODA variable: '" + var_name + "'.");
 				if (!this.sodaVars.containsKey(var_name)) {
 					this.report.Log("SODA variable: '" + var_name + "' not found, nothing to unset.");
@@ -679,8 +751,19 @@ public class SodaEventDriver implements Runnable {
 		try {
 			this.report.Log("Link Event Started.");
 			element = this.findElement(event, parent, required);
+			
+			String how = event.get("how").toString();
+			how = this.replaceString(how);
+			String value = event.get(how).toString();
+			value = this.replaceString(value);
 			if (element == null) {
+				if (required) {
+					String msg = String.format("Failed to find link: '%s' => '%s'!", how, value);
+					this.report.ReportError(msg);
+				}
+				
 				result = false;
+				this.report.Log("Link Event Finished.");
 				return result;
 			}
 
@@ -695,11 +778,12 @@ public class SodaEventDriver implements Runnable {
 			}
 			
 			if (click) {
-				String how = event.get("how").toString();
-				String value = event.get(how).toString();
 				value = this.replaceString(value);
 				this.report.Log(String.format("Clicking Link: '%s' => '%s'", how, value));
 				element.click();
+			} else {
+				String msg = String.format("Found Link: '%s' but not clicking as click => '%s'.", value, click);
+				this.report.Log(msg);
 			}
 			
 			if (event.containsKey("jscriptevent")) {
@@ -708,8 +792,6 @@ public class SodaEventDriver implements Runnable {
 				Thread.sleep(1000);
 				this.report.Log("Javascript event finished.");
 			}
-			
-			this.report.Log("Link Event Finished.");
 		} catch (Exception exp) {
 			this.report.ReportException(exp);
 			result = false;
@@ -717,6 +799,7 @@ public class SodaEventDriver implements Runnable {
 		
 		this.resetThreadTime();
 		
+		this.report.Log("Link Event Finished.");
 		return result;
 	}
 	
@@ -766,18 +849,20 @@ public class SodaEventDriver implements Runnable {
 		
 		this.resetThreadTime();
 		
+		this.report.Log("Starting Wait event.");
+		
 		if (event.containsKey("timeout")) {
 			Integer int_out = new Integer(event.get("timeout").toString());
 			default_timeout = int_out.intValue();
-			this.report.Log(String.format("WAIT: Setting timeout to: %d seconds.", default_timeout));
+			this.report.Log(String.format("Setting timeout to: %d seconds.", default_timeout));
 		} else {
-			this.report.Log(String.format("WAIT: default timeout: %d seconds.", default_timeout));
+			this.report.Log(String.format("default timeout: %d seconds.", default_timeout));
 		}
 		
 		default_timeout = default_timeout * 1000;
 		
 		try {
-			this.report.Log(String.format("WAIT: waiting: '%d' seconds.", (default_timeout / 1000)));
+			this.report.Log(String.format("waiting: '%d' seconds.", (default_timeout / 1000)));
 			int wait_seconds = default_timeout / 1000;
 			
 			for (int i = 0; i <= wait_seconds -1; i++) {
@@ -787,13 +872,14 @@ public class SodaEventDriver implements Runnable {
 				Thread.sleep(1000);
 			}
 			
-			this.report.Log("WAIT: finished.");
 			result = true;
 		} catch (InterruptedException exp) {
 			result = false;
 		}
 		
 		this.resetThreadTime();
+		this.report.Log("Wait event finished.");
+		
 		return result;
 	}
 
@@ -887,9 +973,14 @@ public class SodaEventDriver implements Runnable {
 		this.resetThreadTime();
 		
 		try {
+			String msg = "";
 			how = event.get("how").toString();
 			what = event.get(how).toString(); 
 			what = this.replaceString(what);
+			String dowhat = event.get("do").toString();
+			
+			msg = String.format("Tring to find page element '%s' by: '%s' => '%s'.", dowhat, how, what);
+			this.report.Log(msg);
 			
 			if (how.matches("class") && what.matches(".*\\s+.*")) {
 				String elem_type = event.get("do").toString();
@@ -951,6 +1042,8 @@ public class SodaEventDriver implements Runnable {
 					element = parent.findElement(by);
 				}
 			}
+			
+			this.report.Log("Found element.");
 		} catch (Exception exp) {
 			this.report.ReportException(exp);
 			element = null;
@@ -1044,18 +1137,26 @@ public class SodaEventDriver implements Runnable {
 		boolean required = true;
 		WebElement element = null;
 		
-		
 		this.resetThreadTime();
+		
+		this.report.Log("Starting button event.");
 		
 		if (event.containsKey("required")) {
 			required = this.clickToBool(event.get("required").toString());
 		}
 		
 		try {
-			
 			element = this.findElement(event, parent, required);
 			if (element == null) {
 				result = false;
+				
+				if (required) {
+					this.report.ReportError("Failed to find button!");
+				} else {
+					String msg = String.format("failed to find button, but required => '%s'.", required);
+					this.report.Log(msg);
+				}
+				
 				return result;
 			}
 			
@@ -1070,7 +1171,9 @@ public class SodaEventDriver implements Runnable {
 			}
 			
 			if (click) {
+				this.report.Log("Clicking button.");
 				element.click();
+				this.report.Log("Finished clicking button.");
 			}
 			
 			result = true;
@@ -1080,6 +1183,7 @@ public class SodaEventDriver implements Runnable {
 		}
 		
 		this.resetThreadTime();
+		this.report.Log("Finished button event.");
 		
 		return result;
 	}
@@ -1090,6 +1194,8 @@ public class SodaEventDriver implements Runnable {
 		WebElement element = null;
 		
 		this.resetThreadTime();
+		
+		this.report.Log("Starting textfield event.");
 		
 		if (event.containsKey("required")) {
 			required = this.clickToBool(event.get("required").toString());
@@ -1105,9 +1211,8 @@ public class SodaEventDriver implements Runnable {
 			if (event.containsKey("set")) {
 				String value = event.get("set").toString();
 				value = this.replaceString(value);
-				this.report.Log(String.format("TEXTFIELD: Setting Value to: '%s'.", value));
+				this.report.Log(String.format("Setting Value to: '%s'.", value));
 				element.sendKeys(value);
-				this.report.Log("TEXTFIELD: Finished.");
 			}
 			
 			result = true;
@@ -1117,6 +1222,8 @@ public class SodaEventDriver implements Runnable {
 		}
 		
 		this.resetThreadTime();
+		
+		this.report.Log("Finished textfield event.");
 		
 		return result;
 	}

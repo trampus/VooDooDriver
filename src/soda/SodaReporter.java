@@ -174,6 +174,8 @@ public class SodaReporter {
 	public String strToRegex(String val) {
 		String result = "";
 		val = val.replaceAll("\\\\", "\\\\\\\\");
+		val = val.replaceAll("^/", "");
+		val = val.replaceAll("/$", "");
 		
 		result = val;
 		return result;
@@ -185,7 +187,9 @@ public class SodaReporter {
 		
 		if (isRegex(value)) {
 			value = this.strToRegex(value);
-			if (src.matches(value)) {
+			Pattern p = Pattern.compile(value, Pattern.MULTILINE);
+			Matcher m = p.matcher(src);
+			if (m.find()) {
 				this.PassedAsserts += 1;
 				msg = String.format("Assert Passed, Found: '%s'.", value);
 				this.Log(msg);
