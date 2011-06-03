@@ -49,7 +49,7 @@ public class SodaTest {
 	private static final int ThreadTimeout = 60 * 5; // 5 minute timeout //
 	
 	public SodaTest(String testFile, SodaBrowser browser, SodaHash gvars, SodaHash hijacks, 
-			SodaBlockList blocklist, SodaHash oldvars) {
+			SodaBlockList blocklist, SodaHash oldvars, String suitename, String reportDir) {
 		boolean master_result = false;
 		this.Browser = browser;
 		this.testFile = testFile;
@@ -57,6 +57,7 @@ public class SodaTest {
 		this.GVars = gvars;
 		this.blocked = blocklist;
 		this.OldVars = oldvars;
+		String resultsdir = reportDir;
 		String report_name = "";
 		File tmp_file = new File(testFile);
 		
@@ -64,7 +65,11 @@ public class SodaTest {
 		report_name = report_name.replaceAll(".xml$", "");
 		master_result = loadTestFile();
 		
-		this.reporter = new SodaReporter(report_name, "/Users/trichmond/reports");
+		if (suitename != null) {
+			resultsdir = resultsdir + "/" + suitename;
+		}
+		
+		this.reporter = new SodaReporter(report_name, resultsdir);
 		this.Browser.setReporter(this.reporter);
 	}
 	

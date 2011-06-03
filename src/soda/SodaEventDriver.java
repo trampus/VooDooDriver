@@ -242,12 +242,32 @@ public class SodaEventDriver implements Runnable {
 		case HIDDEN:
 			result = hiddenEvent(event, parent);
 			break;
+		case ROW:
+			result = rowEvent(event, parent);
+			break;
 		default:
 			System.out.printf("(*)Unknown command: '%s'!\n", event.get("type").toString());
 			System.exit(1);
 		}
 		
 		this.resetThreadTime();
+		
+		return result;
+	}
+	
+	private boolean rowEvent(SodaHash event, WebElement parent) {
+		boolean result = false;
+		boolean required = true;
+		WebElement element = null;
+		
+		this.report.Log("Hidden event Started.");
+		
+		if (event.containsKey("required")) {
+			required = this.clickToBool(event.get("required").toString());
+		}
+		
+		System.err.printf("NEED TO ADD ROW SUPPORT!!!\n");
+		System.exit(1);
 		
 		return result;
 	}

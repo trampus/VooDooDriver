@@ -34,6 +34,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import soda.SodaBlockList;
 import soda.SodaBlockListParser;
@@ -255,10 +257,16 @@ public class SodaSuite {
 		browser.newBrowser();
 		
 		for (int i = 0; i <= len; i++) {
+			String suite_base_noext = "";
 			String suite_name = suites.get(i);
 			String suite_base_name = "";
 			File suite_fd = new File(suite_name);
 			suite_base_name = suite_fd.getName();
+			
+			Pattern p = Pattern.compile("\\.xml$", Pattern.CASE_INSENSITIVE);
+			Matcher m = p.matcher(suite_base_name);
+			suite_base_noext = m.replaceAll("");
+
 			suite_fd = null;
 			SodaTest testobj = null;
 			System.out.printf("(*)Executing Suite: %s\n", suite_base_name);
@@ -270,7 +278,8 @@ public class SodaSuite {
 			for (int test_index = 0; test_index <= suite_test_list.size() -1; test_index++) {
 				String current_test = suite_test_list.get(test_index);
 				System.out.printf("(*)Executing Test: '%s'\n", current_test);
-				testobj = new SodaTest(current_test, browser, gvars, hijacks, blockList, vars);
+				testobj = new SodaTest(current_test, browser, gvars, hijacks, blockList, vars, 
+						suite_base_noext, resultdir);
 				testobj.runTest(false);
 				vars = testobj.getSodaEventDriver().getSodaVars();
 			}
