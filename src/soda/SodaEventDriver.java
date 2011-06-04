@@ -1313,6 +1313,7 @@ public class SodaEventDriver implements Runnable {
 					this.report.Log("Clearing textfield.");
 					element.clear();
 				}
+				
 			}
 			
 			if (event.containsKey("set")) {

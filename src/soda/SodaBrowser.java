@@ -251,6 +251,7 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 				this.reporter.ReportException(exp);
 			}
 			
+			
 			if (result != null) {
 				break;
 			}
