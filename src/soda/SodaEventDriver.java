@@ -242,8 +242,11 @@ public class SodaEventDriver implements Runnable {
 		case HIDDEN:
 			result = hiddenEvent(event, parent);
 			break;
-		case ROW:
-			result = rowEvent(event, parent);
+		case TR:
+			result = trEvent(event, parent);
+			break;
+		case FILEFIELD:
+			result = filefieldEvent(event, parent);
 			break;
 		default:
 			System.out.printf("(*)Unknown command: '%s'!\n", event.get("type").toString());
@@ -255,20 +258,71 @@ public class SodaEventDriver implements Runnable {
 		return result;
 	}
 	
-	private boolean rowEvent(SodaHash event, WebElement parent) {
+	private boolean filefieldEvent(SodaHash event, WebElement parent) {
 		boolean result = false;
 		boolean required = true;
 		WebElement element = null;
 		
-		this.report.Log("Hidden event Started.");
+		this.report.Log("FileField event Started.");
+		this.resetThreadTime();
+		
+		if (event.containsKey("required")) {
+			required = this.clickToBool(event.get("required").toString());
+		}
+
+		try {
+			element = this.findElement(event, parent, required);
+			
+			if (event.containsKey("set")) {
+				String setvalue = event.get("set").toString();
+				setvalue = this.replaceString(setvalue);
+				element.sendKeys(setvalue);
+			}
+		} catch (Exception exp) {
+			result = false;
+			this.report.ReportException(exp);
+		}		
+		
+		this.report.Log("FileField event finished..");
+		this.resetThreadTime();
+		
+		return result;
+	}
+	
+	private boolean trEvent(SodaHash event, WebElement parent) {
+		boolean result = false;
+		boolean required = true;
+		WebElement element = null;
+		
+		this.report.Log("TR event Started.");
 		
 		if (event.containsKey("required")) {
 			required = this.clickToBool(event.get("required").toString());
 		}
 		
-		System.err.printf("NEED TO ADD ROW SUPPORT!!!\n");
-		System.exit(1);
+		try {
+			element = this.findElement(event, parent, required);
+		} catch (Exception exp) {
+			result = false;
+			this.report.ReportException(exp);
+		}
 		
+		if (event.containsKey("children")) {
+			List<WebElement> list = null;
+			
+			list = element.findElements(By.tagName("a"));
+			int len = list.size() -1;
+			
+			for (int i = 0; i <= len; i++) {
+				WebElement tmp = list.get(i);
+				String text = tmp.getText();
+				System.out.printf("HREF TEXT: %s\n", text);
+			}
+			
+			this.processEvents((SodaEvents)event.get("children"), element);
+		}
+		
+		this.report.Log("TR event finished.");
 		return result;
 	}
 	
@@ -425,7 +479,7 @@ public class SodaEventDriver implements Runnable {
 		try {
 			element = this.findElement(event, parent, required);
 			
-			if (event.containsKey("children")) {
+			if (event.containsKey("children") && element != null) {
 				this.processEvents((SodaEvents)event.get("children"), element);
 			}
 		} catch (Exception exp) {
@@ -989,6 +1043,11 @@ public class SodaEventDriver implements Runnable {
 		boolean value = false;
 		String how = "";
 		String what = "";
+		int index = 0;
+		
+		if (event.containsKey("index")) {
+			index = Integer.valueOf(event.get("index").toString()).intValue();
+		}
 		
 		this.resetThreadTime();
 		
@@ -999,7 +1058,8 @@ public class SodaEventDriver implements Runnable {
 			what = this.replaceString(what);
 			String dowhat = event.get("do").toString();
 			
-			msg = String.format("Tring to find page element '%s' by: '%s' => '%s'.", dowhat, how, what);
+			msg = String.format("Tring to find page element '%s' by: '%s' => '%s' index => '%s'.", dowhat, how, what,
+					index);
 			this.report.Log(msg);
 			
 			if (how.matches("class") && what.matches(".*\\s+.*")) {
@@ -1057,13 +1117,27 @@ public class SodaEventDriver implements Runnable {
 				element = this.slowFindElement(event.get("do").toString(), what, parent);
 			}else {
 				if (parent == null) {
-					element = this.Browser.findElement(by, 5);
+					if (index > 0) {
+						element = this.Browser.findElements(by, 5, index);
+					} else {
+						element = this.Browser.findElement(by, 5);
+					}
 				} else {
-					element = parent.findElement(by);
+					List<WebElement> elements;
+					if (index > 0) {
+						elements = parent.findElements(by);
+						if (elements.size() -1 < index) {
+							msg = String.format("Failed to find element by index '%d', index is out of bounds!", index);
+							this.report.ReportError(msg);
+							element = null;
+						} else {
+							element = elements.get(index);
+						}
+					} else {
+						element = parent.findElement(by);
+					}
 				}
 			}
-			
-			this.report.Log("Found element.");
 		} catch (Exception exp) {
 			this.report.ReportException(exp);
 			element = null;
@@ -1079,6 +1153,8 @@ public class SodaEventDriver implements Runnable {
 				String msg = String.format("Failed to find element, but required => 'false' : '%s' => '%s'", how, what);
 				this.report.Log(msg);
 			}
+		} else {
+			this.report.Log("Found element.");
 		}
 		
 		return element;
@@ -1091,15 +1167,18 @@ public class SodaEventDriver implements Runnable {
 		
 		msg = String.format("Looking for elements by value is very very slow!  You should never do this!");
 		this.report.Log(msg);
-		msg = String.format("Look for element: '%s' => '%s'.", ele_type, how);
+		msg = String.format("Looking for element: '%s' => '%s'.", ele_type, how);
 		this.report.Log(msg);
 		
+		if (how.contains("Copy...")) {
+			System.out.print("");
+		}
 		
 		if (ele_type.contains("button")) {
-			js = String.format("querySelector('input[type=button][value=%s],button[value=%s],"+
-					"input[type=submit][value=%s], input[type=reset][vaue=%s]', true);", how, how, how, how);
+			js = String.format("querySelector('input[type=\"button\"][value=\"%s\"],button[value=\"%s\"],"+
+					"input[type=\"submit\"][value=\"%s\"], input[type=\"reset\"][vaue=\"%s\"]', true);", how, how, how, how);
 		} else {
-			js = String.format("querySelector('input[type=%s][value=%s],%s[value=%s]', true)", 
+			js = String.format("querySelector('input[type=\"%s\"][value=\"%s\"],%s[value=\"%s\"]', true)", 
 					ele_type, how, ele_type, how);
 		}
 		
@@ -1225,7 +1304,15 @@ public class SodaEventDriver implements Runnable {
 			element = this.findElement(event, parent, required);
 			if (element == null) {
 				result = false;
+				this.report.Log("Finished textfield event.");
 				return result;
+			}
+			
+			if (event.containsKey("clear")) {
+				if (this.clickToBool(event.get("clear").toString())) {
+					this.report.Log("Clearing textfield.");
+					element.clear();
+				}
 			}
 			
 			if (event.containsKey("set")) {

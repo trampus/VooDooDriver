@@ -231,6 +231,40 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 		return result;
 	}
 	
+	public WebElement findElements(By by, int retryTime, int index) {
+		WebElement result = null;
+		List<WebElement> elements = null;
+		int len = 0;
+		String msg = "";
+		
+		long end = System.currentTimeMillis() + retryTime * 1000;
+		
+		while (System.currentTimeMillis() < end) {
+			try {
+				elements = this.Driver.findElements(by);
+				len = elements.size() -1;
+				if (len >= index) {
+					result = elements.get(index);
+				}
+			} catch (Exception exp) {
+				result = null;
+				this.reporter.ReportException(exp);
+			}
+			
+			if (result != null) {
+				break;
+			}
+		}
+
+		if (len < index && result == null) {
+			msg = String.format("Failed to find element by index '%d', index is out of bounds!", index);
+			this.reporter.ReportError(msg);
+			result = null;	
+		}
+		
+		return result;
+	}
+	
 	public void url(String url) {
 		try {
 			this.Driver.navigate().to(url);

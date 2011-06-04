@@ -75,20 +75,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       </accessor_attributes>
    </puts>
 
-   <filefield>
-      <accessor_attributes>
-         <accessor type="string">set</accessor>
-         <accessor type="boolean">assertPage</accessor>
-         <accessor type="string">jscriptevent</accessor>
-         <accessor type="boolean">exists</accessor>
-      </accessor_attributes>
-
-      <soda_attributes>
-         <accessor type="string">cssprop</accessor>
-         <accessor type="string">cssvalue</accessor>
-      </soda_attributes>
-   </filefield>
-
    <browser>
       <accessor_attributes>
       </accessor_attributes>
@@ -316,26 +302,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       </soda_attributes>
    </h5>
 
-   <cell>
-      <accessor_attributes>
-         <accessor type="string">name</accessor>
-         <accessor type="string">class</accessor>
-         <accessor type="string">text</accessor>
-         <accessor type="string">id</accessor>
-         <accessor type="string">index</accessor>
-         <accessor type="string">xpath</accessor>
-      </accessor_attributes>
-
-      <soda_attributes>
-         <accessor type="string">assert</accessor>
-         <accessor type="string">assertnot</accessor>
-         <accessor type="string">jscriptevent</accessor>
-         <accessor type="boolean">exists</accessor>
-         <accessor type="string">cssprop</accessor>
-         <accessor type="string">cssvalue</accessor>
-      </soda_attributes>
-   </cell>
-
    <td>
       <accessor_attributes>
          <accessor type="string">name</accessor>
@@ -436,32 +402,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       </soda_attributes>
    </pre>
 
-   <row>
-      <accessor_attributes>
-         <accessor type="string">name</accessor>
-         <accessor type="string">class</accessor>
-         <accessor type="string">text</accessor>
-         <accessor type="string">id</accessor>
-         <accessor type="string">index</accessor>
-         <accessor type="string">xpath</accessor>
-      </accessor_attributes>
-
-      <soda_attributes>
-         <accessor type="string">jscriptevent</accessor>
-         <accessor type="boolean">click</accessor>
-         <accessor type="boolean">exists</accessor>
-         <accessor type="string">cssprop</accessor>
-         <accessor type="string">cssvalue</accessor>
-      </soda_attributes>
-   </row>
-
    <tr>
       <accessor_attributes>
          <accessor type="string">name</accessor>
          <accessor type="string">class</accessor>
          <accessor type="string">text</accessor>
          <accessor type="string">id</accessor>
-         <accessor type="string">index</accessor>
          <accessor type="string">xpath</accessor>
       </accessor_attributes>
 
@@ -470,6 +416,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="boolean">exists</accessor>
          <accessor type="string">cssprop</accessor>
          <accessor type="string">cssvalue</accessor>
+         <accessor type="string">index</accessor>
       </soda_attributes>
    </tr>
 

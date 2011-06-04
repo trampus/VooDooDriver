@@ -139,7 +139,7 @@ public class SodaXML {
 	 * 
 	 * Intput:
 	 * 	map: This is the soda element's map.
-	 * node: This is the xml node for the given element.
+	 *  node: This is the xml node for the given element.
 	 * 
 	 * Output:
 	 * 	returns a SodaHash object filled with the node's attributes if it has any.  If there are

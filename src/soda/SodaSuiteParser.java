@@ -72,6 +72,10 @@ public class SodaSuiteParser {
 				continue;
 			}
 			
+			if (!name.contains("script")) {
+				continue;
+			}
+			
 			NamedNodeMap attrs = nodes.item(i).getAttributes();
 			int atts_len = attrs.getLength() -1;
 			for (int x = 0; x <= atts_len; x++) {
