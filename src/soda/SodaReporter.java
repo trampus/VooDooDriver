@@ -34,6 +34,7 @@ import java.io.FileOutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -75,6 +76,25 @@ public class SodaReporter {
 		} catch (Exception exp) {
 			exp.printStackTrace();
 		}
+	}
+	
+	public SodaTestResults getResults() {
+		SodaTestResults result = null;
+		Integer res = 0;
+		
+		result = new SodaTestResults();
+		result.put("blocked", this.Blocked);
+		result.put("exceptions", this.Exceptions);
+		result.put("failedasserts", this.FailedAsserts);
+		result.put("passedasserts", this.PassedAsserts);
+		
+		if (this.Blocked > 0 || this.Exceptions > 0 || this.FailedAsserts > 0) {
+			res = -1;
+		}
+		
+		result.put("result", res);
+		
+		return result;
 	}
 	
 	private void _log(String msg) {

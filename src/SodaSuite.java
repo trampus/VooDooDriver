@@ -52,6 +52,7 @@ import soda.SodaSuiteParser;
 import soda.SodaSupportedBrowser;
 import soda.SodaTest;
 import soda.SodaTestList;
+import soda.SodaTestResults;
 
 public class SodaSuite {
 
@@ -193,6 +194,14 @@ public class SodaSuite {
 		System.exit(0);
 	}
 	
+	private static void writeSummary(FileOutputStream in, String msg) {
+		try {
+			in.write(msg.getBytes());
+		} catch (Exception exp) {
+			exp.printStackTrace();
+		}
+	}
+	
 	private static void RunSuites(ArrayList<String> suites, String resultdir, SodaSupportedBrowser browserType,
 			SodaHash gvars, SodaHash hijacks, SodaBlockList blockList) {
 		int len = suites.size() -1;
@@ -201,6 +210,8 @@ public class SodaSuite {
 		String hostname = "";
 		FileOutputStream suiteRptFD = null;
 		SodaBrowser browser = null;
+		DateFormat df = null;
+		Date now = null;
 		
 		System.out.printf("(*)Running Suite files now...\n");
 		
@@ -230,8 +241,8 @@ public class SodaSuite {
 			System.exit(4);
 		}
 		
-		DateFormat fd = new SimpleDateFormat("MM-d-yyyy-hh-m-s.S");
-		String date_str = fd.format(new Date());
+		df = new SimpleDateFormat("MM-d-yyyy-hh-m-s.S");
+		String date_str = df.format(new Date());
 		report_file_name += "/"+ hostname + "-" + date_str + ".xml";
 		
 		try {
@@ -256,12 +267,17 @@ public class SodaSuite {
 		
 		browser.newBrowser();
 		
+		writeSummary(suiteRptFD, "<data>\n");
+		
 		for (int i = 0; i <= len; i++) {
 			String suite_base_noext = "";
 			String suite_name = suites.get(i);
 			String suite_base_name = "";
 			File suite_fd = new File(suite_name);
 			suite_base_name = suite_fd.getName();
+		
+			writeSummary(suiteRptFD, "\t<suite>\n\n");
+			writeSummary(suiteRptFD, String.format("\t\t<suitefile>%s</suitefile>\n", suite_base_name));
 			
 			Pattern p = Pattern.compile("\\.xml$", Pattern.CASE_INSENSITIVE);
 			Matcher m = p.matcher(suite_base_name);
@@ -274,22 +290,51 @@ public class SodaSuite {
 			SodaSuiteParser suiteP = new SodaSuiteParser(suite_name);
 			SodaTestList suite_test_list = suiteP.getTests();
 			SodaHash vars = null;
+			SodaTestResults test_results_hash = null;
+			String test_res_str = "";
 			
 			for (int test_index = 0; test_index <= suite_test_list.size() -1; test_index++) {
+				writeSummary(suiteRptFD, "\t\t<test>\n");
 				boolean test_result = false;
 				String current_test = suite_test_list.get(test_index);
+				writeSummary(suiteRptFD, String.format("\t\t\t<testfile>%s</testfile>\n", current_test));
 				System.out.printf("(*)Executing Test: '%s'\n", current_test);
+				now = new Date();
+				date_str = df.format(now);
+				writeSummary(suiteRptFD, String.format("\t\t\t<starttime>%s</starttime>\n", date_str));
+				
 				testobj = new SodaTest(current_test, browser, gvars, hijacks, blockList, vars, 
 						suite_base_noext, resultdir);
-				test_result = testobj.runTest(false);
+				testobj.runTest(false);
+				
+				now = new Date();
+				date_str = df.format(now);
+				writeSummary(suiteRptFD, String.format("\t\t\t<stoptime>%s</stoptime>\n", date_str));
+				
 				
 				if (testobj.getSodaEventDriver() != null) {
 					vars = testobj.getSodaEventDriver().getSodaVars();
 				}
-
+				
+				test_results_hash = testobj.getReporter().getResults();
+				for (int res_index = 0; res_index <= test_results_hash.keySet().size() -1; res_index++) {
+					String key = test_results_hash.keySet().toArray()[res_index].toString();
+					String value = test_results_hash.get(key).toString();
+					
+					if (key.contains("result")) {
+						if (Integer.valueOf(value) != 0) {
+							value = "Failed";	
+						} else {
+							value = "Passed";	
+						}
+					}
+					writeSummary(suiteRptFD, String.format("\t\t\t<%s>%s</%s>\n", key, value, key));
+				}
+				writeSummary(suiteRptFD, "\t\t</test>\n\n");
 			}
+			writeSummary(suiteRptFD, "\t</suite>\n");
 		}
-		
+		writeSummary(suiteRptFD, "</data>\n\n");
 	}
 	
 }

@@ -110,10 +110,10 @@ public class SodaTest {
 		result = this.loadTestFile();
 		if (!result) {
 			this.reporter.ReportError("Failed to parse test file!");
+			this.logResults();
 			this.reporter.closeLog();
 			return result;
 		}
-		
 		
 		result = CheckTestBlocked();
 		if (!result) {
@@ -160,8 +160,23 @@ public class SodaTest {
 			}
 		}
 		
+		this.logResults();
 		this.reporter.closeLog();
 		return result;
+	}
+	
+	private void logResults() {
+		SodaTestResults tmp = this.reporter.getResults();
+		int len = tmp.keySet().size() -1;
+		String res = "Soda Test Report:";
+		
+		for (int i = 0; i<= len; i++) {
+			String key = tmp.keySet().toArray()[i].toString();
+			String value = tmp.get(key).toString();
+			res = res.concat(String.format("--%s:%s", key, value));
+		}
+		
+		this.reporter.Log(res);
 	}
 	
 	private boolean CheckTestBlocked() {
