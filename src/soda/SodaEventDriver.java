@@ -710,7 +710,7 @@ public class SodaEventDriver implements Runnable {
 			}
 			fd = null;
 			
-			xml = new SodaXML(testfile);
+			xml = new SodaXML(testfile, null);
 			newEvents = xml.getEvents();
 			this.processEvents(newEvents, null);
 			
@@ -793,8 +793,9 @@ public class SodaEventDriver implements Runnable {
 			}
 			
 			if (event.containsKey("set")) {
-				int val = Integer.valueOf(event.get("set").toString());
-				if (val == 0) {
+				boolean check = this.clickToBool(event.get("set").toString());
+				
+				if (!check) {
 					element.clear();
 				} else {
 					element.setSelected();
@@ -1226,8 +1227,20 @@ public class SodaEventDriver implements Runnable {
 	 *  Output:
 	 *   returns a boolean type.
 	 */
-	private boolean clickToBool(String clickstr) {	
-		return Boolean.valueOf(clickstr).booleanValue();
+	private boolean clickToBool(String clickstr) {
+		boolean result = false;
+		
+		if (clickstr.toLowerCase().contains("true") || clickstr.toLowerCase().contains("false")) {
+			result = Boolean.valueOf(clickstr).booleanValue();
+		} else {
+			if (clickstr.contains("0")) {
+				result = false;
+			} else {
+				result = true;
+			}
+		}
+		
+		return result;
 	}
 	
 	private boolean buttonEvent(SodaHash event, WebElement parent) {

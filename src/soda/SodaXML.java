@@ -48,6 +48,7 @@ public class SodaXML {
 	private SodaElementsList types = null;
 	private SodaTypes sodaTypes = null;
 	private SodaEvents events = null;
+	private SodaReporter reporter = null;
 	
 	/*
 	 * SodaXML: Constructor
@@ -58,11 +59,13 @@ public class SodaXML {
 	 * Output:
 	 * 	None.
 	 */
-	public SodaXML(String sodaTest) {
+	public SodaXML(String sodaTest, SodaReporter reporter) {
 		File testFD = null;
 		DocumentBuilderFactory dbf = null;
 		DocumentBuilder db = null;
 
+		this.reporter = reporter;
+		
 		try {
 			testFD = new File(sodaTest);
 			dbf = DocumentBuilderFactory.newInstance();
@@ -72,7 +75,12 @@ public class SodaXML {
 			types = sodaTypes.getTypes();
 			events = this.parse(doc.getDocumentElement().getChildNodes());
 		} catch (Exception exp) {
-			exp.printStackTrace();
+			this.events = null;
+			if (this.reporter == null) {
+				exp.printStackTrace();
+			} else {
+				this.reporter.ReportException(exp);
+			}
 		}
 	}
 	
@@ -177,17 +185,14 @@ public class SodaXML {
 	 * Output:
 	 * 	returns a SodaEvents object.
 	 */
-	private SodaEvents parse(NodeList node) {
+	private SodaEvents parse(NodeList node) throws Exception{
 		SodaHash data = null;
-		SodaEvents dataList = null; 
-		
+		SodaEvents dataList = null;
+		boolean err = false;
 		int len = 0;
-		try {
-			dataList = new SodaEvents();
-		} catch (Exception exp) {
-			exp.printStackTrace();
-		}
 		
+		dataList = new SodaEvents();
+
 		len = node.getLength();
 		for (int i = 0; i <= len -1; i++) {
 			Node child = node.item(i);
@@ -198,7 +203,14 @@ public class SodaXML {
 			}
 			
 			if (!sodaTypes.isValid(name)) {
-				System.err.printf("Error: Invalid Soda Element: '%s'!\n", name);
+				if (this.reporter == null) {
+					System.err.printf("Error: Invalid Soda Element: '%s'!\n", name);
+				} else {
+					this.reporter.ReportError(String.format("Error: Invalid Soda Element: '%s'!", name));
+				}
+				
+				err = true;
+				break;
 			}
 			
 			data = new SodaHash();
@@ -210,7 +222,13 @@ public class SodaXML {
 			}
 			
 			if (child.hasChildNodes()) {
-				data.put("children", parse(child.getChildNodes()));
+				SodaEvents tmp = parse(child.getChildNodes());
+				if (tmp != null) {
+					data.put("children", tmp);
+				} else {
+					err = true;
+					break;
+				}
 			}
 			
 			if (!data.isEmpty()) {
@@ -218,6 +236,10 @@ public class SodaXML {
 			} else {
 				System.out.printf("Note: No data found.\n");
 			}
+		}
+		
+		if (err) {
+			dataList = null;
 		}
 		
 		return dataList;

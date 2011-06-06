@@ -63,7 +63,6 @@ public class SodaTest {
 		
 		report_name = tmp_file.getName();
 		report_name = report_name.replaceAll(".xml$", "");
-		master_result = loadTestFile();
 		
 		if (suitename != null) {
 			resultsdir = resultsdir + "/" + suitename;
@@ -87,12 +86,18 @@ public class SodaTest {
 		
 		try {
 			System.out.printf("Loading Soda Test: '%s'.\n", testFile);
-			xml = new SodaXML(testFile);
+			xml = new SodaXML(testFile, this.reporter);
 			this.events = xml.getEvents();
 			System.out.printf("Finished.\n");
 		} catch (Exception exp) {
-			exp.printStackTrace();
+			this.reporter.ReportException(exp);
 			result = false;
+		}
+		
+		if (this.events == null) {
+			result = false;
+		} else {
+			result = true;
 		}
 		
 		return result;
@@ -101,6 +106,14 @@ public class SodaTest {
 	public boolean runTest(boolean isSuitetest) {
 		boolean result = false;
 		boolean watchdog = false;
+		
+		result = this.loadTestFile();
+		if (!result) {
+			this.reporter.ReportError("Failed to parse test file!");
+			this.reporter.closeLog();
+			return result;
+		}
+		
 		
 		result = CheckTestBlocked();
 		if (!result) {

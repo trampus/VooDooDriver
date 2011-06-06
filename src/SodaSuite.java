@@ -276,12 +276,17 @@ public class SodaSuite {
 			SodaHash vars = null;
 			
 			for (int test_index = 0; test_index <= suite_test_list.size() -1; test_index++) {
+				boolean test_result = false;
 				String current_test = suite_test_list.get(test_index);
 				System.out.printf("(*)Executing Test: '%s'\n", current_test);
 				testobj = new SodaTest(current_test, browser, gvars, hijacks, blockList, vars, 
 						suite_base_noext, resultdir);
-				testobj.runTest(false);
-				vars = testobj.getSodaEventDriver().getSodaVars();
+				test_result = testobj.runTest(false);
+				
+				if (testobj.getSodaEventDriver() != null) {
+					vars = testobj.getSodaEventDriver().getSodaVars();
+				}
+
 			}
 		}
 		
