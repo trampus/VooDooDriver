@@ -49,6 +49,7 @@ public class SodaReporter {
 	private int FailedAsserts = 0;
 	private int PassedAsserts = 0;
 	private int OtherErrors = 0;
+	private int WatchDog = 0;
 	private DateFormat Dateformater = null;
 	
 	public SodaReporter(String reportName, String resultDir) {
@@ -87,6 +88,7 @@ public class SodaReporter {
 		result.put("exceptions", this.Exceptions);
 		result.put("failedasserts", this.FailedAsserts);
 		result.put("passedasserts", this.PassedAsserts);
+		result.put("watchdog", this.WatchDog);
 		
 		if (this.Blocked > 0 || this.Exceptions > 0 || this.FailedAsserts > 0) {
 			res = -1;
@@ -131,6 +133,10 @@ public class SodaReporter {
 	public void ReportError(String msg) {
 		this._log(String.format("(!)%s", msg));
 		this.OtherErrors += 1;
+	}
+	
+	public void ReportWatchDog() {
+		this.WatchDog = 1;
 	}
 	
 	public void ReportBlocked() {

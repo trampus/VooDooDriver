@@ -57,4 +57,7 @@ public class SodaChrome extends SodaBrowser {
 		
 	}
 	
+	public void forceClose() {
+		
+	}
 }

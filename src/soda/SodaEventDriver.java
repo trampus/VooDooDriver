@@ -38,6 +38,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
@@ -115,7 +116,9 @@ public class SodaEventDriver implements Runnable {
 	}
 	
 	public void stop() {
+		
 		synchronized(this.threadStop) {
+			System.out.printf("EVENT DRIVER STOP!!!\n");
 			this.threadStop = true;
 			this.runner.interrupt();
 		}
@@ -137,7 +140,7 @@ public class SodaEventDriver implements Runnable {
 		int i = 0;
 		int event_count = this.testEvents.size() -1;
 		
-		while ( (!this.runner.isInterrupted()) && (i <= event_count)) {
+		while ( (!this.threadStop) && (i <= event_count)) {
 			handleSingleEvent(this.testEvents.get(i), null);
 			i += 1;
 		}
@@ -248,12 +251,48 @@ public class SodaEventDriver implements Runnable {
 		case FILEFIELD:
 			result = filefieldEvent(event, parent);
 			break;
+		case IMAGE:
+			result = imageEvent(event, parent);
+			break;
 		default:
 			System.out.printf("(*)Unknown command: '%s'!\n", event.get("type").toString());
 			System.exit(1);
 		}
 		
 		this.resetThreadTime();
+		
+		return result;
+	}
+	
+	private boolean imageEvent(SodaHash event, WebElement parent) {
+		boolean result = false;
+		boolean required = true;
+		boolean click = false;
+		WebElement element = null;
+		
+		
+		this.report.Log("Image event Started.");
+		this.resetThreadTime();
+		
+		if (event.containsKey("required")) {
+			required = this.clickToBool(event.get("required").toString());
+		}
+		
+		try {
+			element = this.findElement(event, parent, required);	
+			if (event.containsKey("click")) {
+				click = this.clickToBool(event.get("click").toString());
+			}
+			
+			if (click) {
+				element.click();
+			}
+		} catch (Exception exp) {
+			result = false;
+			this.report.ReportException(exp);
+		}
+		
+		this.report.Log("Image event Finished.");
 		
 		return result;
 	}
@@ -434,28 +473,30 @@ public class SodaEventDriver implements Runnable {
 		try {
 			List<WebElement> list = null;
 			element = this.findElement(event, parent, required);
-			list = element.findElements(By.tagName("option"));
-			int len = list.size() -1;
-			
-			if (event.containsKey("set")) {
-				setvalue = event.get("set").toString();
-				setvalue = this.replaceString(setvalue);
-			}
-			
-			if (setvalue != null) {
-				for (int i = 0; i <= len; i++) {
-					String tmp = list.get(i).getText();
-					if (setvalue.equals(tmp)) {
-						msg = String.format("Setting Select value to: '%s'.", setvalue);
-						this.report.Log(msg);
-						list.get(i).setSelected();
-						was_set = true;
-						break;
-					}
+			if (element != null) {
+				list = element.findElements(By.tagName("option"));
+				int len = list.size() -1;
+				
+				if (event.containsKey("set")) {
+					setvalue = event.get("set").toString();
+					setvalue = this.replaceString(setvalue);
 				}
 				
-				if (!was_set) {
-					this.report.ReportError(String.format("Failed to find option in select with text matching: '%s'!", setvalue));
+				if (setvalue != null) {
+					for (int i = 0; i <= len; i++) {
+						String tmp = list.get(i).getText();
+						if (setvalue.equals(tmp)) {
+							msg = String.format("Setting Select value to: '%s'.", setvalue);
+							this.report.Log(msg);
+							list.get(i).setSelected();
+							was_set = true;
+							break;
+						}
+					}
+					
+					if (!was_set) {
+						this.report.ReportError(String.format("Failed to find option in select with text matching: '%s'!", setvalue));
+					}
 				}
 			}
 		} catch (Exception exp) {
@@ -1138,6 +1179,11 @@ public class SodaEventDriver implements Runnable {
 						element = parent.findElement(by);
 					}
 				}
+			}
+		} catch (NoSuchElementException exp) {
+			if (required) {
+				this.report.ReportException(exp);
+				element = null;
 			}
 		} catch (Exception exp) {
 			this.report.ReportException(exp);

@@ -46,7 +46,9 @@ public class SodaTest {
 	private SodaHash OldVars = null;
 	private SodaHash HiJacks = null;
 	private SodaBlockList blocked = null;
-	private static final int ThreadTimeout = 60 * 5; // 5 minute timeout //
+	private boolean WatchDog = false;
+	//private static final int ThreadTimeout = 60 * 5; // 5 minute timeout //
+	private static final int ThreadTimeout = 60;
 	
 	public SodaTest(String testFile, SodaBrowser browser, SodaHash gvars, SodaHash hijacks, 
 			SodaBlockList blocklist, SodaHash oldvars, String suitename, String reportDir) {
@@ -105,7 +107,7 @@ public class SodaTest {
 	
 	public boolean runTest(boolean isSuitetest) {
 		boolean result = false;
-		boolean watchdog = false;
+		this.WatchDog = false;
 		
 		result = this.loadTestFile();
 		if (!result) {
@@ -121,7 +123,7 @@ public class SodaTest {
 			eventDriver = new SodaEventDriver(this.Browser, events, this.reporter, this.GVars, this.HiJacks, 
 					this.OldVars);
 			
-			while(eventDriver.isAlive() && watchdog != true) {
+			while(eventDriver.isAlive() && this.WatchDog != true) {
 				Date current_time = new Date();
 				Date thread_time = eventDriver.getThreadTime();
 				current = current_time.getTime();
@@ -132,16 +134,11 @@ public class SodaTest {
 				long seconds = (current - thread);
 			
 				if (seconds > ThreadTimeout) {
-					watchdog = true;
+					this.WatchDog = true;
 					eventDriver.stop();
 					String msg = String.format("Test watchdogged out after: '%d' seconds!\n", seconds);
 					this.reporter.ReportError(msg);
-					
-					try {
-						eventDriver.getThread().join();				
-					} catch (Exception exp) {
-						this.reporter.ReportException(exp);
-					}
+					this.reporter.ReportWatchDog();
 					break;
 				}
 				
@@ -158,6 +155,12 @@ public class SodaTest {
 			if (!this.Browser.getBrowserCloseState()) {
 				this.Browser.close();
 			}
+		}
+		
+		if (this.WatchDog) {
+			System.out.printf("Trying to close browser after watchdog!\n");
+			this.Browser.close();
+			System.out.printf("Closed???!\n");
 		}
 		
 		this.logResults();

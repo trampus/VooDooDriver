@@ -77,4 +77,7 @@ public class SodaFirefox extends SodaBrowser implements SodaBrowserInterface {
 		this.executeJS(alert_js, null);
 	}
 	
+	public void forceClose() {
+		
+	}
 }

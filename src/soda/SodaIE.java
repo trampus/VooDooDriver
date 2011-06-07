@@ -40,4 +40,8 @@ public class SodaIE extends SodaBrowser implements SodaBrowserInterface {
 	public void newBrowser() {
 		this.setDriver(new InternetExplorerDriver());
 	}
+	
+	public void forceClose() {
+		
+	}
 }

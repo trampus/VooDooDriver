@@ -67,5 +67,7 @@ public interface SodaBrowserInterface {
 	
 	public void setProfile(String profile);
 	
+	public void forceClose();
+	
 	public String getProfile();
 }

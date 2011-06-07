@@ -47,6 +47,7 @@ import soda.SodaCmdLineOpts;
 import soda.SodaFirefox;
 import soda.SodaHash;
 import soda.SodaIE;
+import soda.SodaOSInfo;
 import soda.SodaReporter;
 import soda.SodaSuiteParser;
 import soda.SodaSupportedBrowser;
@@ -103,6 +104,12 @@ public class SodaSuite {
 		SodaHash cmdOpts = null;
 		SodaSupportedBrowser browserType = null;
 		ArrayList<String> SodaSuitesList = null;
+		
+		SodaOSInfo.getOS();
+		SodaOSInfo.getProcessIDs("firefox");
+		SodaOSInfo.killProcesses(SodaOSInfo.getProcessIDs("firefox"));
+		
+		System.exit(0);
 		
 		System.out.printf("Starting SodaSuite...\n");
 		try {
@@ -331,6 +338,12 @@ public class SodaSuite {
 					writeSummary(suiteRptFD, String.format("\t\t\t<%s>%s</%s>\n", key, value, key));
 				}
 				writeSummary(suiteRptFD, "\t\t</test>\n\n");
+				
+				Integer watchdog = Integer.valueOf(test_results_hash.get("watchdog"));
+				if (watchdog > 0) {
+					System.out.printf("Exiting from finishing the other tests due to watch dog!");
+					break;
+				}
 			}
 			writeSummary(suiteRptFD, "\t</suite>\n");
 		}
