@@ -99,10 +99,16 @@ public class SodaReporter {
 		return result;
 	}
 	
+	private String replaceLineFeed(String str) {
+		str = str.replaceAll("\n", "\\\\n");
+		return str;
+	}
+	
 	private void _log(String msg) {
 		Date now = new Date();
 		DateFormat df = new SimpleDateFormat("MM/d/yyyy-hh:m:s.S");
 		String date_str = df.format(now);
+		msg = replaceLineFeed(msg);
 		String logstr = "[" + date_str + "]" + msg + "\n";
 		
 		if (msg.isEmpty()) {
