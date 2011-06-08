@@ -151,15 +151,9 @@ public class SodaTest {
 			}
 		}
 		
-		if (isSuitetest != true) {
-			if (!this.Browser.getBrowserCloseState()) {
-				this.Browser.close();
-			}
-		}
-		
 		if (this.WatchDog) {
 			System.out.printf("Trying to close browser after watchdog!\n");
-			this.Browser.close();
+			this.Browser.forceClose();
 			System.out.printf("Closed???!\n");
 		}
 		

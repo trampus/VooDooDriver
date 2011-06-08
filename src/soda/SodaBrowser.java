@@ -52,6 +52,10 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 		
 	}
 	
+	public boolean isClosed() {
+		return this.closed;
+	}
+	
 	public void setReporter(SodaReporter rep) {
 		this.reporter = rep;
 	}
@@ -81,7 +85,11 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 	}
 	
 	public void newBrowser() {
-		
+		this.closed = false;
+	}
+	
+	public void setBrowserState(boolean state) {
+		this.closed = state;
 	}
 	
     public void alertHack(boolean alert) {
@@ -250,7 +258,6 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 				result = null;
 				this.reporter.ReportException(exp);
 			}
-			
 			
 			if (result != null) {
 				break;

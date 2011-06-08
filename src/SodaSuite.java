@@ -105,12 +105,6 @@ public class SodaSuite {
 		SodaSupportedBrowser browserType = null;
 		ArrayList<String> SodaSuitesList = null;
 		
-		SodaOSInfo.getOS();
-		SodaOSInfo.getProcessIDs("firefox");
-		SodaOSInfo.killProcesses(SodaOSInfo.getProcessIDs("firefox"));
-		
-		System.exit(0);
-		
 		System.out.printf("Starting SodaSuite...\n");
 		try {
 			opts = new SodaCmdLineOpts(args);
@@ -310,6 +304,12 @@ public class SodaSuite {
 				date_str = df.format(now);
 				writeSummary(suiteRptFD, String.format("\t\t\t<starttime>%s</starttime>\n", date_str));
 				
+				if (browser.isClosed()) {
+					System.out.printf("(*)Browser was closed by another suite, creating new browser...\n");
+					browser.newBrowser();
+					System.out.printf("(*)New browser created.\n");
+				}
+				
 				testobj = new SodaTest(current_test, browser, gvars, hijacks, blockList, vars, 
 						suite_base_noext, resultdir);
 				testobj.runTest(false);
@@ -341,7 +341,7 @@ public class SodaSuite {
 				
 				Integer watchdog = Integer.valueOf(test_results_hash.get("watchdog"));
 				if (watchdog > 0) {
-					System.out.printf("Exiting from finishing the other tests due to watch dog!");
+					System.out.printf("Exiting from finishing the other tests due to watch dog!\n");
 					break;
 				}
 			}
@@ -349,5 +349,4 @@ public class SodaSuite {
 		}
 		writeSummary(suiteRptFD, "</data>\n\n");
 	}
-	
 }

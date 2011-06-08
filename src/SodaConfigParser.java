@@ -29,7 +29,6 @@ should not be interpreted as representing official policies, either expressed or
 
 import java.io.File;
 
-
 public class SodaConfigParser {
 
 	public SodaConfigParser(File configfile) {

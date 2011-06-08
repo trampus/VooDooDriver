@@ -50,6 +50,7 @@ public class SodaFirefox extends SodaBrowser implements SodaBrowserInterface {
 		fp.setPreference("browser.link.open_newwindow.restriction", 0);
 		fd = new FirefoxDriver(fp);
 		this.setDriver(fd);
+		this.setBrowserState(false);
 	}
 	
 	/*
@@ -78,6 +79,11 @@ public class SodaFirefox extends SodaBrowser implements SodaBrowserInterface {
 	}
 	
 	public void forceClose() {
-		
+		try {
+			SodaOSInfo.killProcesses(SodaOSInfo.getProcessIDs("firefox"));
+		} catch (Exception exp) {
+			exp.printStackTrace();
+		}
+		this.setBrowserClosed();
 	}
 }

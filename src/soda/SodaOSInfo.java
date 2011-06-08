@@ -154,7 +154,7 @@ public class SodaOSInfo {
 		
 		try {
 			proc = Runtime.getRuntime().exec(cmd);
-			Thread.sleep(3000); // this is to bypass a windows wait issue... //
+			Thread.sleep(5000); // this is to bypass a windows wait issue... //
 			ret = proc.exitValue();
 			if (ret != 0) {
 				System.out.printf("(!)Error: Failed trying to kill process by pid: '%d'\n", pid);
@@ -178,6 +178,7 @@ public class SodaOSInfo {
 		
 		try {
 			proc = Runtime.getRuntime().exec(cmd);
+			Thread.sleep(5000);
 			ret = proc.exitValue();
 			if (ret != 0) {
 				System.out.printf("(!)Error: Failed trying to kill process by pid: '%d'\n", pid);

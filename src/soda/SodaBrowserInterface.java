@@ -70,4 +70,8 @@ public interface SodaBrowserInterface {
 	public void forceClose();
 	
 	public String getProfile();
+	
+	public boolean isClosed();
+	
+	public void setBrowserState(boolean state);
 }

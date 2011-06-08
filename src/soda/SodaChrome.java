@@ -40,6 +40,7 @@ public class SodaChrome extends SodaBrowser {
 	
 	public void newBrowser() {
 		this.setDriver(new ChromeDriver()); 
+		this.setBrowserState(false);
 	}
 	
 	// this is causing chrome to hang forever! //
@@ -58,6 +59,7 @@ public class SodaChrome extends SodaBrowser {
 	}
 	
 	public void forceClose() {
-		
+		SodaOSInfo.killProcesses(SodaOSInfo.getProcessIDs("Google Chrome"));
+		this.setBrowserClosed();
 	}
 }

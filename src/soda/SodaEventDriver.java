@@ -118,7 +118,6 @@ public class SodaEventDriver implements Runnable {
 	public void stop() {
 		
 		synchronized(this.threadStop) {
-			System.out.printf("EVENT DRIVER STOP!!!\n");
 			this.threadStop = true;
 			this.runner.interrupt();
 		}
@@ -270,7 +269,6 @@ public class SodaEventDriver implements Runnable {
 		boolean click = false;
 		WebElement element = null;
 		
-		
 		this.report.Log("Image event Started.");
 		this.resetThreadTime();
 		
@@ -285,7 +283,9 @@ public class SodaEventDriver implements Runnable {
 			}
 			
 			if (click) {
+				this.report.Log("Image click started.");
 				element.click();
+				this.report.Log("Image click finished.");
 			}
 		} catch (Exception exp) {
 			result = false;
@@ -396,7 +396,6 @@ public class SodaEventDriver implements Runnable {
 		this.report.Log("Hidden event finished.");
 		return result;
 	}
-	
 	
 	private boolean stampEvent() {
 		boolean result = false;
@@ -1110,6 +1109,15 @@ public class SodaEventDriver implements Runnable {
 				how = "css";
 				String css_sel = String.format("%s[%s=\"%s\"]",elem_type, old_how, what);
 				what = css_sel;
+			}
+			
+			if (how.contains("index")) {
+				how = "tagname";
+				what = event.get("do").toString();
+				
+				if (what.contains("image")) {
+					what = "img";
+				}
 			}
 			
 			switch (SodaElementsHow.valueOf(how.toUpperCase())) {
