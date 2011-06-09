@@ -106,6 +106,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">value</accessor>
          <accessor type="string">index</accessor>
          <accessor type="string">xpath</accessor>
+         <accessor type="string">css</accessor>
       </accessor_attributes>
 
       <soda_attributes>
@@ -136,6 +137,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">value</accessor>
          <accessor type="string">index</accessor>
          <accessor type="string">xpath</accessor>
+         <accessor type="string">css</accessor>
       </accessor_attributes>
 
       <soda_attributes>
@@ -159,6 +161,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">id</accessor>
          <accessor type="string">index</accessor>
          <accessor type="string">xpath</accessor>
+         <accessor type="string">css</accessor>
       </accessor_attributes>
 
       <soda_attributes>
@@ -176,6 +179,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">index</accessor>
          <accessor type="string">for</accessor>
          <accessor type="string">xpath</accessor>
+         <accessor type="string">css</accessor>
       </accessor_attributes>
 
       <soda_attributes>
@@ -194,6 +198,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">value</accessor>
          <accessor type="string">index</accessor>
          <accessor type="string">xpath</accessor>
+         <accessor type="string">css</accessor>
       </accessor_attributes>
 
       <soda_attributes>
@@ -220,6 +225,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">id</accessor>
          <accessor type="string">index</accessor>
          <accessor type="string">xpath</accessor>
+         <accessor type="string">css</accessor>
       </accessor_attributes>
 
       <soda_attributes>
@@ -236,6 +242,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">id</accessor>
          <accessor type="string">index</accessor>
          <accessor type="string">xpath</accessor>
+         <accessor type="string">css</accessor>
       </accessor_attributes>
 
       <soda_attributes>
@@ -253,6 +260,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">value</accessor>
          <accessor type="string">index</accessor>
          <accessor type="string">xpath</accessor>
+         <accessor type="string">css</accessor>
       </accessor_attributes>
 
       <soda_attributes>
@@ -273,6 +281,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">value</accessor>
          <accessor type="string">index</accessor>
          <accessor type="string">xpath</accessor>
+         <accessor type="string">css</accessor>
       </accessor_attributes>
 
       <soda_attributes>
@@ -291,6 +300,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">id</accessor>
          <accessor type="string">index</accessor>
          <accessor type="string">xpath</accessor>
+         <accessor type="string">css</accessor>
       </accessor_attributes>
 
       <soda_attributes>
@@ -309,6 +319,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">id</accessor>
          <accessor type="string">index</accessor>
          <accessor type="string">xpath</accessor>
+         <accessor type="string">css</accessor>
       </accessor_attributes>
 
       <soda_attributes>
@@ -329,6 +340,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">id</accessor>
          <accessor type="string">index</accessor>
          <accessor type="string">xpath</accessor>
+         <accessor type="string">css</accessor>
       </accessor_attributes>
 
       <soda_attributes>
@@ -346,6 +358,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">value</accessor>
          <accessor type="string">index</accessor>
          <accessor type="string">xpath</accessor>
+         <accessor type="string">css</accessor>
       </accessor_attributes>
 
       <soda_attributes>
@@ -373,6 +386,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">value</accessor>
          <accessor type="string">index</accessor>
          <accessor type="string">xpath</accessor>
+         <accessor type="string">css</accessor>
       </accessor_attributes>
 
       <soda_attributes>
@@ -393,6 +407,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">id</accessor>
          <accessor type="string">index</accessor>
          <accessor type="string">xpath</accessor>
+         <accessor type="string">css</accessor>
       </accessor_attributes>
 
       <soda_attributes>
@@ -408,6 +423,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">text</accessor>
          <accessor type="string">id</accessor>
          <accessor type="string">xpath</accessor>
+         <accessor type="string">css</accessor>
       </accessor_attributes>
 
       <soda_attributes>
@@ -427,6 +443,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">id</accessor>
          <accessor type="string">index</accessor>
          <accessor type="string">xpath</accessor>
+         <accessor type="string">css</accessor>
       </accessor_attributes>
 
       <soda_attributes>
@@ -449,6 +466,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">value</accessor>
          <accessor type="string">index</accessor>
          <accessor type="string">xpath</accessor>
+         <accessor type="string">css</accessor>
       </accessor_attributes>
 
       <soda_attributes>
@@ -470,6 +488,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">id</accessor>
          <accessor type="string">index</accessor>
          <accessor type="string">xpath</accessor>
+         <accessor type="string">css</accessor>
       </accessor_attributes>
 
       <soda_attributes>
@@ -487,6 +506,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">value</accessor>
          <accessor type="string">index</accessor>
          <accessor type="string">xpath</accessor>
+         <accessor type="string">css</accessor>
       </accessor_attributes>
 
       <soda_attributes>
@@ -514,6 +534,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">value</accessor>
          <accessor type="string">index</accessor>
          <accessor type="string">xpath</accessor>
+         <accessor type="string">css</accessor>
       </accessor_attributes>
 
       <soda_attributes>
@@ -532,6 +553,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">id</accessor>
          <accessor type="string">index</accessor>
          <accessor type="string">xpath</accessor>
+         <accessor type="string">css</accessor>
       </accessor_attributes>
 
       <soda_attributes>
@@ -551,6 +573,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">id</accessor>
          <accessor type="string">index</accessor>
          <accessor type="string">xpath</accessor>
+         <accessor type="string">css</accessor>
       </accessor_attributes>
 
       <soda_attributes>
@@ -570,6 +593,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">id</accessor>
          <accessor type="string">index</accessor>
          <accessor type="string">xpath</accessor>
+         <accessor type="string">css</accessor>
       </accessor_attributes>
 
       <soda_attributes>
@@ -592,6 +616,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">id</accessor>
          <accessor type="string">index</accessor>
          <accessor type="string">xpath</accessor>
+         <accessor type="string">css</accessor>
       </accessor_attributes>
 
       <soda_attributes>
@@ -610,6 +635,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">id</accessor>
          <accessor type="string">index</accessor>
          <accessor type="string">xpath</accessor>
+         <accessor type="string">css</accessor>
       </accessor_attributes>
 
       <soda_attributes>
@@ -630,6 +656,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">id</accessor>
          <accessor type="string">index</accessor>
          <accessor type="string">xpath</accessor>
+         <accessor type="string">css</accessor>
       </accessor_attributes>
 
       <soda_attributes>
@@ -656,6 +683,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">id</accessor>
          <accessor type="string">index</accessor>
          <accessor type="string">xpath</accessor>
+         <accessor type="string">css</accessor>
       </accessor_attributes>
 
       <soda_attributes>
@@ -675,6 +703,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">index</accessor>
          <accessor type="string">alt</accessor>
          <accessor type="string">xpath</accessor>
+         <accessor type="string">css</accessor>
       </accessor_attributes>
 
       <soda_attributes>
@@ -695,6 +724,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">id</accessor>
          <accessor type="string">index</accessor>
          <accessor type="string">xpath</accessor>
+         <accessor type="string">css</accessor>
       </accessor_attributes>
 
       <soda_attributes>
@@ -713,6 +743,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">value</accessor>
          <accessor type="string">index</accessor>
          <accessor type="string">xpath</accessor>
+         <accessor type="string">css</accessor>
       </accessor_attributes>
 
       <soda_attributes>
@@ -732,6 +763,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">id</accessor>
          <accessor type="string">index</accessor>
          <accessor type="string">xpath</accessor>
+         <accessor type="string">css</accessor>
       </accessor_attributes>
 
       <soda_attributes>
@@ -757,6 +789,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">value</accessor>
          <accessor type="string">index</accessor>
          <accessor type="string">xpath</accessor>
+         <accessor type="string">css</accessor>
       </accessor_attributes>
 
       <soda_attributes>
@@ -800,12 +833,5 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">content</accessor>
       </soda_attributes>
    </javascript>
-
-   <ruby>
-      <soda_attributes>
-         <accessor type="string">content</accessor>
-      </soda_attributes>
-   </ruby>
-
 </soda>
 

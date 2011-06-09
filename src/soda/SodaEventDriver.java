@@ -1227,7 +1227,7 @@ public class SodaEventDriver implements Runnable {
 		msg = String.format("Looking for element: '%s' => '%s'.", ele_type, how);
 		this.report.Log(msg);
 		
-		if (how.contains("Copy...")) {
+		if (how.contains("OK")) {
 			System.out.print("");
 		}
 		
