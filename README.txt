@@ -12,6 +12,7 @@ This project is currently under dev and isn't ready for use yet.
 5.)Soda java will only allow you to find an element by one selector where Soda ruby would allow you more then one.  
 6.)Soda java now supports accessing elements using css selectors.  Example:
 <button css="input[type=button][value='Search']" />
+7.)Soda java supports plugins.  Please see the Plugin.txt doc.
 
 Notes:
 

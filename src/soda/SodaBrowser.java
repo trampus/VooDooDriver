@@ -107,7 +107,7 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 		}
 		
 		if (result == null) {
-			result = "null";
+			result = null;
 		}
 		
 		return result;

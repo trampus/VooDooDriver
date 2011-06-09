@@ -688,7 +688,6 @@ public class SodaEventDriver implements Runnable {
 		}
 		
 		result = result.replaceAll("\\\\n", "\n");
-		
 		this.resetThreadTime();
 		
 		return result;
