@@ -1308,8 +1308,7 @@ public class SodaEventDriver implements Runnable {
 		
 		for (int i = 0; i <= len; i++) {
 			SodaHash tmp = this.plugIns.get(i);
-			
-			//if (tmp.containsKey(type.toString().toLowerCase())) {
+
 			if (tmp.get("control").toString().contains((type.toString().toLowerCase()))) {
 				if (tmp.get("event").toString().contains(eventType.toString().toLowerCase())) {
 					String user_js = SodaUtils.FileToStr((String)tmp.get("jsfile"));
@@ -1328,12 +1327,15 @@ public class SodaEventDriver implements Runnable {
 		}
 		
 		if (result) {
-			System.out.printf("JS:\n%s\n\n", js);
-			System.exit(1);
-			String res = this.Browser.fire_event(element, js);
-			System.out.printf("Plugin Event Result: %s!\n", res);
+			Object res = this.Browser.executeJS(js, element);
+			int tmp = Integer.valueOf(res.toString());
+			if (tmp != 0) {
+				result = true;
+			} else {
+				result = false;
+			}
 		}
-	
+		
 		return result;
 	}
 	

@@ -6,4 +6,5 @@ function SetColor() {
 	return 0;
 }
 
-SetColor();
+var result = SetColor();
+return result;

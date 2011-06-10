@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data>
+   
+   <plugin>
+      <name>My Plugin</name>
+      <control>button</control>
+      <event>beforeclick</event>
+      <jsfile>/Users/trichmond/Documents/workspace/Soda-Project/plugins/button-highlight.js</jsfile>
+   </plugin>
+
+<!-- 
+
+ -->
+   
+</data>
+
