@@ -44,6 +44,7 @@ import soda.SodaCSV;
 import soda.SodaCSVData;
 import soda.SodaChrome;
 import soda.SodaCmdLineOpts;
+import soda.SodaEvents;
 import soda.SodaFirefox;
 import soda.SodaHash;
 import soda.SodaIE;
@@ -83,6 +84,7 @@ public class SodaSuite {
 		" suite.\n\n"+
 		"   --blocklistfile: This is the XML file containing tests to block from running.\n\n"+
 		"	--profile: This is the browser profile name use start the browser with.\n\n"+
+		"	--plugin: This is a plugin XML file.\n\n"+
 		"   --version: Print the Soda Version string.\n\n";
 		
 		System.out.printf("%s\n", msg);
@@ -104,6 +106,9 @@ public class SodaSuite {
 		SodaHash cmdOpts = null;
 		SodaSupportedBrowser browserType = null;
 		ArrayList<String> SodaSuitesList = null;
+		String pluginFile = null;
+		SodaPluginParser plugParser = null;
+		SodaEvents plugins = null;
 		
 		System.out.printf("Starting SodaSuite...\n");
 		try {
@@ -124,6 +129,13 @@ public class SodaSuite {
 			if ((Boolean)cmdOpts.get("version")) {
 				System.out.printf("(*)SodaSuite Version: %s\n", SodaSuite.VERSION);
 				System.exit(0);
+			}
+			
+			pluginFile = (String)cmdOpts.get("plugin");
+			if (pluginFile != null) {
+				System.out.printf("(*)Loading Plugins from file: '%s'.\n", pluginFile);
+				plugParser = new SodaPluginParser(pluginFile);
+				plugins = plugParser.parse();
 			}
 			
 			try {
@@ -153,7 +165,7 @@ public class SodaSuite {
 				}
 				
 				RunSuites(SodaSuitesList, resultdir, browserType, (SodaHash)cmdOpts.get("gvars"), 
-						(SodaHash)cmdOpts.get("hijacks"), blockList);
+						(SodaHash)cmdOpts.get("hijacks"), blockList, plugins);
 			}
 		} catch (Exception exp) {
 			exp.printStackTrace();
@@ -204,7 +216,7 @@ public class SodaSuite {
 	}
 	
 	private static void RunSuites(ArrayList<String> suites, String resultdir, SodaSupportedBrowser browserType,
-			SodaHash gvars, SodaHash hijacks, SodaBlockList blockList) {
+			SodaHash gvars, SodaHash hijacks, SodaBlockList blockList, SodaEvents plugins) {
 		int len = suites.size() -1;
 		File resultFD = null;
 		String report_file_name = resultdir;
@@ -312,6 +324,11 @@ public class SodaSuite {
 				
 				testobj = new SodaTest(current_test, browser, gvars, hijacks, blockList, vars, 
 						suite_base_noext, resultdir);
+				
+				if (plugins != null) {
+					testobj.setPlugins(plugins);
+				}
+				
 				testobj.runTest(false);
 				
 				now = new Date();

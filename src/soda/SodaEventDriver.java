@@ -54,9 +54,10 @@ public class SodaEventDriver implements Runnable {
 	private SodaHash webDrivers = null;
 	private volatile Thread runner;
 	private volatile Boolean threadStop = false;
+	private SodaEvents plugIns = null;
 	
 	public SodaEventDriver(SodaBrowser browser, SodaEvents events, SodaReporter reporter, SodaHash gvars,
-			SodaHash hijacks, SodaHash oldvars) {
+			SodaHash hijacks, SodaHash oldvars, SodaEvents plugins) {
 		testEvents = events;
 		this.Browser = browser;
 		this.report = reporter;
@@ -69,6 +70,8 @@ public class SodaEventDriver implements Runnable {
 			sodaVars = new SodaHash();
 		}
 		this.webDrivers = new SodaHash();
+		
+		this.plugIns = plugins;
 		
 		if (gvars != null) {
 			int len = gvars.keySet().size();
@@ -1298,6 +1301,42 @@ public class SodaEventDriver implements Runnable {
 		return result;
 	}
 	
+	private boolean firePlugin(WebElement element, SodaElements type, SodaPluginEventType eventType) {
+		boolean result = false;
+		int len = this.plugIns.size() -1;
+		String js = "var CONTROL = arguments[0];\n\n";
+		
+		for (int i = 0; i <= len; i++) {
+			SodaHash tmp = this.plugIns.get(i);
+			
+			//if (tmp.containsKey(type.toString().toLowerCase())) {
+			if (tmp.get("control").toString().contains((type.toString().toLowerCase()))) {
+				if (tmp.get("event").toString().contains(eventType.toString().toLowerCase())) {
+					String user_js = SodaUtils.FileToStr((String)tmp.get("jsfile"));
+					if (user_js != null) {
+						js = js.concat(user_js);
+						result = true;
+					} else {
+						String msg = String.format("Failed trying to read plugin source file: '%s'!", 
+								(String)tmp.get("jsfile"));
+						this.report.ReportError(msg);
+						result = false;
+					}
+				}
+			}
+
+		}
+		
+		if (result) {
+			System.out.printf("JS:\n%s\n\n", js);
+			System.exit(1);
+			String res = this.Browser.fire_event(element, js);
+			System.out.printf("Plugin Event Result: %s!\n", res);
+		}
+	
+		return result;
+	}
+	
 	private boolean buttonEvent(SodaHash event, WebElement parent) {
 		boolean result = false;
 		boolean click = true;
@@ -1327,6 +1366,8 @@ public class SodaEventDriver implements Runnable {
 				return result;
 			}
 			
+			this.firePlugin(element, SodaElements.BUTTON, SodaPluginEventType.AFTERFOUND);
+			
 			if (event.containsKey("click")) {
 				click = this.clickToBool(event.get("click").toString());
 			}
@@ -1338,9 +1379,11 @@ public class SodaEventDriver implements Runnable {
 			}
 			
 			if (click) {
+				this.firePlugin(element, SodaElements.BUTTON, SodaPluginEventType.BEFORECLICK);
 				this.report.Log("Clicking button.");
 				element.click();
 				this.report.Log("Finished clicking button.");
+				this.firePlugin(element, SodaElements.BUTTON, SodaPluginEventType.AFTERCLICK);
 			}
 			
 			result = true;

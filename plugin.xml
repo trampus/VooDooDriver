@@ -1,0 +1,8 @@
+<data>
+   <plugin>
+      <name>My Plugin</name>
+      <control>button</control>
+      <event>beforeclick</event>
+      <jsfile></jsfile>
+   </plugin>
+</data>

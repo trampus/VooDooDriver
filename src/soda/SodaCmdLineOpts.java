@@ -48,6 +48,7 @@ public class SodaCmdLineOpts {
 	private Boolean skipcssErrors = false;
 	private Boolean help = false;
 	private String profile = null;
+	private String plugin = null;
 	
 	public SodaCmdLineOpts(String[] args) {
 		
@@ -103,6 +104,10 @@ public class SodaCmdLineOpts {
 				} else if (args[i].contains("--help")) {
 					this.profile = args[i];
 					System.out.printf("(*)Browser Profile: %s\n", this.profile);
+				} else if (args[i].contains("--plugin")) {
+					this.plugin = args[i];
+					this.plugin = this.plugin.replace("--plugin=", "");
+					System.out.printf("(*)Soda Plugin File: %s\n", this.plugin);
 				}
 			}
 			
@@ -121,7 +126,7 @@ public class SodaCmdLineOpts {
 			this.options.put("hijacks", this.hijacks);
 			this.options.put("help", this.help);
 			this.options.put("profile", this.profile);
-			
+			this.options.put("plugin", this.plugin);
 		} catch (Exception exp) {
 			exp.printStackTrace();
 			this.options = null;

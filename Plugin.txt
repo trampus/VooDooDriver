@@ -32,3 +32,7 @@ All plugin Javascript code must return the value -1 or 0, -1 meaning failure, an
 
 (*)Plugin life span:
 Once a plugin has been loaded it will no be unloaded until after Java-Soda has finished executing and returned control back to the calling process or shell.
+
+(*)Control element access:
+You will be able to access the internal control that was found for your Control, but using the Javascript var called CONTROL.
+

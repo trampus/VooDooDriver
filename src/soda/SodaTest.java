@@ -47,8 +47,9 @@ public class SodaTest {
 	private SodaHash HiJacks = null;
 	private SodaBlockList blocked = null;
 	private boolean WatchDog = false;
-	//private static final int ThreadTimeout = 60 * 5; // 5 minute timeout //
-	private static final int ThreadTimeout = 60;
+	private SodaEvents PlugIns = null;
+	private static final int ThreadTimeout = 60 * 5; // 5 minute timeout //
+	//private static final int ThreadTimeout = 60;
 	
 	public SodaTest(String testFile, SodaBrowser browser, SodaHash gvars, SodaHash hijacks, 
 			SodaBlockList blocklist, SodaHash oldvars, String suitename, String reportDir) {
@@ -72,6 +73,10 @@ public class SodaTest {
 		
 		this.reporter = new SodaReporter(report_name, resultsdir);
 		this.Browser.setReporter(this.reporter);
+	}
+	
+	public void setPlugins(SodaEvents plugins) {
+		this.PlugIns = plugins;
 	}
 	
 	public SodaEventDriver getSodaEventDriver() {
@@ -121,7 +126,7 @@ public class SodaTest {
 		if (!result) {
 			long current = 0;
 			eventDriver = new SodaEventDriver(this.Browser, events, this.reporter, this.GVars, this.HiJacks, 
-					this.OldVars);
+					this.OldVars, this.PlugIns);
 			
 			while(eventDriver.isAlive() && this.WatchDog != true) {
 				Date current_time = new Date();
