@@ -150,7 +150,7 @@ public class SodaCmdLineOpts {
 
 	private void handleTests(String str) {
 		str = str.replace("--test=", "");
-		this.suites.add(str);
+		this.tests.add(str);
 		System.out.printf("(*)Test Added: %s\n", str);
 	}
 	

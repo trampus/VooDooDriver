@@ -1315,6 +1315,7 @@ public class SodaEventDriver implements Runnable {
 					if (user_js != null) {
 						js = js.concat(user_js);
 						result = true;
+						break;
 					} else {
 						String msg = String.format("Failed trying to read plugin source file: '%s'!", 
 								(String)tmp.get("jsfile"));
@@ -1323,17 +1324,21 @@ public class SodaEventDriver implements Runnable {
 					}
 				}
 			}
-
 		}
 		
 		if (result) {
+			this.report.Log("Plugin Event Started.");
 			Object res = this.Browser.executeJS(js, element);
 			int tmp = Integer.valueOf(res.toString());
-			if (tmp != 0) {
+			if (tmp == 0) {
 				result = true;
 			} else {
 				result = false;
+				String msg = String.format("Plugin Event Failed with return value: '%s'!", tmp);
+				this.report.ReportError(msg);
 			}
+			
+			this.report.Log("Plugin Event Finished.");
 		}
 		
 		return result;

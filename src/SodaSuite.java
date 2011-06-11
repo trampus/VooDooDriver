@@ -93,13 +93,6 @@ public class SodaSuite {
 	public static void main(String[] args) {
 		String sodaConfigFile = "soda-config.xml";
 		File sodaConfigFD = null;
-		String sodaTest = "/Users/trichmond/Documents/workspace/Soda-Project/src/test1.xml";
-		String sodaCSV = "/Users/trichmond/Documents/workspace/Soda-Project/data.csv";
-		SodaTest testobj = null;
-		SodaBrowser browser = null;
-		SodaCSV csv = null;
-		SodaCSVData csv_data = null;
-		SodaReporter reporter = null;
 		String blockListFile = null;
 		SodaBlockList blockList = null;
 		SodaCmdLineOpts opts = null;
@@ -205,6 +198,10 @@ public class SodaSuite {
 		
 		System.out.printf("SodaSuite Finished.\n");
 		System.exit(0);
+	}
+	
+	private static void RunTests() {
+		
 	}
 	
 	private static void writeSummary(FileOutputStream in, String msg) {
