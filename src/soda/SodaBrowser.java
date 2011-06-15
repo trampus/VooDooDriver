@@ -267,7 +267,7 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 		if (len < index && result == null) {
 			msg = String.format("Failed to find element by index '%d', index is out of bounds!", index);
 			this.reporter.ReportError(msg);
-			result = null;	
+			result = null;
 		}
 		
 		return result;

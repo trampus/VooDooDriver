@@ -32,5 +32,6 @@ package soda;
 public enum SodaPluginEventType {
 	BEFORECLICK,
 	AFTERCLICK,
+	AFTERSET,
 	AFTERFOUND;
 }

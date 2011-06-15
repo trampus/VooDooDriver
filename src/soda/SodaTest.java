@@ -190,6 +190,10 @@ public class SodaTest {
 		test_file = fd.getName();
 		test_file = test_file.substring(0, test_file.length() -4);
 
+		if (this.blocked == null) {
+			return false;
+		}
+		
 		for (int i = 0; i <= this.blocked.size() -1; i++) {
 			String blocked_file = this.blocked.get(i).get("testfile").toString();
 			if (test_file.equals(blocked_file)) {

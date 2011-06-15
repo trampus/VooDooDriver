@@ -99,6 +99,7 @@ public class SodaSuite {
 		SodaHash cmdOpts = null;
 		SodaSupportedBrowser browserType = null;
 		ArrayList<String> SodaSuitesList = null;
+		ArrayList<String> SodaTestsList = null;
 		String pluginFile = null;
 		SodaPluginParser plugParser = null;
 		SodaEvents plugins = null;
@@ -150,7 +151,7 @@ public class SodaSuite {
 			
 			String resultdir = (String)cmdOpts.get("resultdir");
 			SodaSuitesList = (ArrayList<String>)cmdOpts.get("suites");
-			if (!SodaSuitesList.isEmpty()) {
+			if ((SodaSuitesList != null) && (!SodaSuitesList.isEmpty())) {
 				if (resultdir == null) {
 					System.out.printf("(!)Error: Missing command line flag --resultdir!\n");
 					System.out.printf("--)--resultdir is needed when running SODA suites.\n\n");
@@ -160,47 +161,66 @@ public class SodaSuite {
 				RunSuites(SodaSuitesList, resultdir, browserType, (SodaHash)cmdOpts.get("gvars"), 
 						(SodaHash)cmdOpts.get("hijacks"), blockList, plugins);
 			}
+			
+			SodaTestsList = (ArrayList<String>)cmdOpts.get("tests");
+			if (!SodaTestsList.isEmpty()) {
+				RunTests(SodaTestsList, resultdir, browserType, (SodaHash)cmdOpts.get("gvars"), (SodaHash)cmdOpts.get("hijacks"),
+						plugins);
+			}
 		} catch (Exception exp) {
 			exp.printStackTrace();
 		}
 		
-			/*
-			switch (browserType) {
-			case FIREFOX:
-				browser = new SodaFirefox();
-				break;
-			case CHROME:
-				browser = new SodaChrome();
-				break;
-			case IE:
-				browser = new SodaIE();
-				break;
-			}
-			
-			browser.newBrowser();
-			
-			
-			long start = System.currentTimeMillis();
-			testobj = new SodaTest(sodaTest, browser, (SodaHash)cmdOpts.get("gvars"), 
-					(SodaHash)cmdOpts.get("hijacks"), blockList);
-			testobj.runTest(false);
-			long stop = System.currentTimeMillis();
-			
-			long diff = stop - start;
-			int seconds = (int) ((diff / 1000) % 60);
-			System.out.printf("Total Run Time in Seconds: %d\n", seconds);
-			
-		} catch(Exception exp) {
-			exp.printStackTrace();
-		}
-		
-		*/
-		
-		System.out.printf("SodaSuite Finished.\n");
+		System.out.printf("(*)SodaSuite Finished.\n");
 		System.exit(0);
 	}
 	
-	private static void RunTests() {
+	private static void RunTests(ArrayList<String> tests, String resultdir, SodaSupportedBrowser browserType,
+			SodaHash gvars, SodaHash hijacks, SodaEvents plugins) {
+		File resultFD = null;
+		SodaBrowser browser = null;
+		int len = 0;
+		SodaTest testobj = null;
+		
+		System.out.printf("(*)Running Soda Tests now...\n");
+		
+		resultFD = new File(resultdir);
+		if (!resultFD.exists()) {
+			System.out.printf("(*)Result directory doesn't exists, trying to create dir: '%s'\n", resultdir);
+			
+			try {
+				resultFD.mkdirs();
+			} catch (Exception exp) {
+				System.out.printf("(!)Error: Failed to create reportdir: '%s'!\n", resultdir);
+				System.out.printf("(!)Exception: %s\n", exp.getMessage());
+				System.exit(3);
+			}
+		}
+		
+		switch (browserType) {
+		case FIREFOX:
+			browser = new SodaFirefox();
+			break;
+		case CHROME:
+			browser = new SodaChrome();
+			break;
+		case IE:
+			browser = new SodaIE();
+			break;
+		}
+		
+		browser.newBrowser();
+		
+		len = tests.size() -1;
+		for (int i = 0; i <= len; i++) {
+			System.out.printf("Starting Test: '%s'.\n", tests.get(i));
+			
+			testobj = new SodaTest(tests.get(i), browser, gvars, hijacks, null, null, null, resultdir);
+			testobj.setPlugins(plugins);
+			testobj.runTest(false);
+			
+		}
+		
 		
 	}
 	

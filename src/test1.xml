@@ -1,44 +1,23 @@
 <soda>
-   <var var="notit" set="666" />
-   <puts text="HIJACK: {@notit}" />
-   <puts text="{@global.nothing}" />
-   <browser url="http://www.google.com" />  
-	<browser url="http://192.168.50.142/sugar-1" />
-	
-	<csv file="/Users/trichmond/Documents/workspace/Soda-Project/data2.csv" var="foo">
-	   <puts text="First Name: '{@foo.first}'" />
-	   <puts text="Last Name : '{@foo.last}'" />
-	   <puts text="Email     : '{@foo.email}'" />	
-	</csv>
-	
-	<puts text="Print something cool here..." />
-	<var var="trampus" set="666" />
-	<puts text="This is the beast: {@trampus}" />
-	
-	<wait timeout="10" />
-	
+   <browser url="http://192.168.50.142/sugar" />
    <textfield id="user_name" set="admin" />
    <textfield id="user_password" set="admin" />
    <button id="login_button" />
+   <wait timeout="2" />
+
+   <link text="Admin" />
+   <link text="Studio" />
    
-   <csv file="/Users/trichmond/Documents/workspace/Soda-Project/data.csv" var="foo">
-	   <link id="moduleTab_Accounts" jscriptevent="onmouseover" click="false" />
-	   <link text="Create Account" />
-	   <textfield id="name" set="{@foo.first}" />
-	   <textfield id="website" set="{@foo.www}" />
-	   <textfield id="Accounts0emailAddress0" set="{@foo.email}" />
-	   <textfield id="description" set="{@foo.desc}" />
-	   <button name="button" />
-	   <wait timeout="2" />
-    </csv>
+   <puts text="In Studio..." />
+   <wait timeout="5" />
    
-   <link id="moduleTab_Accounts" jscriptevent="onmouseover" click="false" />
-   <link text="View Accounts" />
-   <checkbox id="massall" click="true" />
-   <link id="actions_link" />
-   <link text="Delete" alert="true" />
+   <table id="ygtvtableel1">
+	   <tr class="ygtvrow">
+	     <td id="ygtvt1" click="true" />
+	   </tr>
+   </table>
    
-   <wait timeout="2" />  
-   <link text="Log Out" />
-   <browser action="close" /> 
+   <wait timeout="10" />
+
+   <browser action="close" />
 </soda>
