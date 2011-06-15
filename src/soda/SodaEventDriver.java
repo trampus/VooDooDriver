@@ -55,6 +55,7 @@ public class SodaEventDriver implements Runnable {
 	private volatile Thread runner;
 	private volatile Boolean threadStop = false;
 	private SodaEvents plugIns = null;
+	private SodaHash ElementStore = null;
 	
 	public SodaEventDriver(SodaBrowser browser, SodaEvents events, SodaReporter reporter, SodaHash gvars,
 			SodaHash hijacks, SodaHash oldvars, SodaEvents plugins) {
@@ -70,6 +71,8 @@ public class SodaEventDriver implements Runnable {
 			sodaVars = new SodaHash();
 		}
 		this.webDrivers = new SodaHash();
+		
+		this.ElementStore = new SodaHash();
 		
 		this.plugIns = plugins;
 		
@@ -88,6 +91,27 @@ public class SodaEventDriver implements Runnable {
 		this.threadTime = new Date();
 		this.runner = new Thread(this, "SodaEventDriver-Thread");
 		runner.start();
+	}
+	
+	private void saveElement(SodaHash event, WebElement element) {
+		if (!event.containsKey("save")) {
+			return;
+		}
+		
+		String name = event.get("save").toString();
+		if (this.ElementStore.containsKey(name)) {
+			String msg = String.format("Found existing saved element var: '%s', Overwriting now.", name);
+			this.report.Warn(msg);
+		}
+		
+		if (element == null) {
+			String msg = String.format("Element trying to be saved: '%s => 'NULL', not storing NULL element!", name);
+			this.report.ReportError(msg);
+		} else {
+			this.ElementStore.put(name, element);
+			String msg = String.format("Stored HTML element to be referenced by: '%s'", name);
+			this.report.Log(msg);
+		}
 	}
 	
 	public SodaHash getSodaVars() {
@@ -182,6 +206,7 @@ public class SodaEventDriver implements Runnable {
 	
 	private boolean handleSingleEvent(SodaHash event, WebElement parent) {
 		boolean result = false;
+		WebElement element = null;
 		
 		if (isStopped()) {
 			return result;
@@ -200,19 +225,19 @@ public class SodaEventDriver implements Runnable {
 			result = waitEvent(event);
 			break;
 		case TEXTFIELD:
-			result = textfieldEvent(event, parent);
+			element = textfieldEvent(event, parent);
 			break;
 		case BUTTON:
-			result = buttonEvent(event, parent);
+			element = buttonEvent(event, parent);
 			break;
 		case CSV:
 			result = csvEvent(event);
 			break;
 		case LINK:
-			result = linkEvent(event, parent);
+			element = linkEvent(event, parent);
 			break;
 		case CHECKBOX:
-			result = checkboxEvent(event, parent);
+			element = checkboxEvent(event, parent);
 			break;
 		case VAR:
 			result = varEvent(event);
@@ -221,19 +246,19 @@ public class SodaEventDriver implements Runnable {
 			result = scriptEvent(event);
 			break;
 		case DIV:
-			result = divEvent(event, parent);
+			element = divEvent(event, parent);
 			break;
 		case ATTACH:
 			result = attachEvent(event);
 			break;
 		case TABLE:
-			result = tableEvent(event, parent);
+			element = tableEvent(event, parent);
 			break;
 		case FORM:
-			result = formEvent(event, parent);
+			element = formEvent(event, parent);
 			break;
 		case SELECT:
-			result = selectEvent(event, parent);
+			element = selectEvent(event, parent);
 			break;
 		case STAMP:
 			result = stampEvent();
@@ -242,35 +267,38 @@ public class SodaEventDriver implements Runnable {
 			result = stampEvent();
 			break;			
 		case SPAN:
-			result = spanEvent(event, parent);
+			element = spanEvent(event, parent);
 			break;
 		case HIDDEN:
 			result = hiddenEvent(event, parent);
 			break;
 		case TR:
-			result = trEvent(event, parent);
+			element = trEvent(event, parent);
 			break;
 		case TD:
-			result = tdEvent(event, parent);
+			element = tdEvent(event, parent);
 			break;
 		case FILEFIELD:
-			result = filefieldEvent(event, parent);
+			element = filefieldEvent(event, parent);
 			break;
 		case IMAGE:
-			result = imageEvent(event, parent);
+			element = imageEvent(event, parent);
 			break;
 		default:
 			System.out.printf("(*)Unknown command: '%s'!\n", event.get("type").toString());
 			System.exit(1);
 		}
-		
+			
 		this.resetThreadTime();
+		
+		if (element != null) {
+			this.saveElement(event, element);
+		}
 		
 		return result;
 	}
 	
-	private boolean imageEvent(SodaHash event, WebElement parent) {
-		boolean result = false;
+	private WebElement imageEvent(SodaHash event, WebElement parent) {
 		boolean required = true;
 		boolean click = false;
 		WebElement element = null;
@@ -285,9 +313,8 @@ public class SodaEventDriver implements Runnable {
 		try {
 			element = this.findElement(event, parent, required);
 			if (element == null) {
-				result = false;
 				this.report.Log("Image event finished.");
-				return result;
+				return element;
 			}
 			
 			if (event.containsKey("click")) {
@@ -302,17 +329,16 @@ public class SodaEventDriver implements Runnable {
 				this.report.Log("Image click finished.");
 			}
 		} catch (Exception exp) {
-			result = false;
+			element = null;
 			this.report.ReportException(exp);
 		}
 		
 		this.report.Log("Image event Finished.");
 		
-		return result;
+		return element;
 	}
 	
-	private boolean filefieldEvent(SodaHash event, WebElement parent) {
-		boolean result = false;
+	private WebElement filefieldEvent(SodaHash event, WebElement parent) {
 		boolean required = true;
 		WebElement element = null;
 		
@@ -327,8 +353,7 @@ public class SodaEventDriver implements Runnable {
 			element = this.findElement(event, parent, required);
 			if (element == null) {
 				this.report.Log("FileField event finished.");
-				result = false;
-				return result;
+				return element;
 			}
 			
 			this.firePlugin(element, SodaElements.FILEFIELD, SodaPluginEventType.AFTERFOUND);
@@ -339,17 +364,17 @@ public class SodaEventDriver implements Runnable {
 				element.sendKeys(setvalue);
 			}
 		} catch (Exception exp) {
-			result = false;
+			element = null;
 			this.report.ReportException(exp);
 		}		
 		
 		this.report.Log("FileField event finished..");
 		this.resetThreadTime();
 		
-		return result;
+		return element;
 	}
 	
-	private boolean trEvent(SodaHash event, WebElement parent) {
+	private WebElement trEvent(SodaHash event, WebElement parent) {
 		boolean result = false;
 		boolean required = true;
 		boolean click = false;
@@ -366,7 +391,7 @@ public class SodaEventDriver implements Runnable {
 			if (element == null) {
 				result = false;
 				this.report.Log("TR event finished.");
-				return result;
+				return element;
 			}
 			
 			if (event.containsKey("click")) {
@@ -402,11 +427,10 @@ public class SodaEventDriver implements Runnable {
 		}
 		
 		this.report.Log("TR event finished.");
-		return result;
+		return element;
 	}
 	
-	private boolean tdEvent(SodaHash event, WebElement parent) {
-		boolean result = false;
+	private WebElement tdEvent(SodaHash event, WebElement parent) {
 		boolean required = true;
 		boolean click = false;
 		WebElement element = null;
@@ -420,9 +444,8 @@ public class SodaEventDriver implements Runnable {
 		try {
 			element = this.findElement(event, parent, required);
 			if (element == null) {
-				result = false;
 				this.report.Log("TD event finished.");
-				return result;
+				return element;
 			}
 			
 			if (event.containsKey("click")) {
@@ -438,7 +461,7 @@ public class SodaEventDriver implements Runnable {
 			}
 			
 		} catch (Exception exp) {
-			result = false;
+			element = null;
 			this.report.ReportException(exp);
 		}
 		
@@ -447,7 +470,7 @@ public class SodaEventDriver implements Runnable {
 		}
 		
 		this.report.Log("TD event finished.");
-		return result;
+		return element;
 	}
 	
 	private boolean hiddenEvent(SodaHash event, WebElement parent) {
@@ -499,8 +522,7 @@ public class SodaEventDriver implements Runnable {
 		return result;
 	}
 	
-	private boolean spanEvent(SodaHash event, WebElement parent) {
-		boolean result = false;
+	private WebElement spanEvent(SodaHash event, WebElement parent) {
 		boolean required = true;
 		boolean click = false;
 		WebElement element = null;
@@ -514,9 +536,8 @@ public class SodaEventDriver implements Runnable {
 		try {
 			element = this.findElement(event, parent, required);
 			if (element == null) {
-				result = false;
 				this.report.Log("Span event finished.");
-				
+				return element;
 			}
 			
 			this.firePlugin(element, SodaElements.SPAN, SodaPluginEventType.AFTERFOUND);
@@ -556,19 +577,17 @@ public class SodaEventDriver implements Runnable {
 				Thread.sleep(1000);
 				this.report.Log("Javascript event finished.");
 			}
-			
-			result = true;
 		} catch (Exception exp) {
 			this.report.ReportException(exp);
-			result = false;
+			element = null;
 		}
 		
 		this.report.Log("Span event finished.");
 		
-		return result;
+		return element;
 	}
 	
-	private boolean selectEvent(SodaHash event, WebElement parent) {
+	private WebElement selectEvent(SodaHash event, WebElement parent) {
 		boolean result = false;
 		boolean required = true;
 		WebElement element = null;
@@ -618,10 +637,10 @@ public class SodaEventDriver implements Runnable {
 		}
 		
 		this.report.Log("Select event finished.");
-		return result;
+		return element;
 	}
 	
-	private boolean formEvent(SodaHash event, WebElement parent) {
+	private WebElement formEvent(SodaHash event, WebElement parent) {
 		boolean result = false;
 		boolean required = true;
 		boolean click = false;
@@ -636,9 +655,8 @@ public class SodaEventDriver implements Runnable {
 		try {
 			element = this.findElement(event, parent, required);
 			if (element == null) {
-				result = false;
 				this.report.Log("Form event finished.");
-				return result;
+				return element;
 			}
 			
 			this.firePlugin(element, SodaElements.FORM, SodaPluginEventType.AFTERFOUND);
@@ -663,11 +681,10 @@ public class SodaEventDriver implements Runnable {
 		
 		this.report.Log("Form event finished.");
 		
-		return result;
+		return element;
 	}
 	
-	private boolean tableEvent(SodaHash event, WebElement parent) {
-		boolean result = false;
+	private WebElement tableEvent(SodaHash event, WebElement parent) {
 		boolean required = true;
 		boolean click = false;
 		WebElement element = null;
@@ -681,9 +698,8 @@ public class SodaEventDriver implements Runnable {
 		try {
 			element = this.findElement(event, parent, required);
 			if (element == null) {
-				result = false;
 				this.report.Log("Table event finished.");
-				return result;
+				return element;
 			}
 			
 			this.firePlugin(element, SodaElements.TABLE, SodaPluginEventType.AFTERFOUND);
@@ -717,12 +733,12 @@ public class SodaEventDriver implements Runnable {
 			}
 		} catch (Exception exp) {
 			this.report.ReportException(exp);
-			result = false;
+			element = null;
 		}
 		
 		this.report.Log("Table event finished.");
 		
-		return result;
+		return element;
 	}
 	
 	private boolean attachEvent(SodaHash event) {
@@ -852,11 +868,13 @@ public class SodaEventDriver implements Runnable {
 		return result;
 	}
 	
-	private boolean divEvent(SodaHash event, WebElement parent) {
+	private WebElement divEvent(SodaHash event, WebElement parent) {
 		boolean result = false;
 		boolean required = true;
 		boolean click = false;
 		WebElement element = null;
+		
+		this.report.Log("Div event starting.");
 		
 		if (event.containsKey("required")) {
 			required = this.clickToBool(event.get("required").toString());
@@ -864,6 +882,10 @@ public class SodaEventDriver implements Runnable {
 		
 		try {
 			element = this.findElement(event, parent, required);
+			if (element == null) {
+				this.report.Log("Div event finished.");
+				return element;
+			}
 			
 			this.firePlugin(element, SodaElements.DIV, SodaPluginEventType.AFTERFOUND);
 			
@@ -898,10 +920,12 @@ public class SodaEventDriver implements Runnable {
 			result = true;
 		} catch (Exception exp) {
 			this.report.ReportException(exp);
-			result = false;
+			element = null;
 		}
 		
-		return result;
+		this.report.Log("Div event finished.");
+		
+		return element;
 	}
 	
 	private boolean scriptEvent(SodaHash event) {
@@ -979,8 +1003,7 @@ public class SodaEventDriver implements Runnable {
 		return result;
 	}
 	
-	private boolean checkboxEvent(SodaHash event, WebElement parent) {
-		boolean result = false;
+	private WebElement checkboxEvent(SodaHash event, WebElement parent) {
 		boolean click = false;
 		boolean required = true;
 		WebElement element = null;
@@ -994,8 +1017,7 @@ public class SodaEventDriver implements Runnable {
 		try {
 			element = this.findElement(event, parent, required);
 			if (element == null) {
-				result = false;
-				return result;
+				return element;
 			}
 			
 			this.firePlugin(element, SodaElements.CHECKBOX, SodaPluginEventType.AFTERFOUND);
@@ -1025,11 +1047,10 @@ public class SodaEventDriver implements Runnable {
 		
 		this.resetThreadTime();
 		
-		return result;
+		return element;
 	}
 	
-	private boolean linkEvent(SodaHash event, WebElement parent) {
-		boolean result = false;
+	private WebElement linkEvent(SodaHash event, WebElement parent) {
 		boolean click = true;
 		boolean required = true;
 		WebElement element = null;
@@ -1054,9 +1075,9 @@ public class SodaEventDriver implements Runnable {
 					this.report.ReportError(msg);
 				}
 				
-				result = false;
+				element = null;
 				this.report.Log("Link Event Finished.");
-				return result;
+				return element;
 			}
 
 			this.firePlugin(element, SodaElements.LINK, SodaPluginEventType.AFTERFOUND);
@@ -1090,13 +1111,13 @@ public class SodaEventDriver implements Runnable {
 			}
 		} catch (Exception exp) {
 			this.report.ReportException(exp);
-			result = false;
+			element = null;
 		}
 		
 		this.resetThreadTime();
 		
 		this.report.Log("Link Event Finished.");
-		return result;
+		return element;
 	}
 	
 	private boolean csvEvent(SodaHash event) {
@@ -1535,8 +1556,7 @@ public class SodaEventDriver implements Runnable {
 		return result;
 	}
 	
-	private boolean buttonEvent(SodaHash event, WebElement parent) {
-		boolean result = false;
+	private WebElement buttonEvent(SodaHash event, WebElement parent) {
 		boolean click = true;
 		boolean required = true;
 		WebElement element = null;
@@ -1552,8 +1572,6 @@ public class SodaEventDriver implements Runnable {
 		try {
 			element = this.findElement(event, parent, required);
 			if (element == null) {
-				result = false;
-				
 				if (required) {
 					this.report.ReportError("Failed to find button!");
 				} else {
@@ -1561,7 +1579,7 @@ public class SodaEventDriver implements Runnable {
 					this.report.Log(msg);
 				}
 				
-				return result;
+				return null;
 			}
 			
 			this.firePlugin(element, SodaElements.BUTTON, SodaPluginEventType.AFTERFOUND);
@@ -1583,21 +1601,18 @@ public class SodaEventDriver implements Runnable {
 				this.report.Log("Finished clicking button.");
 				this.firePlugin(element, SodaElements.BUTTON, SodaPluginEventType.AFTERCLICK);
 			}
-			
-			result = true;
 		} catch (Exception exp) {
 			this.report.ReportException(exp);
-			result = false;
+			element = null;
 		}
 		
 		this.resetThreadTime();
 		this.report.Log("Finished button event.");
 		
-		return result;
+		return element;
 	}
 	
-	private boolean textfieldEvent(SodaHash event, WebElement parent) {
-		boolean result = false;
+	private WebElement textfieldEvent(SodaHash event, WebElement parent) {
 		boolean required = true;
 		WebElement element = null;
 		
@@ -1612,9 +1627,8 @@ public class SodaEventDriver implements Runnable {
 		try {
 			element = this.findElement(event, parent, required);
 			if (element == null) {
-				result = false;
 				this.report.Log("Finished textfield event.");
-				return result;
+				return null;
 			}
 			
 			this.firePlugin(element, SodaElements.TEXTFIELD, SodaPluginEventType.AFTERFOUND);
@@ -1633,18 +1647,16 @@ public class SodaEventDriver implements Runnable {
 				this.report.Log(String.format("Setting Value to: '%s'.", value));
 				element.sendKeys(value);
 			}
-			
-			result = true;
 		} catch (Exception exp) {
 			this.report.ReportException(exp);
-			result = false;
+			element = null;
 		}
 		
 		this.resetThreadTime();
 		
 		this.report.Log("Finished textfield event.");
 		
-		return result;
+		return element;
 	}
 	
 	private boolean putsEvent(SodaHash event) {

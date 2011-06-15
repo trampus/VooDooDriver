@@ -125,6 +125,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="boolean">exists</accessor>
          <accessor type="string">cssprop</accessor>
          <accessor type="string">cssvalue</accessor>
+         <accessor type="string">save</accessor>
       </soda_attributes>
    </textfield>
 
@@ -150,6 +151,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="boolean">exists</accessor>
          <accessor type="string">cssprop</accessor>
          <accessor type="string">cssvalue</accessor>
+         <accessor type="string">save</accessor>
       </soda_attributes>
    </textarea>
 
@@ -167,6 +169,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <soda_attributes>
          <accessor type="string">cssprop</accessor>
          <accessor type="string">cssvalue</accessor>
+         <accessor type="string">save</accessor>
       </soda_attributes>
    </h3>
 
@@ -185,6 +188,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <soda_attributes>
          <accessor type="string">cssprop</accessor>
          <accessor type="string">cssvalue</accessor>
+         <accessor type="string">save</accessor>
       </soda_attributes>
    </label>
 
@@ -214,6 +218,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="boolean">disabled</accessor>
          <accessor type="string">cssprop</accessor>
          <accessor type="string">cssvalue</accessor>
+         <accessor type="string">save</accessor>
       </soda_attributes>
    </button>
 
@@ -231,6 +236,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <soda_attributes>
          <accessor type="string">cssprop</accessor>
          <accessor type="string">cssvalue</accessor>
+         <accessor type="string">save</accessor>
       </soda_attributes>
    </h4>
 
@@ -248,6 +254,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <soda_attributes>
          <accessor type="string">cssprop</accessor>
          <accessor type="string">cssvalue</accessor>
+         <accessor type="string">save</accessor>
       </soda_attributes>
    </ul>
 
@@ -269,28 +276,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="boolean">exists</accessor>
          <accessor type="string">cssprop</accessor>
          <accessor type="string">cssvalue</accessor>
+         <accessor type="string">save</accessor>
       </soda_attributes>
    </filefield>
-
-   <file_field>
-      <accessor_attributes>
-         <accessor type="string">name</accessor>
-         <accessor type="string">title</accessor>
-         <accessor type="string">class</accessor>
-         <accessor type="string">id</accessor>
-         <accessor type="string">value</accessor>
-         <accessor type="string">index</accessor>
-         <accessor type="string">xpath</accessor>
-         <accessor type="string">css</accessor>
-      </accessor_attributes>
-
-      <soda_attributes>
-         <accessor type="string">jscriptevent</accessor>
-         <accessor type="boolean">exists</accessor>
-         <accessor type="string">cssprop</accessor>
-         <accessor type="string">cssvalue</accessor>
-      </soda_attributes>
-   </file_field>
 
    <h5>
       <accessor_attributes>
@@ -308,6 +296,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">assertnot</accessor>
          <accessor type="string">cssprop</accessor>
          <accessor type="string">cssvalue</accessor>
+         <accessor type="string">save</accessor>
       </soda_attributes>
    </h5>
 
@@ -329,6 +318,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="boolean">exists</accessor>
          <accessor type="string">cssprop</accessor>
          <accessor type="string">cssvalue</accessor>
+         <accessor type="string">save</accessor>
       </soda_attributes>
    </td>
 
@@ -346,6 +336,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <soda_attributes>
          <accessor type="string">cssprop</accessor>
          <accessor type="string">cssvalue</accessor>
+         <accessor type="string">save</accessor>
       </soda_attributes>
    </h6>
 
@@ -373,6 +364,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">jscriptevent</accessor>
          <accessor type="string">cssprop</accessor>
          <accessor type="string">cssvalue</accessor>
+         <accessor type="string">save</accessor>
       </soda_attributes>
    </select>
 
@@ -396,6 +388,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="boolean">exists</accessor>
          <accessor type="string">cssprop</accessor>
          <accessor type="string">cssvalue</accessor>
+         <accessor type="string">save</accessor>
       </soda_attributes>
    </select_list>
 
@@ -432,6 +425,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">cssprop</accessor>
          <accessor type="string">cssvalue</accessor>
          <accessor type="string">index</accessor>
+         <accessor type="string">save</accessor>
       </soda_attributes>
    </tr>
 
@@ -454,6 +448,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="boolean">exists</accessor>
          <accessor type="string">cssprop</accessor>
          <accessor type="string">cssvalue</accessor>
+         <accessor type="string">save</accessor>
       </soda_attributes>
    </table>
 
@@ -477,6 +472,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="boolean">exists</accessor>
          <accessor type="string">cssprop</accessor>
          <accessor type="string">cssvalue</accessor>
+         <accessor type="string">save</accessor>
       </soda_attributes>
    </radio>
 
@@ -522,6 +518,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="boolean">exists</accessor>
          <accessor type="string">cssprop</accessor>
          <accessor type="string">cssvalue</accessor>
+         <accessor type="string">save</accessor>
       </soda_attributes>
    </checkbox>
 
@@ -542,6 +539,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="boolean">exists</accessor>
          <accessor type="string">cssprop</accessor>
          <accessor type="string">cssvalue</accessor>
+         <accessor type="string">save</accessor>
       </soda_attributes>
    </map>
 
@@ -561,6 +559,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="boolean">exists</accessor>
          <accessor type="string">cssprop</accessor>
          <accessor type="string">cssvalue</accessor>
+         <accessor type="string">save</accessor>
       </soda_attributes>
    </frame>
 
@@ -605,6 +604,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="boolean">exists</accessor>
          <accessor type="string">cssprop</accessor>
          <accessor type="string">cssvalue</accessor>
+         <accessor type="string">save</accessor>
       </soda_attributes>
    </div>
 
@@ -624,6 +624,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="boolean">exists</accessor>
          <accessor type="string">cssprop</accessor>
          <accessor type="string">cssvalue</accessor>
+         <accessor type="string">save</accessor>
       </soda_attributes>
    </area>
 
@@ -644,6 +645,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="boolean">exists</accessor>
          <accessor type="string">cssprop</accessor>
          <accessor type="string">cssvalue</accessor>
+         <accessor type="string">save</accessor>
       </soda_attributes>
    </li>
 
@@ -672,6 +674,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="boolean">disabled</accessor>
          <accessor type="string">cssprop</accessor>
          <accessor type="string">cssvalue</accessor>
+         <accessor type="string">save</accessor>
       </soda_attributes>
    </link>
 
@@ -689,6 +692,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <soda_attributes>
          <accessor type="string">cssprop</accessor>
          <accessor type="string">cssvalue</accessor>
+         <accessor type="string">save</accessor>
       </soda_attributes>
    </h1>
 
@@ -713,6 +717,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="boolean">alert</accessor>
          <accessor type="string">cssprop</accessor>
          <accessor type="string">cssvalue</accessor>
+         <accessor type="string">save</accessor>
       </soda_attributes>
    </image>
 
@@ -731,6 +736,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="boolean">click</accessor>
          <accessor type="string">cssprop</accessor>
          <accessor type="string">cssvalue</accessor>
+         <accessor type="string">save</accessor>
       </soda_attributes>
    </h2>
 
@@ -752,6 +758,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="boolean">exists</accessor>
          <accessor type="string">cssprop</accessor>
          <accessor type="string">cssvalue</accessor>
+         <accessor type="string">save</accessor>
       </soda_attributes>
    </text_field>
 
@@ -776,6 +783,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="boolean">exists</accessor>
          <accessor type="string">cssprop</accessor>
          <accessor type="string">cssvalue</accessor>
+         <accessor type="string">save</accessor>
       </soda_attributes>
    </span>
 
@@ -809,18 +817,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">action</accessor>
       </soda_attributes>
    </whitelist>
-
-   <exception>
-      <soda_attributes>
-         <accessor type="boolen">alwaysrun</accessor>
-      </soda_attributes>
-   </exception>
-
-   <dialog>
-      <soda_attributes>
-         <accessor type="string">title</accessor>
-      </soda_attributes>
-   </dialog>
 
    <assert>
       <soda_attributes>

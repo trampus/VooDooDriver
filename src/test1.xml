@@ -17,6 +17,21 @@
 	   </tr>
    </table>
    
+   <table id="ygtvtableel5">
+      <tr class="ygtvrow">
+         <td id="ygtvt5" click="true" />
+         <wait timeout="2" />
+      </tr>
+   </table>
+   
+	<table id="ygtvtableel6">
+	  <tr class="ygtvrow">
+	     <td id="ygtvcontentel6">
+	        <link text="EditView" />
+	     </td>
+	  </tr>
+	</table>
+   
    <wait timeout="10" />
 
    <browser action="close" />

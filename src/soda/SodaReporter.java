@@ -136,6 +136,10 @@ public class SodaReporter {
 		this._log("(*)" + msg);
 	}
 	
+	public void Warn(String msg) {
+		this._log("(W)" + msg);
+	}
+	
 	public void ReportError(String msg) {
 		this._log(String.format("(!)%s", msg));
 		this.OtherErrors += 1;
