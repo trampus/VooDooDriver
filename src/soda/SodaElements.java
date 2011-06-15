@@ -79,6 +79,7 @@ public enum SodaElements {
 	H2,
 	FILEFIELD,
 	ATTACH,
-	STAMP;
+	STAMP,
+	DND;
 }
 

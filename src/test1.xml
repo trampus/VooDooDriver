@@ -32,6 +32,12 @@
 	  </tr>
 	</table>
    
+   <div id="1005" save="d1" />
+   
+   <div id="panels">
+      <div id="15" save="d2" />
+   </div>
+   
    <wait timeout="10" />
 
    <browser action="close" />

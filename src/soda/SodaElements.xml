@@ -829,5 +829,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">content</accessor>
       </soda_attributes>
    </javascript>
+   
+   <dnd>
+      <soda_attributes type="string">src</soda_attributes>
+      <soda_attributes type="string">dst</soda_attributes>
+   </dnd>
 </soda>
 

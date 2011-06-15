@@ -39,6 +39,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.RenderedWebElement;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
@@ -109,7 +110,7 @@ public class SodaEventDriver implements Runnable {
 			this.report.ReportError(msg);
 		} else {
 			this.ElementStore.put(name, element);
-			String msg = String.format("Stored HTML element to be referenced by: '%s'", name);
+			String msg = String.format("Stored HTML element to be referenced by: '%s'.", name);
 			this.report.Log(msg);
 		}
 	}
@@ -284,6 +285,9 @@ public class SodaEventDriver implements Runnable {
 		case IMAGE:
 			element = imageEvent(event, parent);
 			break;
+		case DND:
+			result = dndEvent(event);
+			break;
 		default:
 			System.out.printf("(*)Unknown command: '%s'!\n", event.get("type").toString());
 			System.exit(1);
@@ -293,6 +297,42 @@ public class SodaEventDriver implements Runnable {
 		
 		if (element != null) {
 			this.saveElement(event, element);
+		}
+		
+		return result;
+	}
+	
+	private boolean dndEvent(SodaHash event) {
+		boolean result = true;
+		String src = null;
+		String dst = null;
+		
+		if (event.containsKey("src")) {
+			src = event.get("src").toString();
+		}
+		
+		if (event.containsKey("dst")) {
+			dst = event.get("dst").toString();
+		}
+		
+		if (src == null) {
+			this.report.ReportError("DVD command is missing 'src' attribute!");
+			result = false;
+		}
+		
+		if (dst == null) {
+			this.report.ReportError("DVD command is missing 'dst' attribute!");
+			result = false;
+		}
+		
+		if (result) {
+			WebElement tmp;
+			
+			
+			RenderedWebElement Esrc = (RenderedWebElement)this.ElementStore.get(src);
+			RenderedWebElement Edst = (RenderedWebElement)this.ElementStore.get(dst);
+			Esrc.
+			Esrc.dragAndDropOn(Edst);
 		}
 		
 		return result;
