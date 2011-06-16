@@ -39,8 +39,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.RenderedWebElement;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Action;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.Select;
 
 public class SodaEventDriver implements Runnable {
@@ -326,13 +327,23 @@ public class SodaEventDriver implements Runnable {
 		}
 		
 		if (result) {
-			WebElement tmp;
+			Actions builder = null;
+			Action dnd = null;
+			WebElement Esrc = (WebElement)this.ElementStore.get(src);
+			WebElement Edst = (WebElement)this.ElementStore.get(dst);
 			
+			builder = new Actions(this.Browser.getDriver());
+			dnd = builder.clickAndHold(Esrc).moveToElement(Edst).release(Edst).build();
+			dnd.perform();
 			
-			RenderedWebElement Esrc = (RenderedWebElement)this.ElementStore.get(src);
-			RenderedWebElement Edst = (RenderedWebElement)this.ElementStore.get(dst);
-			Esrc.
-			Esrc.dragAndDropOn(Edst);
+			//action = new Actions(this.Browser.getDriver());
+			//System.out.printf("Starting DND!\n");
+			//action.dragAndDrop(Esrc, Edst);
+			//action.clickAndHold(Esrc);
+			//action.moveToElement(Edst);
+			//action.release(Edst);
+			System.out.printf("Finished DND!\n");
+		
 		}
 		
 		return result;

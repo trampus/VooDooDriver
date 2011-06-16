@@ -37,6 +37,8 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.openqa.selenium.firefox.FirefoxDriver;
+
 import soda.SodaBlockList;
 import soda.SodaBlockListParser;
 import soda.SodaBrowser;

@@ -32,13 +32,19 @@
 	  </tr>
 	</table>
    
-   <div id="1005" save="d1" />
+   <div id="toolbox">
+      <wait timeout="2" />
+      <div class="le_panel special" save="d1" />
+   </div>   
+   <wait timeout="2" />
    
-   <div id="panels">
-      <div id="15" save="d2" />
-   </div>
+   <div id="panels" save="d2" />
+   
+   <wait timeout="3" />
+   
+   <dnd src="d1" dst="d2" />
    
    <wait timeout="10" />
 
-   <browser action="close" />
+   <!--  <browser action="close" /> -->
 </soda>

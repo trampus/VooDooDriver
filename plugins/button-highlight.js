@@ -1,7 +1,6 @@
 
 function SetColor() {
-	CONTROL.style.borderColor = "#FF0000";
-	CONTROL.style.color = "#FF0000";
+	CONTROL.style.border = "5px solid red";
 
 	return 0;
 }
