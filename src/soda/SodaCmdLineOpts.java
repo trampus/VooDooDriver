@@ -55,6 +55,8 @@ public class SodaCmdLineOpts {
 		try {
 			this.gvars = new SodaHash();
 			this.hijacks = new SodaHash();
+			this.tests = new ArrayList<String>();
+			this.suites = new ArrayList<String>();
 			
 			for (int i = 0; i <= args.length -1; i++) {
 				if (args[i].contains("--hijack")) {
@@ -62,14 +64,8 @@ public class SodaCmdLineOpts {
 				} else if(args[i].contains("--gvar")) {
 					this.handleGvarsValue(args[i]);
 				} else if (args[i].contains("--suite")) {
-					if (this.suites == null)  {
-						this.suites = new ArrayList<String>();
-					}
 					handleSuites(args[i]);
 				} else if (args[i].contains("--test")) {
-					if (this.tests == null) {
-						this.tests = new ArrayList<String>();
-					}
 					handleTests(args[i]);
 				} else if (args[i].contains("--browser")) {
 					args[i] = args[i].replaceAll("--browser=", "");
