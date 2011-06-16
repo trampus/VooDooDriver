@@ -29,6 +29,10 @@
 	     <td id="ygtvcontentel6">
 	        <link text="EditView" />
 	     </td>
+	     
+	     <puts text="before no action" />
+	     <td id="ygtvcontentel6" />
+	     <puts text="after no action" />
 	  </tr>
 	</table>
    

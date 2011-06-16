@@ -157,6 +157,16 @@ public class SodaSuite {
 			}
 			
 			String resultdir = (String)cmdOpts.get("resultdir");
+			if (resultdir == null) {
+				DateFormat df = null;
+				String cwd = System.getProperty("user.dir");
+				df = new SimpleDateFormat("MM-d-yyyy-hh-m-s.S");
+				String date_str = df.format(new Date());
+				cwd = cwd.concat("/");
+				cwd = cwd.concat(date_str);
+				resultdir = cwd;
+			}
+			
 			SodaSuitesList = (ArrayList<String>)cmdOpts.get("suites");
 			if ((SodaSuitesList != null) && (!SodaSuitesList.isEmpty())) {
 				if (resultdir == null) {
