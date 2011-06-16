@@ -127,6 +127,11 @@ public class SodaSuite {
 				System.exit(0);
 			}
 			
+			if (cmdOpts.get("browser") == null) {
+				System.out.printf("(!)Error: Missing --browser commandline option!\n\n");
+				System.exit(-1);
+			}
+			
 			pluginFile = (String)cmdOpts.get("plugin");
 			if (pluginFile != null) {
 				System.out.printf("(*)Loading Plugins from file: '%s'.\n", pluginFile);
