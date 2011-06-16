@@ -333,8 +333,11 @@ public class SodaEventDriver implements Runnable {
 			WebElement Edst = (WebElement)this.ElementStore.get(dst);
 			
 			builder = new Actions(this.Browser.getDriver());
-			dnd = builder.clickAndHold(Esrc).moveToElement(Edst).release(Edst).build();
+			builder.dragAndDrop(Esrc, Edst);
+			dnd = builder.build();
 			dnd.perform();
+			//dnd = builder.clickAndHold(Esrc).moveToElement(Edst).release(Edst).build();
+			//dnd.perform();
 			
 			//action = new Actions(this.Browser.getDriver());
 			//System.out.printf("Starting DND!\n");
