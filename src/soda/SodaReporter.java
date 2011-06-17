@@ -50,6 +50,7 @@ public class SodaReporter {
 	private int PassedAsserts = 0;
 	private int OtherErrors = 0;
 	private int WatchDog = 0;
+	private String LineSeparator = null;
 	private DateFormat Dateformater = null;
 	
 	public SodaReporter(String reportName, String resultDir) {
@@ -57,6 +58,8 @@ public class SodaReporter {
 		this.Dateformater = new SimpleDateFormat("MM-d-yyyy-hh-m-s.S");
 		Date now = new Date();
 		String date_str = fd.format(now);
+		
+		this.LineSeparator = System.getProperty("line.separator");
 		
 		if (resultDir != null) {
 			File dir = new File(resultDir);
@@ -109,7 +112,7 @@ public class SodaReporter {
 		DateFormat df = new SimpleDateFormat("MM/d/yyyy-hh:m:s.S");
 		String date_str = df.format(now);
 		msg = replaceLineFeed(msg);
-		String logstr = "[" + date_str + "]" + msg + "\n";
+		String logstr = "[" + date_str + "]" + msg + this.LineSeparator;
 		
 		if (msg.isEmpty()) {
 			msg = "Found empty message!";
