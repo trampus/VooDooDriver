@@ -27,7 +27,10 @@ should not be interpreted as representing official policies, either expressed or
  
  */
 
+package voodoodriver;
+
 import java.io.File;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -35,68 +38,60 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import voodoodriver.SodaEvents;
-import voodoodriver.SodaHash;
-
-public class SodaPluginParser {
-
-	private SodaEvents plugins = null;
-	private NodeList Nodedata = null;
+public class SodaBlockListParser {
 	
-	public SodaPluginParser(String filename) throws Exception {
-		File fd = null;
+	private String file_name = null;
+	
+	public SodaBlockListParser(String file) {
+		this.file_name = file;
+	}
+	
+	public SodaBlockList parse() {
+		SodaBlockList list = null;
+		File FD = null;
 		DocumentBuilderFactory dbf = null;
 		DocumentBuilder db = null;
 		Document doc = null;
-		
-		fd = new File(filename);
-		if (!fd.exists()) {
-			throw new Exception("Failed to find file: " + filename);
+		NodeList nodes = null;
+
+		try {
+			FD = new File(this.file_name);
+			dbf = DocumentBuilderFactory.newInstance();
+			db = dbf.newDocumentBuilder();
+			doc = db.parse(FD);
+			list = new SodaBlockList();
+		} catch (Exception exp) {
+			System.err.printf("(!)Error: %s\n", exp.getMessage());
+			list = null;
 		}
 		
-		dbf = DocumentBuilderFactory.newInstance();
-		db = dbf.newDocumentBuilder();
-		doc = db.parse(fd);
-		this.Nodedata = doc.getDocumentElement().getChildNodes();
-	}
-	
-	public SodaEvents parse() throws Exception {
-		SodaEvents data = null;
-		int len = this.Nodedata.getLength() -1;
-		
-		data = new SodaEvents();
-		
-		for (int i = 0; i <= len; i++) {
-			Node child = this.Nodedata.item(i);
-			String name = child.getNodeName();
-			
-			if (!name.contains("plugin")) {
+		nodes = doc.getDocumentElement().getChildNodes();
+		for (int i = 0; i <= nodes.getLength() -1; i++) {
+			Node n = nodes.item(i);
+			String name = n.getNodeName();
+			if (!name.contains("block")) {
 				continue;
 			}
 			
-			if (!child.hasChildNodes()) {
-				System.out.printf("(!)Error: Failed to find all needed data for plugin node!\n");
-				continue;
-			}
-			
+			NodeList kids = n.getChildNodes();
 			SodaHash tmp = new SodaHash();
-			
-			int clen = child.getChildNodes().getLength() -1;
-			for (int cindex = 0; cindex <= clen; cindex++) {
-				Node info = child.getChildNodes().item(cindex);
-				String cname = info.getNodeName();
-				cname = cname.toLowerCase();
-				
-				if (cname.contains("#text")) {
+			for (int x = 0; x <= kids.getLength() -1; x++) {
+				Node kid = kids.item(x);
+
+				if (kid.getNodeName().contains("#text")) {
 					continue;
 				}
 				
-				String value = info.getTextContent();
-				tmp.put(cname, value);
+				String kid_name = kid.getNodeName();
+				String value = kid.getTextContent();
+				if (value != null) {
+					tmp.put(kid_name, value);
+				}
 			}
-			data.add(tmp);
+			list.add(tmp);
 		}
 		
-		return data;
+		return list;
 	}
+	
 }

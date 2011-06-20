@@ -27,76 +27,80 @@ should not be interpreted as representing official policies, either expressed or
  
  */
 
+package voodoodriver;
+
 import java.io.File;
+import java.util.Arrays;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 
-import voodoodriver.SodaEvents;
-import voodoodriver.SodaHash;
-
-public class SodaPluginParser {
-
-	private SodaEvents plugins = null;
-	private NodeList Nodedata = null;
+public class SodaSuiteParser {
 	
-	public SodaPluginParser(String filename) throws Exception {
-		File fd = null;
+	private SodaTestList tests = null;
+	
+	public SodaSuiteParser(String suitefile) {
+		Document doc = null;
+		File suiteFD = null;
 		DocumentBuilderFactory dbf = null;
 		DocumentBuilder db = null;
-		Document doc = null;
-		
-		fd = new File(filename);
-		if (!fd.exists()) {
-			throw new Exception("Failed to find file: " + filename);
+
+		try {
+			this.tests = new SodaTestList();
+			suiteFD = new File(suitefile);
+			dbf = DocumentBuilderFactory.newInstance();
+			db = dbf.newDocumentBuilder();
+			doc = db.parse(suiteFD);
+			this.parse(doc.getDocumentElement().getChildNodes());
+		} catch (Exception exp) {
+			exp.printStackTrace();
 		}
-		
-		dbf = DocumentBuilderFactory.newInstance();
-		db = dbf.newDocumentBuilder();
-		doc = db.parse(fd);
-		this.Nodedata = doc.getDocumentElement().getChildNodes();
 	}
 	
-	public SodaEvents parse() throws Exception {
-		SodaEvents data = null;
-		int len = this.Nodedata.getLength() -1;
-		
-		data = new SodaEvents();
+	public SodaTestList getTests() {
+		return this.tests;
+	}
+	
+	private void parse(NodeList nodes) {
+		int len = nodes.getLength() -1;
 		
 		for (int i = 0; i <= len; i++) {
-			Node child = this.Nodedata.item(i);
-			String name = child.getNodeName();
-			
-			if (!name.contains("plugin")) {
+			String name = nodes.item(i).getNodeName();
+			if (name.contains("#text")) {
 				continue;
 			}
 			
-			if (!child.hasChildNodes()) {
-				System.out.printf("(!)Error: Failed to find all needed data for plugin node!\n");
+			if (!name.contains("script")) {
 				continue;
 			}
 			
-			SodaHash tmp = new SodaHash();
-			
-			int clen = child.getChildNodes().getLength() -1;
-			for (int cindex = 0; cindex <= clen; cindex++) {
-				Node info = child.getChildNodes().item(cindex);
-				String cname = info.getNodeName();
-				cname = cname.toLowerCase();
+			NamedNodeMap attrs = nodes.item(i).getAttributes();
+			int atts_len = attrs.getLength() -1;
+			for (int x = 0; x <= atts_len; x++) {
+				String attr_name = attrs.item(x).getNodeName();
+				String attr_value = attrs.item(x).getNodeValue();
+				File fd_tmp = null;
 				
-				if (cname.contains("#text")) {
-					continue;
+				if (attr_name.contains("fileset")) {
+					fd_tmp = new File(attr_value);
+					String base_path = fd_tmp.getAbsolutePath();
+					String[] files = fd_tmp.list();
+					Arrays.sort(files);
+					for (int findex = 0; findex <= files.length -1; findex++) {
+						if (files[findex].toLowerCase().matches(".*\\.xml")) {
+							this.tests.add(base_path+"/"+files[findex]);
+							System.out.printf("(*)Adding file to Soda Suite list: '%s'.\n", base_path+"/"+files[findex]);
+						} else {
+							System.out.printf("(!)Not adding file to Soda Suite list: '%s'.\n", base_path+"/"+files[findex]);
+						}
+					}
+				} else {
+					this.tests.add(attr_value);
 				}
-				
-				String value = info.getTextContent();
-				tmp.put(cname, value);
 			}
-			data.add(tmp);
 		}
-		
-		return data;
 	}
+	
 }
