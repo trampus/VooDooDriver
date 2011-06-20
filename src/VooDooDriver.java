@@ -63,7 +63,7 @@ public class VooDooDriver {
 	public static String VERSION = "0.0.1";
 	
 	public static void printUsage() {
-		String msg = "SodaSuite\n"+
+		String msg = "VooDooDriver\n"+
 		"Usage: SodaSuite --browser=\"firefox\" --test=\"sodatest1.xml\""+
 		" --test=\"sodatest2.xml\" ...\n\n"+
 		"Required Flags:\n"+
@@ -106,14 +106,14 @@ public class VooDooDriver {
 		SodaPluginParser plugParser = null;
 		SodaEvents plugins = null;
 		
-		System.out.printf("Starting SodaSuite...\n");
+		System.out.printf("Starting VooDooDriver...\n");
 		try {
 			opts = new SodaCmdLineOpts(args);
 			cmdOpts = opts.getOptions();
 			
 			sodaConfigFD = new File(sodaConfigFile);
 			if (sodaConfigFD.exists()) {
-				System.out.printf("(*)Found SodaSuite config file: %s\n", sodaConfigFile);
+				System.out.printf("(*)Found VooDooDriver config file: %s\n", sodaConfigFile);
 				SodaConfigParser scp = new SodaConfigParser(sodaConfigFD);
 			}
 			
@@ -123,7 +123,7 @@ public class VooDooDriver {
 			}
 			
 			if ((Boolean)cmdOpts.get("version")) {
-				System.out.printf("(*)SodaSuite Version: %s\n", VooDooDriver.VERSION);
+				System.out.printf("(*)VooDooDriver Version: %s\n", VooDooDriver.VERSION);
 				System.exit(0);
 			}
 			
@@ -188,7 +188,7 @@ public class VooDooDriver {
 			exp.printStackTrace();
 		}
 		
-		System.out.printf("(*)SodaSuite Finished.\n");
+		System.out.printf("(*)VooDooDriver Finished.\n");
 		System.exit(0);
 	}
 	
