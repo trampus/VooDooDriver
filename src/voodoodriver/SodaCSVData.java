@@ -33,6 +33,11 @@ import java.util.ArrayList;
 
 public class SodaCSVData extends ArrayList<SodaHash> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public SodaCSVData() {
 		super();
 	}

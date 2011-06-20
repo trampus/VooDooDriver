@@ -42,7 +42,6 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.Select;
 
 public class SodaEventDriver implements Runnable {
 
@@ -50,10 +49,8 @@ public class SodaEventDriver implements Runnable {
 	private SodaBrowser Browser = null;
 	private SodaHash sodaVars = null;
 	private SodaReporter report = null;
-	private SodaHash globalVars = null;
 	private SodaHash hijacks = null;
 	private Date threadTime = null;
-	private SodaHash webDrivers = null;
 	private volatile Thread runner;
 	private volatile Boolean threadStop = false;
 	private SodaEvents plugIns = null;
@@ -64,7 +61,6 @@ public class SodaEventDriver implements Runnable {
 		testEvents = events;
 		this.Browser = browser;
 		this.report = reporter;
-		this.globalVars = gvars;
 		this.hijacks = hijacks;
 		
 		if (oldvars != null) {
@@ -72,7 +68,6 @@ public class SodaEventDriver implements Runnable {
 		} else {
 			sodaVars = new SodaHash();
 		}
-		this.webDrivers = new SodaHash();
 		
 		this.ElementStore = new SodaHash();
 		
@@ -192,13 +187,13 @@ public class SodaEventDriver implements Runnable {
 	
 	private void processEvents(SodaEvents events, WebElement parent) {
 		int event_count = events.size() -1;
-		boolean result = false;
 		
 		for (int i = 0; i <= event_count; i++) {
 			if (isStopped()) {
 				break;
 			}
-			result = handleSingleEvent(events.get(i), parent);
+			
+			handleSingleEvent(events.get(i), parent);
 		}
 	}
 	
@@ -429,7 +424,6 @@ public class SodaEventDriver implements Runnable {
 	}
 	
 	private WebElement trEvent(SodaHash event, WebElement parent) {
-		boolean result = false;
 		boolean required = true;
 		boolean click = false;
 		WebElement element = null;
@@ -443,7 +437,6 @@ public class SodaEventDriver implements Runnable {
 		try {
 			element = this.findElement(event, parent, required);
 			if (element == null) {
-				result = false;
 				this.report.Log("TR event finished.");
 				return element;
 			}
@@ -459,9 +452,7 @@ public class SodaEventDriver implements Runnable {
 				this.firePlugin(element, SodaElements.TR, SodaPluginEventType.AFTERCLICK);
 				this.report.Log("Click finished.");
 			}
-			
 		} catch (Exception exp) {
-			result = false;
 			this.report.ReportException(exp);
 		}
 		
@@ -548,7 +539,8 @@ public class SodaEventDriver implements Runnable {
 			
 			if (event.containsKey("var")) {
 				String name = event.get("var").toString();
-				String value = element.getValue();
+				//String value = element.getValue();
+				String value = element.getAttribute("value");
 				SodaHash tmp = new SodaHash();
 				tmp.put("set", value);
 				tmp.put("var", name);
@@ -642,7 +634,6 @@ public class SodaEventDriver implements Runnable {
 	}
 	
 	private WebElement selectEvent(SodaHash event, WebElement parent) {
-		boolean result = false;
 		boolean required = true;
 		WebElement element = null;
 		String setvalue = null;
@@ -687,7 +678,6 @@ public class SodaEventDriver implements Runnable {
 			}
 		} catch (Exception exp) {
 			this.report.ReportException(exp);
-			result = false;
 		}
 		
 		this.report.Log("Select event finished.");
@@ -695,7 +685,6 @@ public class SodaEventDriver implements Runnable {
 	}
 	
 	private WebElement formEvent(SodaHash event, WebElement parent) {
-		boolean result = false;
 		boolean required = true;
 		boolean click = false;
 		WebElement element = null;
@@ -730,7 +719,6 @@ public class SodaEventDriver implements Runnable {
 			}
 		} catch (Exception exp) {
 			this.report.ReportException(exp);
-			result = false;
 		}
 		
 		this.report.Log("Form event finished.");
@@ -923,7 +911,6 @@ public class SodaEventDriver implements Runnable {
 	}
 	
 	private WebElement divEvent(SodaHash event, WebElement parent) {
-		boolean result = false;
 		boolean required = true;
 		boolean click = false;
 		WebElement element = null;
@@ -971,7 +958,6 @@ public class SodaEventDriver implements Runnable {
 				this.processEvents((SodaEvents)event.get("children"), element);
 			}
 			
-			result = true;
 		} catch (Exception exp) {
 			this.report.ReportException(exp);
 			element = null;

@@ -31,12 +31,9 @@ package voodoodriver;
 
 import java.io.File;
 import java.util.Date;
-import org.openqa.selenium.WebDriver;
 
 public class SodaTest {
-
-	private SodaSupportedBrowser BrowserType = null;
-	private WebDriver Driver = null;
+	
 	private SodaBrowser Browser = null;
 	private String testFile = "";
 	private SodaEventDriver eventDriver = null;
@@ -53,7 +50,6 @@ public class SodaTest {
 	
 	public SodaTest(String testFile, SodaBrowser browser, SodaHash gvars, SodaHash hijacks, 
 			SodaBlockList blocklist, SodaHash oldvars, String suitename, String reportDir) {
-		boolean master_result = false;
 		this.Browser = browser;
 		this.testFile = testFile;
 		this.HiJacks = hijacks;

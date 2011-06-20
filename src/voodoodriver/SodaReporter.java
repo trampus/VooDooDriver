@@ -34,7 +34,6 @@ import java.io.FileOutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,7 +42,6 @@ public class SodaReporter {
 	private String resultDir = "";
 	private String reportLog = null;
 	private FileOutputStream reportFD = null;
-	private String datetime_str = "";
 	private int Blocked = 0;
 	private int Exceptions = 0;
 	private int FailedAsserts = 0;
@@ -51,11 +49,9 @@ public class SodaReporter {
 	private int OtherErrors = 0;
 	private int WatchDog = 0;
 	private String LineSeparator = null;
-	private DateFormat Dateformater = null;
 	
 	public SodaReporter(String reportName, String resultDir) {
 		DateFormat fd = new SimpleDateFormat("MM-d-yyyy-hh-m-s-S");
-		this.Dateformater = new SimpleDateFormat("MM-d-yyyy-hh-m-s.S");
 		Date now = new Date();
 		String date_str = fd.format(now);
 		

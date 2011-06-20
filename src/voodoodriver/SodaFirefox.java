@@ -29,9 +29,6 @@ should not be interpreted as representing official policies, either expressed or
 
 package voodoodriver;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 public class SodaFirefox extends SodaBrowser implements SodaBrowserInterface {

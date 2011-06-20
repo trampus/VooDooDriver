@@ -30,10 +30,8 @@ should not be interpreted as representing official policies, either expressed or
 package voodoodriver;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -64,7 +62,6 @@ public class SodaOSInfo {
 	private static ArrayList<Integer> getUnixPids(String process) {
 		ArrayList<Integer> pids = new ArrayList<Integer>();
 		Process proc = null;
-		InputStream in;
 		BufferedReader reader;
 		String[] cmd = {"ps", "x", "-o", "pid,comm"};
 		

@@ -30,9 +30,6 @@ should not be interpreted as representing official policies, either expressed or
 package voodoodriver;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -40,15 +37,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import voodoodriver.SodaXML;
-
 public class SodaTypes {
 	private Document doc = null;
 	private SodaElementsList datatypes = null;
-	private SodaTypes types = null;
 	
 	public SodaTypes() {
-		SodaXML sodaxml = null;
 		File testFD = null;
 		DocumentBuilderFactory dbf = null;
 		DocumentBuilder db = null;

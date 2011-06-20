@@ -40,7 +40,6 @@ import voodoodriver.SodaHash;
 
 public class SodaPluginParser {
 
-	private SodaEvents plugins = null;
 	private NodeList Nodedata = null;
 	
 	public SodaPluginParser(String filename) throws Exception {

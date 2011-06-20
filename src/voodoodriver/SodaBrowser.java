@@ -29,17 +29,11 @@ should not be interpreted as representing official policies, either expressed or
 
 package voodoodriver;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.List;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.ie.InternetExplorerDriver;
 
 public abstract class SodaBrowser implements SodaBrowserInterface {
 	

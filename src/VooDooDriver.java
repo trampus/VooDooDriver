@@ -36,22 +36,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.openqa.selenium.firefox.FirefoxDriver;
-
 import voodoodriver.SodaBlockList;
 import voodoodriver.SodaBlockListParser;
 import voodoodriver.SodaBrowser;
-import voodoodriver.SodaCSV;
-import voodoodriver.SodaCSVData;
 import voodoodriver.SodaChrome;
 import voodoodriver.SodaCmdLineOpts;
 import voodoodriver.SodaEvents;
 import voodoodriver.SodaFirefox;
 import voodoodriver.SodaHash;
 import voodoodriver.SodaIE;
-import voodoodriver.SodaOSInfo;
-import voodoodriver.SodaReporter;
 import voodoodriver.SodaSuiteParser;
 import voodoodriver.SodaSupportedBrowser;
 import voodoodriver.SodaTest;
@@ -114,7 +107,7 @@ public class VooDooDriver {
 			sodaConfigFD = new File(sodaConfigFile);
 			if (sodaConfigFD.exists()) {
 				System.out.printf("(*)Found VooDooDriver config file: %s\n", sodaConfigFile);
-				SodaConfigParser scp = new SodaConfigParser(sodaConfigFD);
+				new SodaConfigParser(sodaConfigFD);
 			}
 			
 			if ((Boolean)cmdOpts.get("help")) {
@@ -338,11 +331,9 @@ public class VooDooDriver {
 			SodaTestList suite_test_list = suiteP.getTests();
 			SodaHash vars = null;
 			SodaTestResults test_results_hash = null;
-			String test_res_str = "";
 			
 			for (int test_index = 0; test_index <= suite_test_list.size() -1; test_index++) {
 				writeSummary(suiteRptFD, "\t\t<test>\n");
-				boolean test_result = false;
 				String current_test = suite_test_list.get(test_index);
 				writeSummary(suiteRptFD, String.format("\t\t\t<testfile>%s</testfile>\n", current_test));
 				System.out.printf("(*)Executing Test: '%s'\n", current_test);

@@ -138,7 +138,6 @@ public class SodaCmdLineOpts {
 	
 	private void handleHijackValue(String str) {
 		str = str.replace("--hijack=", "");
-		SodaHash tmp = new SodaHash();
 		String[] data = str.split("::");
 		this.hijacks.put(data[0], data[1]);
 		System.out.printf("(*)HiJack: %s => %s\n", data[0], data[1]);
