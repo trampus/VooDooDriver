@@ -1,4 +1,5 @@
-This is a java based replacement for SODA: https://github.com/trampus/SODA
+VooDooDriver:
+   This is a java based replacement for SODA: https://github.com/trampus/SODA
 
 This project is currently under dev and isn't ready for use yet.
 
@@ -9,11 +10,11 @@ This project is currently under dev and isn't ready for use yet.
    you have to parent the link with the proper td.
 4.) When using set for text fields in ruby soda, soda would clear the field of any existing text before 
    setting the new value.  Soda java does not do this, as it will just append text to the current field.
-5.)Soda java will only allow you to find an element by one selector where Soda ruby would allow you more then one.  
-6.)Soda java now supports accessing elements using css selectors.  Example:
+5.)VooDooDriver will only allow you to find an element by one selector where Soda ruby would allow you more then one.  
+6.)VooDooDriver now supports accessing elements using css selectors.  Example:
 <button css="input[type=button][value='Search']" />
-7.)Soda java supports plugins.  Please see the Plugin.txt doc.
-8.)Soda Java supports storing off dragable HTML elements.  THis can be done by using the "save" attribute for supported soda
+7.)VooDooDriver supports plugins.  Please see the Plugin.txt doc.
+8.)VooDooDriver supports storing off dragable HTML elements.  THis can be done by using the "save" attribute for supported soda
 elements.  Example:
    <div id="foo" save="my-div" />, this stores the div element under the ref "my-div", which can only be used by the <dnd>
    soda command.  See Drag'n Drop example for more info.
