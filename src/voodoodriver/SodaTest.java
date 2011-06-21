@@ -130,8 +130,8 @@ public class SodaTest {
 				current = current_time.getTime();
 				long thread = thread_time.getTime();
 
-				current = (long)current / 1000;
-				thread = (long)thread / 1000;
+				current = current / 1000;
+				thread = thread / 1000;
 				long seconds = (current - thread);
 			
 				if (seconds > ThreadTimeout) {

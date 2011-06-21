@@ -184,6 +184,7 @@ public class SodaReporter {
 			}
 		} else {
 			msg = "Something really bad happened here and the exception is null!!!";
+			e.printStackTrace();
 		}
 		
 		this._log("(!)" + msg);

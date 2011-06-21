@@ -32,7 +32,6 @@ package voodoodriver;
 import java.io.File;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -47,10 +46,18 @@ public class SodaTypes {
 		DocumentBuilder db = null;
 
 		try {
-			testFD = new File(getClass().getResource("SodaElements.xml").getFile());
+			String className = this.getClass().getName().replace('.', '/');
+			String classJar =  this.getClass().getResource("/" + className + ".class").toString();
 			dbf = DocumentBuilderFactory.newInstance();
 			db = dbf.newDocumentBuilder();
-			doc = db.parse(testFD);
+			
+			if (classJar.startsWith("jar:")) {
+				doc = db.parse(getClass().getResourceAsStream("SodaElements.xml"));
+			} else {
+				testFD = new File(getClass().getResource("SodaElements.xml").getFile());
+				doc = db.parse(testFD);
+			}
+			
 			datatypes = this.parse(doc.getDocumentElement().getChildNodes());
 		} catch (Exception exp) {
 			exp.printStackTrace();

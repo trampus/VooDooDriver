@@ -9,6 +9,7 @@
    <property name="build" location="build"/>
    <property name="dist"  location="dist"/>
    <property name="lib" location="./lib"/>
+	<property name="sodaelements" location="${src}/voodoodriver/SodaElements.xml"/>
 	
    <pathconvert property="jars.classes" pathsep=" ">
       <mapper>
@@ -47,7 +48,20 @@
       <delete dir="${build}" failonerror="false" />
       <delete dir="${dist}" failonerror="false" />
    </target>
-   
+
+   <target name="compile-debug" depends="init" description="compile the source " >
+      <echo>TEST ME ${jars.classes}</echo>
+      <javac srcdir="${src}" destdir="${build}" debug="true" debuglevel="lines,vars,source">
+         <classpath>
+            <pathelement path="${classpath}"/>
+            <fileset dir="lib">
+               <include name="**/*.jar"/>
+            </fileset>
+         </classpath>
+         <compilerarg value="-Xlint"/>
+      </javac>
+   </target>
+	
    <target name="compile" depends="init" description="compile the source " >
       <javac srcdir="${src}" destdir="${build}">
          <classpath>
@@ -56,6 +70,7 @@
                <include name="**/*.jar"/>
             </fileset>
          </classpath>
+      	<compilerarg value="-Xlint"/>
       </javac>
    </target>
    
@@ -68,13 +83,15 @@
          <fileset dir="lib/libs" />
       </copy>
       
+   	<copy todir="${build}/voodoodriver" file="${sodaelements}"/>
+   	
       <jar jarfile="${dist}/VooDooDriver.jar" basedir="${build}">
          <fileset dir="${lib}">
             <include name="**/*.jar" />
          </fileset>
          
          <manifest>
-            <attribute name="Main-Class" value="SodaSuite"/>
+            <attribute name="Main-Class" value="VooDooDriver"/>
             <attribute name="Class-Path" value="${jars.classes}"/>
          </manifest>
       </jar>
