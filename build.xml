@@ -50,7 +50,6 @@
    </target>
 
    <target name="compile-debug" depends="init" description="compile the source " >
-      <echo>TEST ME ${jars.classes}</echo>
       <javac srcdir="${src}" destdir="${build}" debug="true" debuglevel="lines,vars,source">
          <classpath>
             <pathelement path="${classpath}"/>
