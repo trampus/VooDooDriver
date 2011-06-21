@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="VooDooDriver" default="dist" basedir=".">
+<project name="VooDooDriver" default="default-build" basedir=".">
     <description>
         simple example build file for building soda-java into a jar file.
     </description>
    
    <!-- set global properties for this build -->
+	<property name="bin" location="bin"/>
    <property name="src" location="src"/>
    <property name="build" location="build"/>
-   <property name="dist"  location="dist"/>
+   <property name="dist"  location="VooDooDriver"/>
    <property name="lib" location="./lib"/>
+	<property name="product-zip" location="${bin}/VooDooDriver.zip"/>
 	<property name="sodaelements" location="${src}/voodoodriver/SodaElements.xml"/>
 	
    <pathconvert property="jars.classes" pathsep=" ">
@@ -34,6 +36,9 @@
       <tstamp/>
       <!-- Create the build directory structure used by compile -->
       <mkdir dir="${build}"/>
+   	<mkdir dir="${bin}" />
+   	<mkdir dir="${dist}" />
+   	<mkdir dir="${dist}/lib"/>      
   </target>
 
    <target name="clean">
@@ -45,20 +50,42 @@
          <fileset dir="${dist}" />
       </delete>
 
+      <delete failonerror="false">
+         <fileset dir="${bin}" />
+      </delete>
+   	
+   	<delete failonerror="false" file="${product-zip}" />
+   	
+   	<delete dir="${bin}" failonerror="false" />
       <delete dir="${build}" failonerror="false" />
       <delete dir="${dist}" failonerror="false" />
    </target>
 
-   <target name="compile-debug" depends="init" description="compile the source " >
+   <target name="debug" depends="clean,init" description="compile the source in debug mode" >
       <javac srcdir="${src}" destdir="${build}" debug="true" debuglevel="lines,vars,source">
-         <classpath>
-            <pathelement path="${classpath}"/>
-            <fileset dir="lib">
-               <include name="**/*.jar"/>
-            </fileset>
-         </classpath>
-         <compilerarg value="-Xlint"/>
-      </javac>
+            <classpath>
+               <pathelement path="${classpath}"/>
+               <fileset dir="lib">
+                  <include name="**/*.jar"/>
+               </fileset>
+            </classpath>
+            <compilerarg value="-Xlint"/>
+         </javac>
+   	
+      <copy todir="${build}/voodoodriver" file="${sodaelements}"/>
+       
+   	<jar jarfile="${dist}/VooDooDriver.jar" basedir="${build}">
+         <fileset dir="${lib}">
+            <include name="**/*.jar" />
+         </fileset>
+         
+         <manifest>
+            <attribute name="Main-Class" value="VooDooDriver"/>
+            <attribute name="Class-Path" value="${jars.classes}"/>
+         </manifest>
+      </jar>
+   	
+   	<zip destfile="${bin}/VooDooDriver-debug.zip" basedir="${dist}"/>
    </target>
 	
    <target name="compile" depends="init" description="compile the source " >
@@ -73,11 +100,7 @@
       </javac>
    </target>
    
-   <target name="dist" depends="compile" description="generate the distribution" >
-      <!-- Create the distribution directory -->
-      <mkdir dir="${dist}" />
-      <mkdir dir="${dist}/lib"/>
-      
+   <target name="default-build" depends="compile" description="generate the distribution" >
       <copy todir="${dist}/lib">
          <fileset dir="lib/libs" />
       </copy>
@@ -94,5 +117,7 @@
             <attribute name="Class-Path" value="${jars.classes}"/>
          </manifest>
       </jar>
+   	
+   	<zip destfile="${bin}/VooDooDriver.zip" basedir="${dist}"/>
   </target>
 </project>
