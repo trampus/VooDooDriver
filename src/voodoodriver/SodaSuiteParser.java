@@ -87,7 +87,13 @@ public class SodaSuiteParser {
 					fd_tmp = new File(attr_value);
 					String base_path = fd_tmp.getAbsolutePath();
 					String[] files = fd_tmp.list();
-					Arrays.sort(files);
+					
+					if (files != null) {
+						Arrays.sort(files);
+					} else {
+						continue;
+					}
+					
 					for (int findex = 0; findex <= files.length -1; findex++) {
 						if (files[findex].toLowerCase().matches(".*\\.xml")) {
 							this.tests.add(base_path+"/"+files[findex]);

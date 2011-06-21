@@ -99,6 +99,7 @@ public class VooDooDriver {
 		SodaPluginParser plugParser = null;
 		SodaEvents plugins = null;
 		
+		
 		System.out.printf("Starting VooDooDriver...\n");
 		try {
 			opts = new SodaCmdLineOpts(args);

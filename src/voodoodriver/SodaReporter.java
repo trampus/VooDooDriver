@@ -88,8 +88,9 @@ public class SodaReporter {
 		result.put("failedasserts", this.FailedAsserts);
 		result.put("passedasserts", this.PassedAsserts);
 		result.put("watchdog", this.WatchDog);
+		result.put("errors", this.OtherErrors);
 		
-		if (this.Blocked > 0 || this.Exceptions > 0 || this.FailedAsserts > 0) {
+		if (this.Blocked > 0 || this.Exceptions > 0 || this.FailedAsserts > 0 || this.OtherErrors > 0) {
 			res = -1;
 		}
 		

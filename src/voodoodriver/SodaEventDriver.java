@@ -1103,12 +1103,12 @@ public class SodaEventDriver implements Runnable {
 		
 		try {
 			this.report.Log("Link Event Started.");
-			element = this.findElement(event, parent, required);
-			
 			String how = event.get("how").toString();
 			how = this.replaceString(how);
 			String value = event.get(how).toString();
 			value = this.replaceString(value);
+			element = this.findElement(event, parent, required);
+
 			if (element == null) {
 				if (required) {
 					String msg = String.format("Failed to find link: '%s' => '%s'!", how, value);
@@ -1501,6 +1501,8 @@ public class SodaEventDriver implements Runnable {
 	private WebElement findElementByHref(String href, WebElement parent) {
 		WebElement element = null;
 		List<WebElement> list = null;
+		
+		href = this.replaceString(href);
 		
 		if (parent != null) {
 			list = parent.findElements(By.tagName("a"));
