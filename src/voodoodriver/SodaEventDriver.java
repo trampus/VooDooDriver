@@ -410,7 +410,9 @@ public class SodaEventDriver implements Runnable {
 			if (event.containsKey("set")) {
 				String setvalue = event.get("set").toString();
 				setvalue = this.replaceString(setvalue);
+				this.report.Log(String.format("Setting filefield to: '%s'.", setvalue));
 				element.sendKeys(setvalue);
+				this.report.Log("Finished set.");
 			}
 		} catch (Exception exp) {
 			element = null;
@@ -1700,15 +1702,14 @@ public class SodaEventDriver implements Runnable {
 			if (event.containsKey("assert")) {
 				String assvalue = event.get("assert").toString();
 				assvalue = this.replaceString(assvalue);
-				this.report.Assert(assvalue, element.getText());
+				this.report.Assert(assvalue, element.getAttribute("value"));
 			}
 			
 			if (event.containsKey("assertnot")) {
 				String assvalue = event.get("assertnot").toString();
 				assvalue = this.replaceString(assvalue);
-				this.report.AssertNot(assvalue, element.getText());
+				this.report.AssertNot(assvalue, element.getAttribute("value"));
 			}
-			
 		} catch (Exception exp) {
 			this.report.ReportException(exp);
 			element = null;
