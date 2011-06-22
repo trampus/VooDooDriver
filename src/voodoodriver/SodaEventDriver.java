@@ -1689,6 +1689,19 @@ public class SodaEventDriver implements Runnable {
 				this.report.Log(String.format("Setting Value to: '%s'.", value));
 				element.sendKeys(value);
 			}
+			
+			if (event.containsKey("assert")) {
+				String assvalue = event.get("assert").toString();
+				assvalue = this.replaceString(assvalue);
+				this.report.Assert(assvalue, element.getText());
+			}
+			
+			if (event.containsKey("assertnot")) {
+				String assvalue = event.get("assertnot").toString();
+				assvalue = this.replaceString(assvalue);
+				this.report.AssertNot(assvalue, element.getText());
+			}
+			
 		} catch (Exception exp) {
 			this.report.ReportException(exp);
 			element = null;
