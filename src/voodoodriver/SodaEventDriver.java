@@ -42,6 +42,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.Select;
 
 public class SodaEventDriver implements Runnable {
 
@@ -625,6 +626,10 @@ public class SodaEventDriver implements Runnable {
 				Thread.sleep(1000);
 				this.report.Log("Javascript event finished.");
 			}
+		
+			if (event.containsKey("children") && element != null) {
+				this.processEvents((SodaEvents)event.get("children"), element);
+			}
 		} catch (Exception exp) {
 			this.report.ReportException(exp);
 			element = null;
@@ -633,6 +638,7 @@ public class SodaEventDriver implements Runnable {
 		this.report.Log("Span event finished.");
 		
 		return element;
+		
 	}
 	
 	private WebElement selectEvent(SodaHash event, WebElement parent) {
@@ -677,6 +683,45 @@ public class SodaEventDriver implements Runnable {
 						this.report.ReportError(String.format("Failed to find option in select with text matching: '%s'!", setvalue));
 					}
 				}
+				
+				if (event.containsKey("assert")) {
+					String assvalue = event.get("assert").toString();
+					assvalue = this.replaceString(assvalue);
+					
+					List<WebElement> opts = element.findElements(By.tagName("option"));
+					int opts_len = opts.size() -1;
+					boolean passed = false;
+					String select_val = "";
+					
+					for (int opts_index = 0; opts_index <= opts_len; opts_index++) {
+						if (opts.get(opts_index).isSelected()) {
+							select_val = opts.get(opts_index).getText();
+							break;
+						}
+					}
+					
+					this.report.Assert(assvalue, select_val);
+				}
+				
+				if (event.containsKey("assertnot")) {
+					String assvalue = event.get("assertnot").toString();
+					assvalue = this.replaceString(assvalue);
+					
+					List<WebElement> opts = element.findElements(By.tagName("option"));
+					int opts_len = opts.size() -1;
+					boolean passed = false;
+					String select_val = "";
+					
+					for (int opts_index = 0; opts_index <= opts_len; opts_index++) {
+						if (opts.get(opts_index).isSelected()) {
+							select_val = opts.get(opts_index).getText();
+							break;
+						}
+					}
+					
+					this.report.AssertNot(assvalue, select_val);
+				}
+				
 			}
 		} catch (Exception exp) {
 			this.report.ReportException(exp);
@@ -1084,9 +1129,13 @@ public class SodaEventDriver implements Runnable {
 				boolean check = this.clickToBool(event.get("set").toString());
 				
 				if (!check) {
+					this.report.Log("Unchecking checkbox.");
 					element.clear();
+					this.report.Log("Unchecking finished.");
 				} else {
+					this.report.Log("Checking checkbox.");
 					element.setSelected();
+					this.report.Log("Checking finished.");
 				}
 			}
 			
@@ -1522,7 +1571,8 @@ public class SodaEventDriver implements Runnable {
 		int len = list.size() -1;
 		for (int i = 0; i <= len; i++) {
 			String value = list.get(i).getAttribute("href");
-			if (href.compareTo(value) == 0) {
+			
+			if (value != null && href.compareTo(value) == 0) {
 				element = list.get(i);
 				break;
 			}
