@@ -38,7 +38,7 @@
       <mkdir dir="${build}"/>
    	<mkdir dir="${bin}" />
    	<mkdir dir="${dist}" />
-   	<mkdir dir="${dist}/lib"/>      
+   	<mkdir dir="${dist}/lib"/>
   </target>
 
    <target name="clean">

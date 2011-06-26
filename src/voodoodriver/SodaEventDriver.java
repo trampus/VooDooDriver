@@ -465,11 +465,14 @@ public class SodaEventDriver implements Runnable {
 			list = element.findElements(By.tagName("a"));
 			int len = list.size() -1;
 			
+			
+			/*
 			for (int i = 0; i <= len; i++) {
 				WebElement tmp = list.get(i);
 				String text = tmp.getText();
 				System.out.printf("HREF TEXT: %s\n", text);
 			}
+			*/
 			
 			this.processEvents((SodaEvents)event.get("children"), element);
 		}
@@ -1739,7 +1742,6 @@ public class SodaEventDriver implements Runnable {
 					this.report.Log("Clearing textfield.");
 					element.clear();
 				}
-				
 			}
 			
 			if (event.containsKey("set")) {

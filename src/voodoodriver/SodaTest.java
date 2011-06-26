@@ -144,7 +144,7 @@ public class SodaTest {
 				}
 				
 				try {
-					Thread.sleep(4000);
+					Thread.sleep(9000);
 				} catch (Exception exp) {
 					exp.printStackTrace();
 					System.exit(-1);
