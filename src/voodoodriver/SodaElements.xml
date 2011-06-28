@@ -417,6 +417,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">id</accessor>
          <accessor type="string">xpath</accessor>
          <accessor type="string">css</accessor>
+         <accessor type="string">index</accessor>
       </accessor_attributes>
 
       <soda_attributes>
@@ -424,7 +425,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="boolean">exists</accessor>
          <accessor type="string">cssprop</accessor>
          <accessor type="string">cssvalue</accessor>
-         <accessor type="string">index</accessor>
          <accessor type="string">save</accessor>
       </soda_attributes>
    </tr>

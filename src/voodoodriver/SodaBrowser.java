@@ -233,7 +233,7 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 		return result;
 	}
 	
-	public WebElement findElements(By by, int retryTime, int index) {
+	public WebElement findElements(By by, int retryTime, int index, boolean required) {
 		WebElement result = null;
 		List<WebElement> elements = null;
 		int len = 0;
@@ -258,7 +258,7 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 			}
 		}
 
-		if (len < index && result == null) {
+		if (len < index && result == null && required != false) {
 			msg = String.format("Failed to find element by index '%d', index is out of bounds!", index);
 			this.reporter.ReportError(msg);
 			result = null;

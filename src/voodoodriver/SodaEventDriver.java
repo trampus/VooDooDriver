@@ -460,20 +460,6 @@ public class SodaEventDriver implements Runnable {
 		}
 		
 		if (event.containsKey("children")) {
-			List<WebElement> list = null;
-			
-			list = element.findElements(By.tagName("a"));
-			int len = list.size() -1;
-			
-			
-			/*
-			for (int i = 0; i <= len; i++) {
-				WebElement tmp = list.get(i);
-				String text = tmp.getText();
-				System.out.printf("HREF TEXT: %s\n", text);
-			}
-			*/
-			
 			this.processEvents((SodaEvents)event.get("children"), element);
 		}
 		
@@ -1303,6 +1289,7 @@ public class SodaEventDriver implements Runnable {
 
 	private boolean browserEvent(SodaHash event) {
 		boolean result = false;
+		boolean assertPage = true;
 		SodaBrowserActions browser_action = null;
 		
 		this.resetThreadTime();
@@ -1371,6 +1358,11 @@ public class SodaEventDriver implements Runnable {
 							this.report.ReportError(msg);
 						}
 						break;
+					
+					case BROWSER_assertPage:
+						assertPage = this.clickToBool(event.get("assertPage").toString());
+						this.report.Log(String.format("Borwser assertPage => '%s'.", assertPage));
+						break;
 					default:
 						System.out.printf("(!)ERROR: Unknown browser method: '%s'!\n", key_id);
 						System.exit(3);
@@ -1395,7 +1387,14 @@ public class SodaEventDriver implements Runnable {
 		boolean value = false;
 		String how = "";
 		String what = "";
-		int index = 0;
+		int index = -1;
+		int timeout = 5;
+		
+		if (event.containsKey("timeout")) {
+			timeout = Integer.valueOf(event.get("timeout").toString());
+			String msg = String.format("Resetting default element finding timeout to: '%d' seconds.", timeout);
+			this.report.Log(msg);
+		}
 		
 		if (event.containsKey("index")) {
 			index = Integer.valueOf(event.get("index").toString()).intValue();
@@ -1410,8 +1409,12 @@ public class SodaEventDriver implements Runnable {
 			what = this.replaceString(what);
 			String dowhat = event.get("do").toString();
 			
+			if (index > -1) {
 			msg = String.format("Tring to find page element '%s' by: '%s' => '%s' index => '%s'.", dowhat, how, what,
 					index);
+			} else {
+				msg = String.format("Tring to find page element '%s' by: '%s' => '%s'.", dowhat, how, what);	
+			}
 			this.report.Log(msg);
 			
 			if (how.matches("class") && what.matches(".*\\s+.*")) {
@@ -1478,18 +1481,20 @@ public class SodaEventDriver implements Runnable {
 				element = this.slowFindElement(event.get("do").toString(), what, parent);
 			}else {
 				if (parent == null) {
-					if (index > 0) {
-						element = this.Browser.findElements(by, 5, index);
+					if (index > -1) {
+						element = this.Browser.findElements(by, timeout, index, required);
 					} else {
-						element = this.Browser.findElement(by, 5);
+						element = this.Browser.findElement(by, timeout);
 					}
 				} else {
 					List<WebElement> elements;
 					if (index > 0) {
 						elements = parent.findElements(by);
-						if (elements.size() -1 < index) {
-							msg = String.format("Failed to find element by index '%d', index is out of bounds!", index);
-							this.report.ReportError(msg);
+						if (elements.size() -1 < index && required != false) {
+							if (required) {
+								msg = String.format("Failed to find element by index '%d', index is out of bounds!", index);
+								this.report.ReportError(msg);
+							}
 							element = null;
 						} else {
 							element = elements.get(index);
@@ -1705,6 +1710,13 @@ public class SodaEventDriver implements Runnable {
 				this.report.Log("Finished clicking button.");
 				this.firePlugin(element, SodaElements.BUTTON, SodaPluginEventType.AFTERCLICK);
 			}
+			
+			if (event.containsKey("jscriptevent")) {
+				this.report.Log("Firing Javascript Event: "+ event.get("jscriptevent").toString());
+				this.Browser.fire_event(element, event.get("jscriptevent").toString());
+				Thread.sleep(1000);
+				this.report.Log("Javascript event finished.");
+			}
 		} catch (Exception exp) {
 			this.report.ReportException(exp);
 			element = null;
@@ -1749,6 +1761,13 @@ public class SodaEventDriver implements Runnable {
 				value = this.replaceString(value);
 				this.report.Log(String.format("Setting Value to: '%s'.", value));
 				element.sendKeys(value);
+			}
+			
+			if (event.containsKey("jscriptevent")) {
+				this.report.Log("Firing Javascript Event: "+ event.get("jscriptevent").toString());
+				this.Browser.fire_event(element, event.get("jscriptevent").toString());
+				Thread.sleep(1000);
+				this.report.Log("Javascript event finished.");
 			}
 			
 			if (event.containsKey("assert")) {
