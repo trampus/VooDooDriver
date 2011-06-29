@@ -24,11 +24,14 @@
 	<classpathentry kind="lib" path="lib/libs/xalan-2.7.1.jar"/>
 	<classpathentry kind="lib" path="lib/libs/xercesImpl-2.9.1.jar"/>
 	<classpathentry kind="lib" path="lib/libs/xml-apis-1.3.04.jar"/>
-	<classpathentry kind="lib" path="lib/libs/selenium-java-2.0rc2.jar"/>
 	<classpathentry kind="lib" path="lib/libs/bsh-1.3.0.jar"/>
 	<classpathentry kind="lib" path="lib/libs/commons-io-2.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/libs/guava-r09.jar"/>
 	<classpathentry kind="lib" path="lib/libs/jcommander-1.13.jar"/>
 	<classpathentry kind="lib" path="lib/libs/testng-6.0.1-nobsh-noguice.jar"/>
+	<classpathentry kind="lib" path="lib/libs/commons-jxpath-1.3.jar"/>
+	<classpathentry kind="lib" path="lib/libs/protobuf-java-2.3.0.jar"/>
+	<classpathentry kind="lib" path="lib/libs/selenium-java-2.0rc3.jar"/>
+	<classpathentry kind="lib" path="lib/libs/webdriver-opera-v0.4.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

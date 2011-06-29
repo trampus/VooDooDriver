@@ -253,6 +253,8 @@ public class VooDooDriver {
 		SodaBrowser browser = null;
 		DateFormat df = null;
 		Date now = null;
+		Date suiteStartTime = null;
+		Date suiteStopTime = null;
 		
 		System.out.printf("(*)Running Suite files now...\n");
 		
@@ -333,6 +335,7 @@ public class VooDooDriver {
 			SodaHash vars = null;
 			SodaTestResults test_results_hash = null;
 			
+			suiteStartTime = new Date();
 			for (int test_index = 0; test_index <= suite_test_list.size() -1; test_index++) {
 				writeSummary(suiteRptFD, "\t\t<test>\n");
 				String current_test = suite_test_list.get(test_index);
@@ -388,6 +391,9 @@ public class VooDooDriver {
 					break;
 				}
 			}
+			suiteStopTime = new Date();
+			writeSummary(suiteRptFD, String.format("\t\t<starttime>%s</starttime>\n", df.format(suiteStartTime)));
+			writeSummary(suiteRptFD, String.format("\t\t<stoptime>%s</stoptime>\n", df.format(suiteStopTime)));
 			writeSummary(suiteRptFD, "\t</suite>\n");
 		}
 		writeSummary(suiteRptFD, "</data>\n\n");

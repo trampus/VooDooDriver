@@ -85,6 +85,10 @@
          </manifest>
       </jar>
    	
+   	<copy todir="${dist}/lib">
+   	         <fileset dir="lib/libs" />
+   	</copy>
+   		
    	<zip destfile="${bin}/VooDooDriver-debug.zip" basedir="${dist}"/>
    </target>
 	

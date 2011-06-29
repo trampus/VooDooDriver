@@ -834,6 +834,7 @@ public class SodaEventDriver implements Runnable {
 		boolean is_REGEX = false;
 		String finder = "";
 		String found_handle = null;
+		int timeout = 5;
 		
 		try {
 			this.report.Log("Starting attach event.");
@@ -853,51 +854,58 @@ public class SodaEventDriver implements Runnable {
 			if (this.report.isRegex(finder)) {
 				is_REGEX = true;
 			}
-				
-			handles = this.Browser.getDriver().getWindowHandles();
-			len = handles.size() -1;
-			for (int i = 0; i <= len; i++) {
-				String tmp_handle = handles.toArray()[i].toString();
-				String tmp_url = this.Browser.getDriver().switchTo().window(tmp_handle).getCurrentUrl();
-				String tmp_title = this.Browser.getDriver().switchTo().window(tmp_handle).getTitle();
-				this.report.Log(String.format("[%d]: Window Handle: '%s'", i, tmp_handle));
-				this.report.Log(String.format("[%d]: Window Title: '%s'", i, tmp_title));
-				this.report.Log(String.format("[%d]: Window URL: '%s'", i, tmp_url));
-				
-				if (!is_REGEX) {
-					if (!use_URL) {
-						if (tmp_title.equals(finder)) {
-							found_handle = tmp_handle;
-							this.report.Log(String.format("Found Window Title '%s'",finder));
-							break;
+			
+			for (int timer = 0; timer <= timeout; timer++) {
+				handles = this.Browser.getDriver().getWindowHandles();
+				len = handles.size() -1;
+				for (int i = 0; i <= len; i++) {
+					String tmp_handle = handles.toArray()[i].toString();
+					String tmp_url = this.Browser.getDriver().switchTo().window(tmp_handle).getCurrentUrl();
+					String tmp_title = this.Browser.getDriver().switchTo().window(tmp_handle).getTitle();
+					this.report.Log(String.format("[%d]: Window Handle: '%s'", i, tmp_handle));
+					this.report.Log(String.format("[%d]: Window Title: '%s'", i, tmp_title));
+					this.report.Log(String.format("[%d]: Window URL: '%s'", i, tmp_url));
+					
+					if (!is_REGEX) {
+						if (!use_URL) {
+							if (tmp_title.equals(finder)) {
+								found_handle = tmp_handle;
+								this.report.Log(String.format("Found Window Title '%s'",finder));
+								break;
+							}
+						} else {
+							if (tmp_url.equals(finder)) {
+								found_handle = tmp_handle;
+								this.report.Log(String.format("Found Window URL '%s'",finder));
+								break;
+							}
 						}
 					} else {
-						if (tmp_url.equals(finder)) {
-							found_handle = tmp_handle;
-							this.report.Log(String.format("Found Window URL '%s'",finder));
-							break;
+						if (!use_URL) {
+							Pattern p = Pattern.compile(finder);
+							Matcher m = p.matcher(tmp_title);
+							if (m.find()) {
+								found_handle = tmp_handle;
+								this.report.Log(String.format("Found Window Title '%s'", finder));
+								break;
+							}
+						} else {
+							Pattern p = Pattern.compile(finder);
+							Matcher m = p.matcher(tmp_url);
+							if (m.find()) {
+								found_handle = tmp_handle;
+								this.report.Log(String.format("Found Window URL '%s'",finder));
+								break;
+							}
 						}
 					}
-				} else {
-					if (!use_URL) {
-						Pattern p = Pattern.compile(finder);
-						Matcher m = p.matcher(tmp_title);
-						if (m.find()) {
-							found_handle = tmp_handle;
-							this.report.Log(String.format("Found Window Title '%s'", finder));
-							break;
-						}
-					} else {
-						Pattern p = Pattern.compile(finder);
-						Matcher m = p.matcher(tmp_url);
-						if (m.find()) {
-							found_handle = tmp_handle;
-							this.report.Log(String.format("Found Window URL '%s'",finder));
-							break;
-						}
-					}
+				} // end for loop //
+				
+				if (found_handle != null) {
+					break;
 				}
-			} // end for loop //
+				Thread.sleep(1000);
+			} // end timer loop //
 			
 			if (found_handle == null) {
 				String msg = String.format("Failed to find window matching: '%s!'", finder);
@@ -996,6 +1004,14 @@ public class SodaEventDriver implements Runnable {
 				value = this.replaceString(value);
 				this.report.AssertNot(value, src);
 			}
+			
+			if (event.containsKey("jscriptevent")) {
+				this.report.Log("Firing Javascript Event: "+ event.get("jscriptevent").toString());
+				this.Browser.fire_event(element, event.get("jscriptevent").toString());
+				Thread.sleep(1000);
+				this.report.Log("Javascript event finished.");
+			}
+			// http://192.168.50.178/sugar2?module=ModuleBuilder&action=index&type=studio#mbContent=module%3DModuleBuilder%26action%3DeditLayout%26view%3Ddetailview%26view_module%3DAccounts
 			
 			if (event.containsKey("children")) {
 				this.processEvents((SodaEvents)event.get("children"), element);
@@ -1708,7 +1724,7 @@ public class SodaEventDriver implements Runnable {
 				this.report.Log("Clicking button.");
 				element.click();
 				this.report.Log("Finished clicking button.");
-				this.firePlugin(element, SodaElements.BUTTON, SodaPluginEventType.AFTERCLICK);
+				this.firePlugin(element, SodaElements.BUTTON, SodaPluginEventType.AFTERCLICK);	
 			}
 			
 			if (event.containsKey("jscriptevent")) {
@@ -1717,6 +1733,7 @@ public class SodaEventDriver implements Runnable {
 				Thread.sleep(1000);
 				this.report.Log("Javascript event finished.");
 			}
+			
 		} catch (Exception exp) {
 			this.report.ReportException(exp);
 			element = null;
