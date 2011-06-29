@@ -285,6 +285,9 @@ public class SodaEventDriver implements Runnable {
 		case DND:
 			result = dndEvent(event);
 			break;
+		case TEXTAREA:
+			element = textareaEvent(event, parent);
+			break;
 		default:
 			System.out.printf("(*)Unknown command: '%s'!\n", event.get("type").toString());
 			System.exit(1);
@@ -1733,7 +1736,6 @@ public class SodaEventDriver implements Runnable {
 				Thread.sleep(1000);
 				this.report.Log("Javascript event finished.");
 			}
-			
 		} catch (Exception exp) {
 			this.report.ReportException(exp);
 			element = null;
@@ -1744,6 +1746,72 @@ public class SodaEventDriver implements Runnable {
 		
 		return element;
 	}
+
+	private WebElement textareaEvent(SodaHash event, WebElement parent) {
+		boolean required = true;
+		WebElement element = null;
+		
+		this.resetThreadTime();
+		
+		this.report.Log("Starting textarea event.");
+		
+		if (event.containsKey("required")) {
+			required = this.clickToBool(event.get("required").toString());
+		}
+		
+		try {
+			element = this.findElement(event, parent, required);
+			if (element == null) {
+				this.report.Log("Finished textarea event.");
+				return null;
+			}
+			
+			this.firePlugin(element, SodaElements.TEXTAREA, SodaPluginEventType.AFTERFOUND);
+			
+			if (event.containsKey("clear")) {
+				if (this.clickToBool(event.get("clear").toString())) {
+					this.report.Log("Clearing textarea.");
+					element.clear();
+				}
+			}
+			
+			if (event.containsKey("set")) {
+				String value = event.get("set").toString();
+				value = this.replaceString(value);
+				this.report.Log(String.format("Setting Value to: '%s'.", value));
+				element.sendKeys(value);
+			}
+			
+			if (event.containsKey("jscriptevent")) {
+				this.report.Log("Firing Javascript Event: "+ event.get("jscriptevent").toString());
+				this.Browser.fire_event(element, event.get("jscriptevent").toString());
+				Thread.sleep(1000);
+				this.report.Log("Javascript event finished.");
+			}
+			
+			if (event.containsKey("assert")) {
+				String assvalue = event.get("assert").toString();
+				assvalue = this.replaceString(assvalue);
+				this.report.Assert(assvalue, element.getAttribute("value"));
+			}
+			
+			if (event.containsKey("assertnot")) {
+				String assvalue = event.get("assertnot").toString();
+				assvalue = this.replaceString(assvalue);
+				this.report.AssertNot(assvalue, element.getAttribute("value"));
+			}
+		} catch (Exception exp) {
+			this.report.ReportException(exp);
+			element = null;
+		}
+		
+		this.resetThreadTime();
+		
+		this.report.Log("Finished textarea event.");
+		
+		return element;
+	}
+	
 	
 	private WebElement textfieldEvent(SodaHash event, WebElement parent) {
 		boolean required = true;
