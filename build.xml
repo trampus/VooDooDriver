@@ -12,6 +12,9 @@
    <property name="lib" location="./lib"/>
 	<property name="product-zip" location="${bin}/VooDooDriver.zip"/>
 	<property name="sodaelements" location="${src}/voodoodriver/SodaElements.xml"/>
+	<property name="officialName" value="VooDooDriver" />
+	<property name="version" value="0.0.1" />
+	<property name="year" value="2011" />
 	
    <pathconvert property="jars.classes" pathsep=" ">
       <mapper>
@@ -31,6 +34,7 @@
    	</path>
    </pathconvert>
 
+	
    <target name="init" depends="clean">
       <!-- Create the time stamp -->
       <tstamp/>

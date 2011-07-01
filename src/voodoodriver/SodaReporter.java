@@ -29,8 +29,10 @@ should not be interpreted as representing official policies, either expressed or
 
 package voodoodriver;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -49,6 +51,11 @@ public class SodaReporter {
 	private int OtherErrors = 0;
 	private int WatchDog = 0;
 	private String LineSeparator = null;
+	private boolean saveHTML = false;
+	private int SavePageNum = 0;
+	private SodaBrowser browser = null;
+	private String CurrentMD5 = "";
+	private String LastSavedPage = "";
 	
 	public SodaReporter(String reportName, String resultDir) {
 		DateFormat fd = new SimpleDateFormat("MM-d-yyyy-hh-m-s-S");
@@ -76,6 +83,11 @@ public class SodaReporter {
 		} catch (Exception exp) {
 			exp.printStackTrace();
 		}
+	}
+	
+	public void setSaveHTML(boolean setting, SodaBrowser browser) {
+		this.saveHTML = setting;
+		this.browser = browser;
 	}
 	
 	public SodaTestResults getResults() {
@@ -189,6 +201,7 @@ public class SodaReporter {
 		}
 		
 		this._log("(!)" + msg);
+		this.SavePage();
 	}
 	
 	public boolean isRegex(String str) {
@@ -235,6 +248,7 @@ public class SodaReporter {
 				this.FailedAsserts += 1;
 				msg = String.format("(!)Assert Failed for find: '%s'!", value);
 				this._log(msg);
+				this.SavePage();
 				result = false;
 			}
 		} else {
@@ -247,6 +261,7 @@ public class SodaReporter {
 				this.FailedAsserts += 1;
 				msg = String.format("(!)Assert Failed for find: '%s'!", value);
 				this._log(msg);
+				this.SavePage();
 				result = false;
 			}
 		}
@@ -263,7 +278,8 @@ public class SodaReporter {
 			if (src.matches(value)) {
 				this.FailedAsserts += 1;
 				msg = String.format("(!)Assert Failed, Found Unexpected text: '%s'.", value);
-				this._log(msg);	
+				this._log(msg);
+				this.SavePage();
 				result = false;
 			} else {
 				this.PassedAsserts += 1;
@@ -281,11 +297,56 @@ public class SodaReporter {
 				this.PassedAsserts += 1;
 				msg = String.format("Assert Failed for find: '%s' as expected.", value);
 				this.Log(msg);
+				this.SavePage();
 				result = true;
 			}
 		}
 		
 		return result;
+	}
+	
+	public void SavePage() {
+		File dir = null;
+		File newfd = null;
+		String htmldir = this.resultDir;
+		String new_save_file = "";
+		String src = "";
+		String md5 = "";
+		
+		if (!this.saveHTML) {
+			return;
+		}
+		
+		src = this.browser.getPageSource();
+		md5 = SodaUtils.MD5(src);
+		
+		if (md5.compareTo(this.CurrentMD5) == 0) {
+			this.Log(String.format("HTML Saved: %s", this.LastSavedPage));
+			return;
+		}
+		
+		htmldir = htmldir.concat("/saved-html");
+		dir = new File(htmldir);
+		if (!dir.exists()) {
+			dir.mkdir();
+		}
+		
+		new_save_file = htmldir;
+		new_save_file = new_save_file.concat(String.format("/savedhtml-%d.html", this.SavePageNum));
+		this.SavePageNum += 1;
+		
+		newfd = new File(new_save_file);
+		
+		try {
+			BufferedWriter bw = new BufferedWriter(new FileWriter(newfd));
+			bw.write(src);
+			bw.close();
+			this.LastSavedPage = new_save_file;
+			this.CurrentMD5 = SodaUtils.MD5(src);
+			this.Log(String.format("HTML Saved: %s", new_save_file));
+		} catch (Exception exp) {
+			this.ReportException(exp);
+		}
 	}
 	
 	protected void finalize() throws Throwable {
@@ -297,5 +358,4 @@ public class SodaReporter {
 	        super.finalize();
 	    }
 	}
-	
 }

@@ -42,7 +42,6 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.Select;
 
 public class SodaEventDriver implements Runnable {
 
@@ -141,7 +140,6 @@ public class SodaEventDriver implements Runnable {
 	}
 	
 	public void stop() {
-		
 		synchronized(this.threadStop) {
 			this.threadStop = true;
 			this.runner.interrupt();
@@ -664,7 +662,7 @@ public class SodaEventDriver implements Runnable {
 						if (setvalue.equals(tmp)) {
 							msg = String.format("Setting Select value to: '%s'.", setvalue);
 							this.report.Log(msg);
-							list.get(i).setSelected();
+							list.get(i).click();
 							this.firePlugin(element, SodaElements.SELECT, SodaPluginEventType.AFTERSET);
 							was_set = true;
 							break;
@@ -682,7 +680,6 @@ public class SodaEventDriver implements Runnable {
 					
 					List<WebElement> opts = element.findElements(By.tagName("option"));
 					int opts_len = opts.size() -1;
-					boolean passed = false;
 					String select_val = "";
 					
 					for (int opts_index = 0; opts_index <= opts_len; opts_index++) {
@@ -701,7 +698,6 @@ public class SodaEventDriver implements Runnable {
 					
 					List<WebElement> opts = element.findElements(By.tagName("option"));
 					int opts_len = opts.size() -1;
-					boolean passed = false;
 					String select_val = "";
 					
 					for (int opts_index = 0; opts_index <= opts_len; opts_index++) {
@@ -1142,7 +1138,7 @@ public class SodaEventDriver implements Runnable {
 					this.report.Log("Unchecking finished.");
 				} else {
 					this.report.Log("Checking checkbox.");
-					element.setSelected();
+					element.click();
 					this.report.Log("Checking finished.");
 				}
 			}
@@ -1527,10 +1523,12 @@ public class SodaEventDriver implements Runnable {
 			if (required) {
 				this.report.ReportException(exp);
 				element = null;
+				System.exit(-1);
 			}
 		} catch (Exception exp) {
 			this.report.ReportException(exp);
 			element = null;
+			System.exit(-1);
 		}
 		
 		this.resetThreadTime();
@@ -1894,4 +1892,9 @@ public class SodaEventDriver implements Runnable {
 		return result;
 	}
 	
+	/*
+	private void saveHTML() {
+		this.report.SavePage(this.Browser);
+	}
+	*/
 }

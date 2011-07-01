@@ -45,11 +45,12 @@ public class SodaTest {
 	private SodaBlockList blocked = null;
 	private boolean WatchDog = false;
 	private SodaEvents PlugIns = null;
+	private boolean SaveHTML = false;
 	private static final int ThreadTimeout = 60 * 5; // 5 minute timeout //
-	//private static final int ThreadTimeout = 60;
 	
 	public SodaTest(String testFile, SodaBrowser browser, SodaHash gvars, SodaHash hijacks, 
-			SodaBlockList blocklist, SodaHash oldvars, String suitename, String reportDir) {
+			SodaBlockList blocklist, SodaHash oldvars, String suitename, String reportDir,
+			boolean saveHtml) {
 		this.Browser = browser;
 		this.testFile = testFile;
 		this.HiJacks = hijacks;
@@ -60,6 +61,8 @@ public class SodaTest {
 		String report_name = "";
 		File tmp_file = new File(testFile);
 		
+		this.SaveHTML = saveHtml;
+		
 		report_name = tmp_file.getName();
 		report_name = report_name.replaceAll(".xml$", "");
 		
@@ -68,6 +71,11 @@ public class SodaTest {
 		}
 		
 		this.reporter = new SodaReporter(report_name, resultsdir);
+		
+		if (saveHtml) {
+			this.reporter.setSaveHTML(this.SaveHTML, browser);
+		}
+		
 		this.Browser.setReporter(this.reporter);
 	}
 	
@@ -200,6 +208,7 @@ public class SodaTest {
 				String msg = String.format("Test is currently blocked, Bug Number: '%s', Module Name: '%s'"+
 						", Reason: '%s'", bug_number, module_name, reason);
 				this.reporter.Log(msg);
+				this.reporter.ReportBlocked();
 				break;
 			}
 		}

@@ -50,6 +50,7 @@ import voodoodriver.SodaSupportedBrowser;
 import voodoodriver.SodaTest;
 import voodoodriver.SodaTestList;
 import voodoodriver.SodaTestResults;
+import voodoodriver.SodaUtils;
 
 public class VooDooDriver {
 
@@ -98,6 +99,7 @@ public class VooDooDriver {
 		String pluginFile = null;
 		SodaPluginParser plugParser = null;
 		SodaEvents plugins = null;
+		boolean savehtml = false;
 		
 		
 		System.out.printf("Starting VooDooDriver...\n");
@@ -125,6 +127,9 @@ public class VooDooDriver {
 				System.out.printf("(!)Error: Missing --browser commandline option!\n\n");
 				System.exit(-1);
 			}
+			
+			savehtml = (Boolean)cmdOpts.get("savehtml");
+			System.out.printf("(*)SaveHTML: %s\n", savehtml);
 			
 			pluginFile = (String)cmdOpts.get("plugin");
 			if (pluginFile != null) {
@@ -170,13 +175,13 @@ public class VooDooDriver {
 				}
 				
 				RunSuites(SodaSuitesList, resultdir, browserType, (SodaHash)cmdOpts.get("gvars"), 
-						(SodaHash)cmdOpts.get("hijacks"), blockList, plugins);
+						(SodaHash)cmdOpts.get("hijacks"), blockList, plugins, savehtml);
 			}
 			
 			SodaTestsList = (ArrayList<String>)cmdOpts.get("tests");
 			if (!SodaTestsList.isEmpty()) {
 				RunTests(SodaTestsList, resultdir, browserType, (SodaHash)cmdOpts.get("gvars"), (SodaHash)cmdOpts.get("hijacks"),
-						plugins);
+						plugins, savehtml);
 			}
 		} catch (Exception exp) {
 			exp.printStackTrace();
@@ -187,7 +192,7 @@ public class VooDooDriver {
 	}
 	
 	private static void RunTests(ArrayList<String> tests, String resultdir, SodaSupportedBrowser browserType,
-			SodaHash gvars, SodaHash hijacks, SodaEvents plugins) {
+			SodaHash gvars, SodaHash hijacks, SodaEvents plugins, boolean savehtml) {
 		File resultFD = null;
 		SodaBrowser browser = null;
 		int len = 0;
@@ -226,7 +231,8 @@ public class VooDooDriver {
 		for (int i = 0; i <= len; i++) {
 			System.out.printf("Starting Test: '%s'.\n", tests.get(i));
 			
-			testobj = new SodaTest(tests.get(i), browser, gvars, hijacks, null, null, null, resultdir);
+			testobj = new SodaTest(tests.get(i), browser, gvars, hijacks, null, null, null, 
+					resultdir, savehtml);
 			testobj.setPlugins(plugins);
 			testobj.runTest(false);
 			
@@ -244,7 +250,7 @@ public class VooDooDriver {
 	}
 	
 	private static void RunSuites(ArrayList<String> suites, String resultdir, SodaSupportedBrowser browserType,
-			SodaHash gvars, SodaHash hijacks, SodaBlockList blockList, SodaEvents plugins) {
+			SodaHash gvars, SodaHash hijacks, SodaBlockList blockList, SodaEvents plugins, boolean savehtml) {
 		int len = suites.size() -1;
 		File resultFD = null;
 		String report_file_name = resultdir;
@@ -334,14 +340,17 @@ public class VooDooDriver {
 			SodaTestList suite_test_list = suiteP.getTests();
 			SodaHash vars = null;
 			SodaTestResults test_results_hash = null;
+			ArrayList<SodaTestResults> test_resultsStore = new ArrayList<SodaTestResults>();
 			
 			suiteStartTime = new Date();
 			for (int test_index = 0; test_index <= suite_test_list.size() -1; test_index++) {
+				Date test_start_time = null;
 				writeSummary(suiteRptFD, "\t\t<test>\n");
 				String current_test = suite_test_list.get(test_index);
 				writeSummary(suiteRptFD, String.format("\t\t\t<testfile>%s</testfile>\n", current_test));
 				System.out.printf("(*)Executing Test: '%s'\n", current_test);
 				now = new Date();
+				test_start_time = now;
 				date_str = df.format(now);
 				writeSummary(suiteRptFD, String.format("\t\t\t<starttime>%s</starttime>\n", date_str));
 				
@@ -352,7 +361,7 @@ public class VooDooDriver {
 				}
 				
 				testobj = new SodaTest(current_test, browser, gvars, hijacks, blockList, vars, 
-						suite_base_noext, resultdir);
+						suite_base_noext, resultdir, savehtml);
 				
 				if (plugins != null) {
 					testobj.setPlugins(plugins);
@@ -363,13 +372,15 @@ public class VooDooDriver {
 				now = new Date();
 				date_str = df.format(now);
 				writeSummary(suiteRptFD, String.format("\t\t\t<stoptime>%s</stoptime>\n", date_str));
-				
+				String msg = SodaUtils.GetRunTime(test_start_time, now);
+				writeSummary(suiteRptFD, String.format("\t\t\t<totaltesttime>%s</totaltesttime>\n", msg));
 				
 				if (testobj.getSodaEventDriver() != null) {
 					vars = testobj.getSodaEventDriver().getSodaVars();
 				}
 				
 				test_results_hash = testobj.getReporter().getResults();
+				test_resultsStore.add(test_results_hash);
 				for (int res_index = 0; res_index <= test_results_hash.keySet().size() -1; res_index++) {
 					String key = test_results_hash.keySet().toArray()[res_index].toString();
 					String value = test_results_hash.get(key).toString();
@@ -391,10 +402,18 @@ public class VooDooDriver {
 					break;
 				}
 			}
+			
 			suiteStopTime = new Date();
+			String msg = String.format("\t\t<runtime>%s</runtime>\n", SodaUtils.GetRunTime(suiteStartTime, suiteStopTime));
 			writeSummary(suiteRptFD, String.format("\t\t<starttime>%s</starttime>\n", df.format(suiteStartTime)));
 			writeSummary(suiteRptFD, String.format("\t\t<stoptime>%s</stoptime>\n", df.format(suiteStopTime)));
+			writeSummary(suiteRptFD, msg);
 			writeSummary(suiteRptFD, "\t</suite>\n");
+			
+			// insert console reporting //
+			
+			
+			
 		}
 		writeSummary(suiteRptFD, "</data>\n\n");
 	}
