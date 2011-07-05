@@ -186,14 +186,13 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 				result = this.Driver.getPageSource();
 			} catch (Exception exp) {
 				failed = true;
-				System.out.printf("SOMETHING BAD!\n");
 			}
 			
 			if (failed) {
 				try {
 					Thread.currentThread().sleep(1000);
 				} catch (Exception exp) {
-					System.out.printf("SOMETHING BAD-2!\n");
+					exp.printStackTrace();
 				}
 			} else {
 				break;
