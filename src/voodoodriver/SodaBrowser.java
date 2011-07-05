@@ -177,18 +177,40 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 	}
 	
 	public String getPageSource() {
-		return this.Driver.getPageSource();
+		String result = "";
+		int max = 20;
+		boolean failed = false;
+		
+		for (int i = 0; i <= max; i++) {
+			try {
+				result = this.Driver.getPageSource();
+			} catch (Exception exp) {
+				failed = true;
+			}
+			
+			if (failed) {
+				try {
+					this.Driver.navigate().wait(1000);
+				} catch (Exception exp) {
+					
+				}
+			} else {
+				break;
+			}
+		}
+		
+		return result;
 	}
 	
 	public boolean Assert(String value) {
 		boolean result = false;
-		result = this.reporter.Assert(value, this.Driver.getPageSource());
+		result = this.reporter.Assert(value, this.getPageSource());
 		return result;
 	}
 	
 	public boolean AssertNot(String value) {
 		boolean result = false;
-		result = this.reporter.AssertNot(value, this.Driver.getPageSource());
+		result = this.reporter.AssertNot(value, this.getPageSource());
 		return result;
 	}
 	

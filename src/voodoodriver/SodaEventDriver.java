@@ -833,7 +833,7 @@ public class SodaEventDriver implements Runnable {
 		boolean is_REGEX = false;
 		String finder = "";
 		String found_handle = null;
-		int timeout = 5;
+		int timeout = 10;
 		
 		try {
 			this.report.Log("Starting attach event.");
@@ -923,7 +923,6 @@ public class SodaEventDriver implements Runnable {
 			
 		} catch (Exception exp) {
 			exp.printStackTrace();
-			System.exit(0);
 		}
 		
 		return result;
@@ -1523,12 +1522,10 @@ public class SodaEventDriver implements Runnable {
 			if (required) {
 				this.report.ReportException(exp);
 				element = null;
-				System.exit(-1);
 			}
 		} catch (Exception exp) {
 			this.report.ReportException(exp);
 			element = null;
-			System.exit(-1);
 		}
 		
 		this.resetThreadTime();
@@ -1891,10 +1888,4 @@ public class SodaEventDriver implements Runnable {
 		
 		return result;
 	}
-	
-	/*
-	private void saveHTML() {
-		this.report.SavePage(this.Browser);
-	}
-	*/
 }

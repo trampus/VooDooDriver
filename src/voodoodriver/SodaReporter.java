@@ -40,7 +40,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SodaReporter {
-
+	
 	private String resultDir = "";
 	private String reportLog = null;
 	private FileOutputStream reportFD = null;
