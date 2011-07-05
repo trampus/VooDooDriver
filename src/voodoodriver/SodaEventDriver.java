@@ -288,6 +288,7 @@ public class SodaEventDriver implements Runnable {
 			break;
 		case LI:
 			element = liEvent(event, parent);
+			break;
 		default:
 			System.out.printf("(*)Unknown command: '%s'!\n", event.get("type").toString());
 			System.exit(1);
