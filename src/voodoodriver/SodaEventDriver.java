@@ -286,6 +286,8 @@ public class SodaEventDriver implements Runnable {
 		case TEXTAREA:
 			element = textareaEvent(event, parent);
 			break;
+		case LI:
+			element = liEvent(event, parent);
 		default:
 			System.out.printf("(*)Unknown command: '%s'!\n", event.get("type").toString());
 			System.exit(1);
@@ -424,6 +426,47 @@ public class SodaEventDriver implements Runnable {
 		this.report.Log("FileField event finished..");
 		this.resetThreadTime();
 		
+		return element;
+	}
+	
+	private WebElement liEvent(SodaHash event, WebElement parent) {
+		boolean required = true;
+		boolean click = false;
+		WebElement element = null;
+		
+		this.report.Log("LI event Started.");
+		
+		if (event.containsKey("required")) {
+			required = this.clickToBool(event.get("required").toString());
+		}
+		
+		try {
+			element = this.findElement(event, parent, required);
+			if (element == null) {
+				this.report.Log("LI event finished.");
+				return element;
+			}
+			
+			if (event.containsKey("click")) {
+				click = this.clickToBool(event.get("click").toString());
+			}
+			
+			if (click) {
+				this.report.Log("Click element.");
+				this.firePlugin(element, SodaElements.LI, SodaPluginEventType.BEFORECLICK);
+				element.click();
+				this.firePlugin(element, SodaElements.LI, SodaPluginEventType.AFTERCLICK);
+				this.report.Log("Click finished.");
+			}
+		} catch (Exception exp) {
+			this.report.ReportException(exp);
+		}
+		
+		if (event.containsKey("children")) {
+			this.processEvents((SodaEvents)event.get("children"), element);
+		}
+		
+		this.report.Log("LI event finished.");
 		return element;
 	}
 	
