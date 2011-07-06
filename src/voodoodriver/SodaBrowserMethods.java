@@ -29,6 +29,12 @@ should not be interpreted as representing official policies, either expressed or
 
 package voodoodriver;
 
+/**
+ * An enum class for all of the valid browser actions.
+ * 
+ * @author trampus
+ *
+ */
 public enum SodaBrowserMethods {
 	BROWSER_cssprop,
 	BROWSER_cssvalue,
@@ -40,6 +46,12 @@ public enum SodaBrowserMethods {
 	BROWSER_jscriptevent,
 	BROWSER_assert;
 
+	/**
+	 * Checks to see if a given name exists in this enum.
+	 * 
+	 * @param aName The name of the action you want to see if it exists for this class.
+	 * @return {@link boolean}
+	 */
 	static public boolean isMember(String aName) {
 		boolean result = false;
 		SodaBrowserMethods[] values = SodaBrowserMethods.values();
