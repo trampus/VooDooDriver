@@ -289,6 +289,9 @@ public class SodaEventDriver implements Runnable {
 		case LI:
 			element = liEvent(event, parent);
 			break;
+		case RADIO:
+			element = radioEvent(event, parent);
+			break;
 		default:
 			System.out.printf("(*)Unknown command: '%s'!\n", event.get("type").toString());
 			System.exit(1);
@@ -676,7 +679,76 @@ public class SodaEventDriver implements Runnable {
 		return element;
 		
 	}
-	
+
+	private WebElement radioEvent(SodaHash event, WebElement parent) {
+		boolean required = true;
+		boolean click = false;
+		WebElement element = null;
+
+		this.report.Log("Radio event starting.");
+		
+		if (event.containsKey("required")) {
+			required = this.clickToBool(event.get("required").toString());
+		}
+		
+		try {
+			element = this.findElement(event, parent, required);
+			if (element == null) {
+				this.report.Log("Radio event finished.");
+				return element;
+			}
+			
+			this.firePlugin(element, SodaElements.RADIO, SodaPluginEventType.AFTERFOUND);
+			
+			if (event.containsKey("click")) {
+				click = this.clickToBool(event.get("click").toString());
+			}
+			
+			if (event.containsKey("vartext")) {
+				String name = event.get("vartext").toString();
+				String value = element.getText();
+				SodaHash tmp = new SodaHash();
+				tmp.put("set", value);
+				tmp.put("var", name);
+				this.varEvent(tmp);
+			}
+			
+			if (click) {
+				this.firePlugin(element, SodaElements.RADIO, SodaPluginEventType.BEFORECLICK);
+				this.report.Log("Clicking Element.");
+				element.click();
+				this.report.Log("Click finished.");
+				this.firePlugin(element, SodaElements.RADIO, SodaPluginEventType.AFTERCLICK);
+			}
+			
+			if (event.containsKey("assert")) {
+				String src = element.getText();
+				String val = this.replaceString(event.get("assert").toString());
+				this.report.Assert(val, src);
+			}
+			
+			if (event.containsKey("assertnot")) {
+				String src = element.getText();
+				String val = this.replaceString(event.get("assertnot").toString());
+				this.report.AssertNot(val, src);
+			}
+			
+			if (event.containsKey("jscriptevent")) {
+				this.report.Log("Firing Javascript Event: "+ event.get("jscriptevent").toString());
+				this.Browser.fire_event(element, event.get("jscriptevent").toString());
+				Thread.sleep(1000);
+				this.report.Log("Javascript event finished.");
+			}
+		} catch (Exception exp) {
+			this.report.ReportException(exp);
+			element = null;
+		}
+		
+		this.report.Log("Radio event finished.");
+		
+		return element;		
+	}
+
 	private WebElement selectEvent(SodaHash event, WebElement parent) {
 		boolean required = true;
 		WebElement element = null;
