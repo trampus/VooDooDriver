@@ -33,6 +33,12 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+/**
+ * Interface needed to add supported browsers to VooDooDriver.
+ * 
+ * @author trampus
+ *
+ */
 public interface SodaBrowserInterface {
 
 	public void newBrowser();

@@ -29,6 +29,12 @@ should not be interpreted as representing official policies, either expressed or
 
 package voodoodriver;
 
+/**
+ * Enum class for all of the supported browser actions.
+ * 
+ * @author trampus
+ *
+ */
 public enum SodaBrowserActions {
 	CLOSE,
 	BACK,

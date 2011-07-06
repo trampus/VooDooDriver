@@ -111,7 +111,7 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 	/**
 	 * Sets a new WebDriver for the browser to use.
 	 * 
-	 * @param {@link WebDriver}
+	 * @param driver
 	 */
 	public void setDriver(WebDriver driver) {
 		this.Driver = driver;
@@ -126,18 +126,39 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 		return this.Driver;
 	}
 	
+	/**
+	 *  creates a newBrowser
+	 */
 	public void newBrowser() {
 		this.closed = false;
 	}
 	
+	/**
+	 * Sets the state if the browser is open or closed.
+	 * 
+	 * @param state Sets the closed state for the browser.
+	 */
 	public void setBrowserState(boolean state) {
 		this.closed = state;
 	}
-	
+
+	/**
+	 * Tells the browser to bypass java Alert & confirm dialogs.
+	 * 
+	 * @param alert	sets how you want to handle a confirm dialog.
+	 */
     public void alertHack(boolean alert) {
     	
     }
 	
+    /**
+     * Executed javascript in the browser, but also creates an auto var called "CONTROL", which 
+     * can be used by the script being executed.
+     * 
+     * @param script	The javascript to run in the browser.
+     * @param element	The Element to use on the page as the CONTROL var.
+     * @return {@link Object}
+     */
 	public Object executeJS(String script, WebElement element) {
 		Object result = null;
 		JavascriptExecutor js = (JavascriptExecutor)this.Driver;
@@ -155,6 +176,13 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 		return result;
 	}
 	
+	/**
+	 * Fires a javascript event in the browser for a given html element.
+	 * 
+	 * @param element
+	 * @param eventType
+	 * @return {@link String}
+	 */
 	public String fire_event(WebElement element, String eventType) {
 		String result = "";
 		String eventjs_src = "";
@@ -196,6 +224,14 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 		return result;
 	}
 	
+
+	/**
+	 * Generates a browser event to be fired on a given control.
+	 *
+	 * @param type
+	 * 
+	 * @return {@link String} results
+	 */
 	public String generateUIEvent(UIEvents type) {
 		String result = "var ele = arguments[0];\n"; 
 		result += "var evObj = document.createEvent('MouseEvents');\n";
@@ -207,23 +243,40 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 		return result;
 	}
 	
+	/**
+	 * Calls refresh in the browser.
+	 */
 	public void refresh() {
 		this.Driver.navigate().refresh();
 	}
 	
+	/**
+	 * Calls forward in the browser.
+	 */
 	public void forward() {
 		this.Driver.navigate().forward();
 	}
 	
+	/**
+	 * Calls back in the browser.
+	 */
 	public void back() {
 		this.Driver.navigate().back();
 	}
 	
+	/**
+	 * Calls close on the browser.
+	 */
 	public void close() {
 		this.Driver.close();
 		this.setBrowserClosed();
 	}
 	
+	/**
+	 * Gets the page sources in the current browser window.
+	 * 
+	 * @return {@link String} result
+	 */
 	public String getPageSource() {
 		String result = "";
 		int max = 20;
@@ -250,18 +303,35 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 		return result;
 	}
 	
+	/**
+	 * Asserts if the given value exists in the browser text.
+	 * 
+	 * @param value The value to check if exists in the browser.
+	 * 
+	 * @return {@link boolean} result
+	 */
 	public boolean Assert(String value) {
 		boolean result = false;
 		result = this.reporter.Assert(value, this.getPageSource());
 		return result;
 	}
 	
+	/**
+	 * Asserts if the given value does not exist in the browser text.
+	 * 
+	 * @param value The value to check if not exists in the browser.
+	 * 
+	 * @return boolean
+	 */
 	public boolean AssertNot(String value) {
 		boolean result = false;
 		result = this.reporter.AssertNot(value, this.getPageSource());
 		return result;
 	}
 	
+	/**
+	 * Current not finished!
+	 */
 	public boolean assertPage() {
 		boolean result = false;
 		
@@ -270,19 +340,13 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 		return result;
 	}
 	
-	/*
-	 * findElement -- method
-	 * 	This method finds a given WebElement.  The retryTime is used to keep looking for the
-	 * 	element until the timeout has happened.
+	/**
+	 * Find an element in the browser's current dom.
 	 * 
-	 * Input:
-	 * 	by: this is how we find the element.
-	 * 	retryTime: This is how many seconds we would wait for the element to showup in the dom
-	 *		before giving up on the search.
-	 *
-	 *	Output:
-	 *	returns null on failure to find the element, else a WebElement is returned.
+	 * @param by
+	 * @param retryTime
 	 * 
+	 * @return {@link WebElement}
 	 */
 	public WebElement findElement(By by, int retryTime) {
 		WebElement result = null;
@@ -303,6 +367,15 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 		return result;
 	}
 	
+	/**
+	 * Finds more then one element in the browser's current DOM.
+	 * 
+	 * @param by
+	 * @param retryTime
+	 * @param index
+	 * @param required
+	 * @return {@link WebElement}
+	 */
 	public WebElement findElements(By by, int retryTime, int index, boolean required) {
 		WebElement result = null;
 		List<WebElement> elements = null;
@@ -337,6 +410,11 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 		return result;
 	}
 	
+	/**
+	 * Tells the browser to go to this URL.
+	 * 
+	 * @param url
+	 */
 	public void url(String url) {
 		try {
 			this.Driver.navigate().to(url);
