@@ -30,6 +30,12 @@ should not be interpreted as representing official policies, either expressed or
 
 package voodoodriver;
 
+/**
+ * The supported voodoodriver javascript event types.
+ * 
+ * @author trampus
+ *
+ */
 public enum JavascriptEventTypes {
 	UIEvent,
 	HTMLEvent;

@@ -29,6 +29,13 @@ should not be interpreted as representing official policies, either expressed or
 
 package voodoodriver;
 
+/**
+ * An enum of all of the supported Soda HTML on'xxxx' events.  All of the enum
+ * names are missing the leading "on".
+ * 
+ * @author trampus
+ *
+ */
 public enum HTMLEvents {
       ABORT,
       BLUR,

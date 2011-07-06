@@ -35,6 +35,12 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+/**
+ * An base class for adding new web browser support for VooDooDriver.
+ * 
+ * @author trampus
+ *
+ */
 public abstract class SodaBrowser implements SodaBrowserInterface {
 	
 	private WebDriver Driver = null;
@@ -42,38 +48,80 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 	private String profile = null;
 	private SodaReporter reporter = null;
 	
+	/**
+	 * Constructor
+	 * 
+	 */
 	public SodaBrowser() {
 		
 	}
 	
+	/**
+	 * Tells you if you the current browser object closed.
+	 * 
+	 * @return boolean
+	 */
 	public boolean isClosed() {
 		return this.closed;
 	}
 	
+	/**
+	 * Set the internal {@link SodaReporter} object.
+	 * 
+	 * @param rep An existing {@link SodaReporter} object.
+	 */
 	public void setReporter(SodaReporter rep) {
 		this.reporter = rep;
 	}
 	
+	/**
+	 * Sets the name of the browser profile to use.
+	 * 
+	 * @param profile The name of the browser profile to use.
+	 */
 	public void setProfile(String profile) {
 		this.profile = profile;
 	}
 	
+	/**
+	 * Gets the current set browser profile name.
+	 * 
+	 * @return {@linkplain String} The current browser profile name.
+	 */
 	public String getProfile() {
 		return this.profile;
 	}
 	
+	/**
+	 * tells the class that the browser window has been closed.
+	 */
 	public void setBrowserClosed() {
 		this.closed = true;
 	}
 	
+	/**
+	 * Tells you if the browser windows was closed for this object.
+	 * 
+	 * @return {@linkplain boolean}
+	 */
 	public boolean getBrowserCloseState() {
 		return this.closed;
 	}
 	
+	/**
+	 * Sets a new WebDriver for the browser to use.
+	 * 
+	 * @param {@link WebDriver}
+	 */
 	public void setDriver(WebDriver driver) {
 		this.Driver = driver;
 	}
 	
+	/**
+	 * Returns the current {@link WebDriver} instance.
+	 * 
+	 * @return {@link WebDriver}
+	 */
 	public WebDriver getDriver() {
 		return this.Driver;
 	}

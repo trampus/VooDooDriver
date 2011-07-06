@@ -30,22 +30,38 @@ should not be interpreted as representing official policies, either expressed or
 package voodoodriver;
 
 import java.io.File;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+/**
+ * This class is for parsing Soda Block List files.
+ * 
+ * @author trampus
+ *
+ */
 public class SodaBlockListParser {
 	
 	private String file_name = null;
 	
+	/**
+	 * Constructor.
+	 * 
+	 * @param file	The blocklist xml file to parse.
+	 */
 	public SodaBlockListParser(String file) {
 		this.file_name = file;
 	}
 	
+	/**
+	 * Parses the block list file.
+	 * 
+	 * @return	Returns a SodaBlockList.
+	 * 
+	 * @see SodaBlockList
+	 */
 	public SodaBlockList parse() {
 		SodaBlockList list = null;
 		File FD = null;
@@ -93,5 +109,4 @@ public class SodaBlockListParser {
 		
 		return list;
 	}
-	
 }

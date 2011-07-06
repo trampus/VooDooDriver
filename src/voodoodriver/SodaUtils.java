@@ -7,9 +7,22 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
-
+/**
+ * A simple class for housing one off needed util functions, that can
+ * all be called statically.
+ * 
+ * @author trampus
+ *
+ */
 public class SodaUtils {
 	
+	/**
+	 * Creates an MD5 sum of your string data.
+	 * 
+	 * @param data	a string that you want to get the MD5 sum of.
+	 * 
+	 * @return The MD5 sum of your data string.
+	 */
 	public static String MD5(String data) {
 		String res = "";
 		int len = 0;
@@ -39,6 +52,13 @@ public class SodaUtils {
 		
 	}
 	
+	/**
+	 * Reads a text file into a String object.
+	 * 
+	 * @param filename 	The file to read in.
+	 * @return Returns a String containing the contents of the text file.
+	 * 
+	 */
 	public static String FileToStr(String filename) {
 		String result = "";
 		BufferedReader reader = null;
@@ -58,6 +78,13 @@ public class SodaUtils {
 		return result;
 	}
 
+	/**
+	 * Generates a string containing the run time based on a start & stop time.
+	 * 
+	 * @param starttime The start time.
+	 * @param stoptime	The stop time.
+	 * @return A String formatted as: hh:mm:ss:m (hours, minutes, seconds, micro seconds).
+	 */
 	public static String GetRunTime(Date starttime, Date stoptime) {
 		String result = "";
 		long diff = 0;
