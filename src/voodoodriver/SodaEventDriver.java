@@ -646,12 +646,14 @@ public class SodaEventDriver implements Runnable {
 			
 			if (event.containsKey("assert")) {
 				String src = element.getText();
-				this.report.Assert(event.get("assert").toString(), src);
+				String val = this.replaceString(event.get("assert").toString());
+				this.report.Assert(val, src);
 			}
 			
 			if (event.containsKey("assertnot")) {
 				String src = element.getText();
-				this.report.AssertNot(event.get("assertnot").toString(), src);
+				String val = this.replaceString(event.get("assertnot").toString());
+				this.report.AssertNot(val, src);
 			}
 			
 			if (event.containsKey("jscriptevent")) {

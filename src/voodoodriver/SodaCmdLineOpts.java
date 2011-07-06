@@ -31,6 +31,12 @@ package voodoodriver;
 
 import java.util.ArrayList;
 
+/**
+ * A class for parsing all the of needed command line options for voodoodriver.
+ * 
+ * @author trampus
+ *
+ */
 public class SodaCmdLineOpts {
 
 	private SodaHash options = null;
@@ -129,6 +135,11 @@ public class SodaCmdLineOpts {
 		}
 	}
 	
+	/**
+	 * Parses the --gvar command line option.
+	 * 
+	 * @param str The gvar command line.
+	 */
 	private void handleGvarsValue(String str) {
 		str = str.replace("--gvar=", "");
 		String[] data = str.split("::");
@@ -136,6 +147,11 @@ public class SodaCmdLineOpts {
 		System.out.printf("(*)GVar: %s => %s\n", "global."+data[0], data[1]);
 	}
 	
+	/**
+	 * Parses the --hijack command line option.
+	 * 
+	 * @param str The hijack command line.
+	 */
 	private void handleHijackValue(String str) {
 		str = str.replace("--hijack=", "");
 		String[] data = str.split("::");
@@ -143,18 +159,33 @@ public class SodaCmdLineOpts {
 		System.out.printf("(*)HiJack: %s => %s\n", data[0], data[1]);
 	}
 
+	/**
+	 * Parses the --test command line option.
+	 * 
+	 * @param str The test command line.
+	 */
 	private void handleTests(String str) {
 		str = str.replace("--test=", "");
 		this.tests.add(str);
 		System.out.printf("(*)Test Added: %s\n", str);
 	}
 	
+	/**
+	 * Parses the --suite command line option.
+	 * 
+	 * @param str The suite command line.
+	 */
 	private void handleSuites(String str) {
 		str = str.replace("--suite=", "");
 		this.suites.add(str);
 		System.out.printf("(*)Suite Added: %s\n", str);
 	}
 	
+	/**
+	 * Returns the parsed options.
+	 * 
+	 * @return {@link SodaHash}
+	 */
 	public SodaHash getOptions() {
 		return this.options;
 	}

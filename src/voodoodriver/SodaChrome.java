@@ -31,6 +31,12 @@ package voodoodriver;
 
 import org.openqa.selenium.chrome.ChromeDriver;
 
+/**
+ * Chome browser support for voodoodriver.
+ * 
+ * @author trampus
+ *
+ */
 public class SodaChrome extends SodaBrowser {
 	
 	public SodaChrome() {
@@ -57,6 +63,9 @@ public class SodaChrome extends SodaBrowser {
 		
 	}
 	
+	/**
+	 * Kills the native chome browser process.
+	 */
 	public void forceClose() {
 		SodaOSInfo.killProcesses(SodaOSInfo.getProcessIDs("Google Chrome"));
 		this.setBrowserClosed();
