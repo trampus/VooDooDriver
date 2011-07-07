@@ -29,6 +29,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
    <gvar name="url">http://localhost/sugarcrm</gvar>
    <gvar name="scriptsdir">tests</gvar>
    <cmdopt name="browser">firefox</cmdopt>
-   <errorskip type="css" />
+   <errorskip>css</errorskip>
 </sodaconfig>
 

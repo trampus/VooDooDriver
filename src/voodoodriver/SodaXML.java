@@ -36,10 +36,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-/*
- * SodaXML:
+/**
  * This is a simple class for reading a soda xml test file into a SodaEvents class.
- * 
+ * @author trampus
+ *
  */
 
 public class SodaXML {

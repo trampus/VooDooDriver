@@ -81,7 +81,10 @@ public class VooDooDriver {
 		"   --blocklistfile: This is the XML file containing tests to block from running.\n\n"+
 		"	--profile: This is the browser profile name use start the browser with.\n\n"+
 		"	--plugin: This is a plugin XML file.\n\n"+
-		"   --version: Print the Soda Version string.\n\n";
+		"	--config: This is a config file for preloading command line options.\n\n"+
+		"   --version: Print the Soda Version string.\n\n\n"+
+		"Notes:\n"+
+		"--)All conflicting command line options with with the config files supersede the confile files.\n\n";
 		
 		System.out.printf("%s\n", msg);
 	}
@@ -100,7 +103,7 @@ public class VooDooDriver {
 		SodaPluginParser plugParser = null;
 		SodaEvents plugins = null;
 		boolean savehtml = false;
-		
+		SodaConfigParser configParser = null;
 		
 		System.out.printf("Starting VooDooDriver...\n");
 		try {
@@ -110,7 +113,8 @@ public class VooDooDriver {
 			sodaConfigFD = new File(sodaConfigFile);
 			if (sodaConfigFD.exists()) {
 				System.out.printf("(*)Found VooDooDriver config file: %s\n", sodaConfigFile);
-				new SodaConfigParser(sodaConfigFD);
+				configParser = new SodaConfigParser(sodaConfigFD);
+				configParser.parse();
 			}
 			
 			if ((Boolean)cmdOpts.get("help")) {
@@ -409,11 +413,6 @@ public class VooDooDriver {
 			writeSummary(suiteRptFD, String.format("\t\t<stoptime>%s</stoptime>\n", df.format(suiteStopTime)));
 			writeSummary(suiteRptFD, msg);
 			writeSummary(suiteRptFD, "\t</suite>\n");
-			
-			// insert console reporting //
-			
-			
-			
 		}
 		writeSummary(suiteRptFD, "</data>\n\n");
 	}

@@ -28,11 +28,88 @@ should not be interpreted as representing official policies, either expressed or
  */
 
 import java.io.File;
+import java.lang.reflect.Constructor;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import voodoodriver.SodaEvents;
+import voodoodriver.SodaHash;
 
+/**
+ * Class to parse a VooDooDriver config xml file.
+ * 
+ * @author trampus
+ *
+ */
 public class SodaConfigParser {
 
+	private File configFile = null;
+	
+	/**
+	 * {@link Constructor}
+	 * 
+	 * @param configfile VooDooDriver config file.
+	 */
 	public SodaConfigParser(File configfile) {
-		
+		this.configFile = configfile;
 	}
 	
+	/**
+	 * Parses the VooDooDriver config file.
+	 * 
+	 * @return {@link SodaEvents}
+	 */
+	public SodaEvents parse() {
+		SodaEvents options = new SodaEvents();
+		DocumentBuilderFactory dbf = null;
+		DocumentBuilder db = null;
+		Document doc = null;
+		NodeList nodes = null;
+		int node_count = 0;
+		
+		try {
+			dbf = DocumentBuilderFactory.newInstance();
+			db = dbf.newDocumentBuilder();
+			doc = db.parse(this.configFile);	
+		} catch (Exception exp) {
+			exp.printStackTrace();
+			System.exit(2);
+		}
+		
+		nodes = doc.getDocumentElement().getChildNodes();
+		node_count = nodes.getLength() -1;
+		
+		for (int i = 0; i <= node_count; i++) {
+			SodaHash data = new SodaHash();
+			Node tmp = nodes.item(i);
+			String name = tmp.getNodeName();
+			
+			
+			if (name.contains("#text")) {
+				continue;
+			}
+			
+			if (tmp.hasAttributes()) {
+				NamedNodeMap attrs = tmp.getAttributes();
+				int attrs_count = attrs.getLength() -1;
+				
+				for (int x = 0; x <= attrs_count; x++) {
+					Node tmp_attr = attrs.item(x);
+					String attr_name = tmp_attr.getNodeName();
+					String attr_value = tmp_attr.getNodeValue();
+					data.put(attr_name, attr_value);
+				}
+			}
+			
+			String value = tmp.getTextContent();
+			data.put("type", name);
+			data.put("value", value);
+			options.add(data);
+		}
+		
+		return options;
+	}
 }

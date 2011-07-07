@@ -704,6 +704,12 @@ public class SodaEventDriver implements Runnable {
 				click = this.clickToBool(event.get("click").toString());
 			}
 			
+			// this is a hack to make older soda tests work //
+			if (event.containsKey("set")) {
+				this.report.Warn("Using the 'set' command for a radio element is not supported anymore!  Use click!");
+				click = this.clickToBool(event.get("set").toString());
+			}
+			
 			if (event.containsKey("vartext")) {
 				String name = event.get("vartext").toString();
 				String value = element.getText();

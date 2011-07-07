@@ -55,6 +55,7 @@ public class SodaCmdLineOpts {
 	private Boolean help = false;
 	private String profile = null;
 	private String plugin = null;
+	private String configfile = null;
 	
 	public SodaCmdLineOpts(String[] args) {
 		
@@ -110,6 +111,10 @@ public class SodaCmdLineOpts {
 					this.plugin = args[i];
 					this.plugin = this.plugin.replace("--plugin=", "");
 					System.out.printf("(*)Soda Plugin File: %s\n", this.plugin);
+				} else if (args[i].contains("--config")) {
+					this.configfile = args[i];
+					this.configfile = this.configfile.replace("--config=", "");
+					System.out.printf("(*)Soda Config File: %s\n", this.configfile);
 				}
 			}
 			
@@ -129,6 +134,7 @@ public class SodaCmdLineOpts {
 			this.options.put("help", this.help);
 			this.options.put("profile", this.profile);
 			this.options.put("plugin", this.plugin);
+			this.options.put("config", this.configfile);
 		} catch (Exception exp) {
 			exp.printStackTrace();
 			this.options = null;
