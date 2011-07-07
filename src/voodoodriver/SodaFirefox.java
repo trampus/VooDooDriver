@@ -30,17 +30,39 @@ should not be interpreted as representing official policies, either expressed or
 package voodoodriver;
 
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
 
 public class SodaFirefox extends SodaBrowser implements SodaBrowserInterface {
+	
+	private String downloadDirecotry = null;
 	
 	public SodaFirefox() {
 		
 	}
 	
+	public void setDownloadDirectory(String dir) {
+		this.downloadDirecotry = dir;
+	}
+	
 	public void newBrowser() {
 		FirefoxDriver fd = null;
+		FirefoxProfile profile = null;
+		
 		try {
-			fd = new FirefoxDriver();
+			profile = new FirefoxProfile();
+			
+			if (this.downloadDirecotry != null) {
+				profile.setPreference("browser.download.defaultFolder", this.downloadDirecotry);
+				profile.setPreference("browser.download.manager.closeWhenDone", true);
+				profile.setPreference("browser.download.manager.retention", 0);
+				profile.setPreference("browser.download.manager.showAlertOnComplete", false);
+				profile.setPreference("browser.download.manager.scanWhenDone", false);
+				profile.setPreference("browser.download.manager.showWhenStarting", false);
+				profile.setPreference("browser.download.manager.skipWinSecurityPolicyChecks", true);
+				profile.setPreference("browser.startup.page", 0);
+			}
+			
+			fd = new FirefoxDriver(profile);
 			this.setDriver(fd);
 			this.setBrowserState(false);
 		} catch (Exception exp) {

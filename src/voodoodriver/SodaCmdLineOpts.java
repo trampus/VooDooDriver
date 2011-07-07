@@ -56,6 +56,7 @@ public class SodaCmdLineOpts {
 	private String profile = null;
 	private String plugin = null;
 	private String configfile = null;
+	private String downloaddir = null;
 	
 	public SodaCmdLineOpts(String[] args) {
 		
@@ -110,12 +111,16 @@ public class SodaCmdLineOpts {
 				} else if (args[i].contains("--plugin")) {
 					this.plugin = args[i];
 					this.plugin = this.plugin.replace("--plugin=", "");
-					System.out.printf("(*)Soda Plugin File: %s\n", this.plugin);
+					System.out.printf("(*)VooDooDriver Plugin File: %s\n", this.plugin);
 				} else if (args[i].contains("--config")) {
 					this.configfile = args[i];
 					this.configfile = this.configfile.replace("--config=", "");
-					System.out.printf("(*)Soda Config File: %s\n", this.configfile);
-				}
+					System.out.printf("(*)VooDooDriver Config File: %s\n", this.configfile);
+				} else if (args[i].contains("--downloaddir")) {
+						this.downloaddir = args[i];
+						this.downloaddir = this.configfile.replace("--downloaddir=", "");
+						System.out.printf("(*)Download Directory: %s\n", this.downloaddir);
+				 }
 			}
 			
 			this.options = new SodaHash();
@@ -135,6 +140,7 @@ public class SodaCmdLineOpts {
 			this.options.put("profile", this.profile);
 			this.options.put("plugin", this.plugin);
 			this.options.put("config", this.configfile);
+			this.options.put("downloaddir", this.downloaddir);
 		} catch (Exception exp) {
 			exp.printStackTrace();
 			this.options = null;

@@ -82,6 +82,7 @@ public class VooDooDriver {
 		"	--profile: This is the browser profile name use start the browser with.\n\n"+
 		"	--plugin: This is a plugin XML file.\n\n"+
 		"	--config: This is a config file for preloading command line options.\n\n"+
+		"   --downloaddir: The default place to save downloaded files to.\n\n"+
 		"   --version: Print the Soda Version string.\n\n\n"+
 		"Notes:\n"+
 		"--)All conflicting command line options with with the config files supersede the confile files.\n\n";
@@ -238,11 +239,8 @@ public class VooDooDriver {
 			testobj = new SodaTest(tests.get(i), browser, gvars, hijacks, null, null, null, 
 					resultdir, savehtml);
 			testobj.setPlugins(plugins);
-			testobj.runTest(false);
-			
+			testobj.runTest(false);	
 		}
-		
-		
 	}
 	
 	private static void writeSummary(FileOutputStream in, String msg) {

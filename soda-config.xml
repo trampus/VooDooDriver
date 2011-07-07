@@ -30,5 +30,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
    <gvar name="scriptsdir">tests</gvar>
    <cmdopt name="browser">firefox</cmdopt>
    <errorskip>css</errorskip>
+   <cmdopt name="downloaddir">/Users/trichmond/voodoo-downloads</cmdopt>
 </sodaconfig>
 
