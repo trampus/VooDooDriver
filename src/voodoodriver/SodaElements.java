@@ -80,6 +80,24 @@ public enum SodaElements {
 	FILEFIELD,
 	ATTACH,
 	STAMP,
-	DND;
+	DND,
+	EXECUTE,
+	ARG;
+	
+	static public boolean isMember(String aName) {
+		boolean result = false;
+		SodaElements[] values = SodaElements.values();
+		
+		for (SodaElements amethod : values) {
+			if (amethod.name().equals(aName)) {
+				result = true;
+				break;
+			}
+		}
+
+		return result;
+	}
 }
+
+
 

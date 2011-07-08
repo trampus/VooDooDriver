@@ -80,25 +80,25 @@ public class SodaTypes {
 			Node child = node.item(i);
 			String name = child.getNodeName();
 			
-			if (name.startsWith("#")) {
-				continue;
-			}
-			
-			if (name.contains("comment")) {
+			if (name.startsWith("#") || name.contains("comment")) {
 				continue;
 			}
 			
 			data.put(name, 0);
-			data.put("type", SodaElements.valueOf(name.toUpperCase()));
-			if (child.hasChildNodes()) {
-				NodeList kids = child.getChildNodes();
-				for (int x = 0; x <= kids.getLength() -1; x++) {
-					Node tmp = kids.item(x);
-					String kid_name = tmp.getNodeName();
-					if (kid_name.contains("soda_attributes") || kid_name.contains("accessor_attributes")) {
-						data.put(kid_name, parseAccessors(tmp.getChildNodes()));
+			if (SodaElements.isMember(name.toUpperCase())) {
+				data.put("type", SodaElements.valueOf(name.toUpperCase()));
+				if (child.hasChildNodes()) {
+					NodeList kids = child.getChildNodes();
+					for (int x = 0; x <= kids.getLength() -1; x++) {
+						Node tmp = kids.item(x);
+						String kid_name = tmp.getNodeName();
+						if (kid_name.contains("soda_attributes") || kid_name.contains("accessor_attributes")) {
+							data.put(kid_name, parseAccessors(tmp.getChildNodes()));
+						}
 					}
 				}
+			} else {
+				System.out.printf("(!)Error: Unknown type: '%s'!\n", name);
 			}
 			
 			if (!data.isEmpty()) {

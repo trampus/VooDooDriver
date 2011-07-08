@@ -292,6 +292,9 @@ public class SodaEventDriver implements Runnable {
 		case RADIO:
 			element = radioEvent(event, parent);
 			break;
+		case EXECUTE:
+			result = executeEvent(event);
+			break;
 		default:
 			System.out.printf("(*)Unknown command: '%s'!\n", event.get("type").toString());
 			System.exit(1);
@@ -301,6 +304,52 @@ public class SodaEventDriver implements Runnable {
 		
 		if (element != null) {
 			this.saveElement(event, element);
+		}
+		
+		return result;
+	}
+	
+	private boolean executeEvent(SodaHash event) {
+		boolean result = false;
+		Process proc = null;
+		int proc_ret = 0;
+		
+		this.report.Log("Execute event starting...\n");
+		this.resetThreadTime();
+		
+		if (event.containsKey("args")) {
+			String[] list = (String[])event.get("args");
+			int len = list.length -1;
+			
+			for (int i = 0; i <= len; i++) {
+				System.out.printf("(%s) => '%s'\n", i, list[i]);
+			}
+			
+			try {
+				this.report.Log("Executing process now...");
+				proc = Runtime.getRuntime().exec(list);
+				this.resetThreadTime();
+				proc.waitFor();
+				this.resetThreadTime();
+				this.report.Log("Process finished executing.");
+				proc_ret = proc.exitValue();
+				if (proc_ret != 0) {
+					String msg = String.format("Error the command being executed returned a non-zero value: '%s'!",
+							proc_ret);
+					this.report.ReportError(msg);
+				} else {
+					this.report.Log("Execute was successful.");
+					result = true;
+				}
+			} catch (Exception exp) {
+				this.report.ReportException(exp);
+				result = false;
+			}
+		} else {
+			this.report.ReportError("Error no args for Execute Event!");
+			result = false;
+			this.report.Log("Execute event finished.");
+			return result;
 		}
 		
 		return result;

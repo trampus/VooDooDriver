@@ -30,6 +30,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
    <timestamp>
    </timestamp>
 
+   <execute>
+      <soda_attributes>
+         <accessor type="string">name</accessor>
+      </soda_attributes>
+   </execute>
+   
+   <arg>
+   </arg>
+
    <attach>
       <accessor_attributes>
          <accessor type="string">var</accessor>

@@ -30,6 +30,8 @@ should not be interpreted as representing official policies, either expressed or
 package voodoodriver;
 
 import java.io.File;
+import java.util.ArrayList;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
@@ -222,12 +224,17 @@ public class SodaXML {
 			}
 			
 			if (child.hasChildNodes()) {
-				SodaEvents tmp = parse(child.getChildNodes());
-				if (tmp != null) {
-					data.put("children", tmp);
+				if (name.contains("execute")) {
+					String[] list = processArgs(child.getChildNodes());
+					data.put("args", list);
 				} else {
-					err = true;
-					break;
+					SodaEvents tmp = parse(child.getChildNodes());
+					if (tmp != null) {
+						data.put("children", tmp);
+					} else {
+						err = true;
+						break;
+					}
 				}
 			}
 			
@@ -244,4 +251,32 @@ public class SodaXML {
 		
 		return dataList;
 	}
+	
+	private String[] processArgs(NodeList nodes) {
+		int len = nodes.getLength() -1;
+		String[] list;
+		int arg_count = 0;
+		int current = 0;
+		
+		for (int i = 0; i <= len; i++) {
+			String name = nodes.item(i).getNodeName();
+			if (name.contains("arg")) {
+				arg_count += 1;
+			}
+		}
+		
+		list = new String[arg_count];
+		
+		for (int i = 0; i <= len; i++) {
+			String name = nodes.item(i).getNodeName();
+			if (name.contains("arg")) {
+				String value = nodes.item(i).getTextContent();
+				list[current] = value;
+				current += 1;
+			}
+		}
+		
+		return list;
+	}
+	
 }

@@ -18,6 +18,7 @@ This project is currently under dev and isn't ready for use yet.
 elements.  Example:
    <div id="foo" save="my-div" />, this stores the div element under the ref "my-div", which can only be used by the <dnd>
    soda command.  See Drag'n Drop example for more info.
+9.)VooDooDriver now supports the <execute> command.  See Notes for more info on this.
 
 
 Notes:
@@ -26,4 +27,28 @@ Notes:
    Currently if you are using the --test command line option the browser you are using will be closed
    for you after each test is run even if you do now call the SODA command <browser action="close" />.  
    This is not the case of SODA suites.  SODA suites keep the browser open until the end of the suite.
+   
+(*)Execute Command:
+   The new command <execute> is for executing any program with arguments from inside a VooDooDriver test.
+   The command being executed !MUST! return a proper exit integer value.  This follows the Unix system of return
+   values so success is always a zero: 0, and anything other then success is non=zero.
+   
+   The execute command can have childern elements but they con only be of type <arg>, type arg is the list of
+   arguments to be passed to the execute command, where the first argument in the list is always going to be 
+   the command to execute, and all following <arg>'s are the parameters to said command.
+   
+   Example:  Calling a simple bash script:
+   <execute>
+      <arg>bash</arg>
+      <arg>-c</arg>
+      <arg>/Users/me/foobar.bash</arg>
+   </execute>
+   
+   Example: Calling a Unix command:
+   <execute>
+      <arg>ls</arg>
+      <arg>-la</arg>
+      <arg>/Users/me</arg>
+   </execute>
+   
    
