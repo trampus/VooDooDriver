@@ -57,6 +57,7 @@ public class SodaCmdLineOpts {
 	private String plugin = null;
 	private String configfile = null;
 	private String downloaddir = null;
+	private String assertPageFile = null;
 	
 	public SodaCmdLineOpts(String[] args) {
 		
@@ -118,8 +119,12 @@ public class SodaCmdLineOpts {
 					System.out.printf("(*)VooDooDriver Config File: %s\n", this.configfile);
 				} else if (args[i].contains("--downloaddir")) {
 						this.downloaddir = args[i];
-						this.downloaddir = this.configfile.replace("--downloaddir=", "");
+						this.downloaddir = this.downloaddir.replace("--downloaddir=", "");
 						System.out.printf("(*)Download Directory: %s\n", this.downloaddir);
+				 } else if (args[i].contains("--assertpagefile")) {
+						this.assertPageFile = args[i];
+						this.assertPageFile = this.assertPageFile.replace("--assertpagefile=", "");
+						System.out.printf("(*)Assertpagefile: %s\n", this.assertPageFile);
 				 }
 			}
 			
@@ -141,6 +146,7 @@ public class SodaCmdLineOpts {
 			this.options.put("plugin", this.plugin);
 			this.options.put("config", this.configfile);
 			this.options.put("downloaddir", this.downloaddir);
+			this.options.put("assertpagefile", this.assertPageFile);
 		} catch (Exception exp) {
 			exp.printStackTrace();
 			this.options = null;

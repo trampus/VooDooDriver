@@ -80,4 +80,6 @@ public interface SodaBrowserInterface {
 	public boolean isClosed();
 	
 	public void setBrowserState(boolean state);
+	
+	public void setDownloadDirectory(String dir);
 }

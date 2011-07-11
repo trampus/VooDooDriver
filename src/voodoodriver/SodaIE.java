@@ -37,6 +37,10 @@ public class SodaIE extends SodaBrowser implements SodaBrowserInterface {
 		
 	}
 	
+	public void setDownloadDirectory(String dir) {
+		
+	}
+	
 	public void newBrowser() {
 		this.setDriver(new InternetExplorerDriver());
 		this.setBrowserState(false);

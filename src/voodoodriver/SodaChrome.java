@@ -43,6 +43,10 @@ public class SodaChrome extends SodaBrowser {
 	
 	}
 	
+	public void setDownloadDirectory(String dir) {
+		
+	}
+	
 	public void newBrowser() {
 		this.setDriver(new ChromeDriver()); 
 		this.setBrowserState(false);

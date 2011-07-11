@@ -57,9 +57,11 @@ public class SodaFirefox extends SodaBrowser implements SodaBrowserInterface {
 				profile.setPreference("browser.download.manager.retention", 0);
 				profile.setPreference("browser.download.manager.showAlertOnComplete", false);
 				profile.setPreference("browser.download.manager.scanWhenDone", false);
-				profile.setPreference("browser.download.manager.showWhenStarting", false);
 				profile.setPreference("browser.download.manager.skipWinSecurityPolicyChecks", true);
 				profile.setPreference("browser.startup.page", 0);
+				profile.setPreference("browser.download.manager.alertOnEXEOpen", false);
+				profile.setPreference("browser.download.manager.focusWhenStarting", false);
+				profile.setPreference("browser.download.useDownloadDir", true);
 			}
 			
 			fd = new FirefoxDriver(profile);

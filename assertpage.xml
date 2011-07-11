@@ -1,0 +1,23 @@
+<soda>
+   <ignore>
+      <regex>Expiration Notice:</regex>
+      <regex>Notice: Your license expires</regex>
+      <regex>Warning: Please upgrade</regex>
+      <regex>/(Fatal|Error): Your license expired|/</regex>
+      <regex>isError</regex>
+      <regex>errors</regex>
+      <regex>ErrorLink</regex>
+      <regex>Warning: Your email settings are not configured to send email</regex>
+      <regex>Warning: Missing username and password</regex>
+      <regex>Warning: You are modifying your automatic</regex>
+      <regex>Warning: Auto import must be enabled when automatically creating cases</regex>
+   </ignore>
+
+   <checks>
+      <regex>/(Notice:.*line.*)/i</regex>
+      <regex>/(Warning:)/i</regex>
+      <regex>/(.*Error:.*line.*)/i</regex>
+      <regex>/(Error retrieving)/i</regex>
+      <regex>/(SQL Error)/i</regex>
+   </checks>
+</soda>

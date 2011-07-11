@@ -83,6 +83,7 @@ public class VooDooDriver {
 		"	--plugin: This is a plugin XML file.\n\n"+
 		"	--config: This is a config file for preloading command line options.\n\n"+
 		"   --downloaddir: The default place to save downloaded files to.\n\n"+
+		"	--assertpagefile: This is the XML file containing things to assert on each page load.\n\n"+
 		"   --version: Print the Soda Version string.\n\n\n"+
 		"Notes:\n"+
 		"--)All conflicting command line options with with the config files supersede the confile files.\n\n";
@@ -105,6 +106,8 @@ public class VooDooDriver {
 		SodaEvents plugins = null;
 		boolean savehtml = false;
 		SodaConfigParser configParser = null;
+		String downloadDir = null;
+		String assertpage = null;
 		
 		System.out.printf("Starting VooDooDriver...\n");
 		try {
@@ -133,6 +136,8 @@ public class VooDooDriver {
 				System.exit(-1);
 			}
 			
+			assertpage = cmdOpts.get("assertpagefile").toString();
+			downloadDir = cmdOpts.get("downloaddir").toString();
 			savehtml = (Boolean)cmdOpts.get("savehtml");
 			System.out.printf("(*)SaveHTML: %s\n", savehtml);
 			
@@ -180,13 +185,13 @@ public class VooDooDriver {
 				}
 				
 				RunSuites(SodaSuitesList, resultdir, browserType, (SodaHash)cmdOpts.get("gvars"), 
-						(SodaHash)cmdOpts.get("hijacks"), blockList, plugins, savehtml);
+						(SodaHash)cmdOpts.get("hijacks"), blockList, plugins, savehtml, downloadDir);
 			}
 			
 			SodaTestsList = (ArrayList<String>)cmdOpts.get("tests");
 			if (!SodaTestsList.isEmpty()) {
 				RunTests(SodaTestsList, resultdir, browserType, (SodaHash)cmdOpts.get("gvars"), (SodaHash)cmdOpts.get("hijacks"),
-						plugins, savehtml);
+						plugins, savehtml, downloadDir);
 			}
 		} catch (Exception exp) {
 			exp.printStackTrace();
@@ -197,7 +202,7 @@ public class VooDooDriver {
 	}
 	
 	private static void RunTests(ArrayList<String> tests, String resultdir, SodaSupportedBrowser browserType,
-			SodaHash gvars, SodaHash hijacks, SodaEvents plugins, boolean savehtml) {
+			SodaHash gvars, SodaHash hijacks, SodaEvents plugins, boolean savehtml, String downloaddir) {
 		File resultFD = null;
 		SodaBrowser browser = null;
 		int len = 0;
@@ -230,6 +235,10 @@ public class VooDooDriver {
 			break;
 		}
 		
+		if (downloaddir != null) {
+			browser.setDownloadDirectory(downloaddir);
+		}
+		
 		browser.newBrowser();
 		
 		len = tests.size() -1;
@@ -252,7 +261,8 @@ public class VooDooDriver {
 	}
 	
 	private static void RunSuites(ArrayList<String> suites, String resultdir, SodaSupportedBrowser browserType,
-			SodaHash gvars, SodaHash hijacks, SodaBlockList blockList, SodaEvents plugins, boolean savehtml) {
+			SodaHash gvars, SodaHash hijacks, SodaBlockList blockList, SodaEvents plugins, boolean savehtml,
+			String downloaddir) {
 		int len = suites.size() -1;
 		File resultFD = null;
 		String report_file_name = resultdir;
