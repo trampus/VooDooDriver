@@ -226,7 +226,7 @@ public class SodaReporter {
 		val = val.replaceAll("\\\\", "\\\\\\\\");
 		val = val.replaceAll("^/", "");
 		val = val.replaceAll("/$", "");
-		
+		val = val.replaceAll("/\\w$", "");
 		result = val;
 		return result;
 	}

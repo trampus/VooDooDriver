@@ -47,6 +47,8 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 	private boolean closed = true;
 	private String profile = null;
 	private SodaReporter reporter = null;
+	private String assertPageFile = null;
+	private SodaPageAsserter asserter = null;
 	
 	/**
 	 * Constructor
@@ -330,12 +332,23 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 	}
 	
 	/**
-	 * Current not finished!
+	 * 
 	 */
 	public boolean assertPage() {
 		boolean result = false;
 		
-		System.out.printf("Missing! browser assertPage!\n");
+		if (this.asserter == null && this.assertPageFile != null) {
+			try {
+				System.out.printf("FOOBAR!\n\n");
+				this.asserter = new SodaPageAsserter(this.assertPageFile, this.reporter);
+			} catch (Exception exp) {
+				this.reporter.ReportException(exp);
+			}
+		}
+		
+		if (this.asserter != null) {
+			this.asserter.assertPage(this.getPageSource());	
+		}
 		
 		return result;
 	}
@@ -422,4 +435,24 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 			exp.printStackTrace();
 		}
 	}
+	
+	/**
+	 * Sets the classes internal var for where the assertpage config xml file is.
+	 * 
+	 * @param filename
+	 */
+	public void setAssertPageFile(String filename, SodaReporter reporter) {
+		this.assertPageFile = filename;
+		this.asserter = new SodaPageAsserter(filename, reporter);
+	}
+	
+	/**
+	 * Gets the current assertpage file if any.
+	 * 
+	 * @return null for no file, or a path to the file.
+	 */
+	public String getAssertPageFile() {
+		return this.assertPageFile;
+	}
+	
 }

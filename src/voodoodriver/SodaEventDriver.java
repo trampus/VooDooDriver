@@ -90,6 +90,18 @@ public class SodaEventDriver implements Runnable {
 		runner.start();
 	}
 	
+	private void assertPage(SodaHash event) {
+		boolean assertpage = true;
+		
+		if (event.containsKey("assertPage")) {
+			assertpage = this.clickToBool(event.get("assertPage").toString());
+		}
+		
+		if (assertpage) {
+			this.Browser.assertPage();
+		}
+	}
+	
 	private void saveElement(SodaHash event, WebElement element) {
 		if (!event.containsKey("save")) {
 			return;
@@ -305,6 +317,8 @@ public class SodaEventDriver implements Runnable {
 		if (element != null) {
 			this.saveElement(event, element);
 		}
+		
+		this.assertPage(event);
 		
 		return result;
 	}
@@ -593,7 +607,6 @@ public class SodaEventDriver implements Runnable {
 				this.firePlugin(element, SodaElements.TD, SodaPluginEventType.AFTERCLICK);
 				this.report.Log("Click finished.");
 			}
-			
 		} catch (Exception exp) {
 			element = null;
 			this.report.ReportException(exp);

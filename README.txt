@@ -19,7 +19,8 @@ elements.  Example:
    <div id="foo" save="my-div" />, this stores the div element under the ref "my-div", which can only be used by the <dnd>
    soda command.  See Drag'n Drop example for more info.
 9.)VooDooDriver now supports the <execute> command.  See Notes for more info on this.
-
+10.)assertPage: The assertPage code from Soda is now longer hardcoded into the product.  Now you have to use a command line
+option called: --assertpagefile=<some file>  See more on assertPage in the Notes section of this readme.
 
 Notes:
 
@@ -51,4 +52,39 @@ Notes:
       <arg>/Users/me</arg>
    </execute>
    
+(*)assertPage:
+   Old soda used to have hard coded values for asserting if a page contained errors or not.  Since I wanted this project to 
+   not have things like this hard coded I have added the --assertpagefile command line option which take an XML file
+   containing things regex's that you want to either ignore or assert an error on after each VooDooDriver event.
+   
+   The ignore options tell VooDooDriver to no cause an assert of the values in the page exist.
+   The checks options tell VooDooDriver which errors in the page you want to report on.
+   
+   Warning: This can make your code run slow as a check is done for every regex after each event is fired in VooDooDriver.
+   So the more options you add the slower things are going to run.
+   
+   Example:
+   <soda>
+   <ignore>
+      <regex>Expiration Notice:</regex>
+      <regex>Notice: Your license expires</regex>
+      <regex>Warning: Please upgrade</regex>
+      <regex>/(Fatal|Error): Your license expired|/</regex>
+      <regex>isError</regex>
+      <regex>errors</regex>
+      <regex>ErrorLink</regex>
+      <regex>Warning: Your email settings are not configured to send email</regex>
+      <regex>Warning: Missing username and password</regex>
+      <regex>Warning: You are modifying your automatic</regex>
+      <regex>Warning: Auto import must be enabled when automatically creating cases</regex>
+   </ignore>
+
+   <checks>
+      <regex>/(Notice:.*line.*)/i</regex>
+      <regex>/(Warning:)/i</regex>
+      <regex>/(.*Error:.*line.*)/i</regex>
+      <regex>/(Error retrieving)/i</regex>
+      <regex>/(SQL Error)/i</regex>
+   </checks>
+</soda> 
    

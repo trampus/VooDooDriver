@@ -47,6 +47,7 @@ public class SodaTest {
 	private SodaEvents PlugIns = null;
 	private boolean SaveHTML = false;
 	private static final int ThreadTimeout = 60 * 5; // 5 minute timeout //
+	private String assertPage = null;
 	
 	public SodaTest(String testFile, SodaBrowser browser, SodaHash gvars, SodaHash hijacks, 
 			SodaBlockList blocklist, SodaHash oldvars, String suitename, String reportDir,
@@ -77,6 +78,11 @@ public class SodaTest {
 		}
 		
 		this.Browser.setReporter(this.reporter);
+	}
+	
+	public void setAssertPage(String assertPage) {
+		this.assertPage = assertPage;
+		this.Browser.setAssertPageFile(this.assertPage, this.reporter);
 	}
 	
 	public void setPlugins(SodaEvents plugins) {

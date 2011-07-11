@@ -82,4 +82,9 @@ public interface SodaBrowserInterface {
 	public void setBrowserState(boolean state);
 	
 	public void setDownloadDirectory(String dir);
+	
+	public void setAssertPageFile(String filename, SodaReporter reporter);
+	
+	public String getAssertPageFile();
+	
 }

@@ -185,13 +185,14 @@ public class VooDooDriver {
 				}
 				
 				RunSuites(SodaSuitesList, resultdir, browserType, (SodaHash)cmdOpts.get("gvars"), 
-						(SodaHash)cmdOpts.get("hijacks"), blockList, plugins, savehtml, downloadDir);
+						(SodaHash)cmdOpts.get("hijacks"), blockList, plugins, savehtml, downloadDir,
+						assertpage);
 			}
 			
 			SodaTestsList = (ArrayList<String>)cmdOpts.get("tests");
 			if (!SodaTestsList.isEmpty()) {
 				RunTests(SodaTestsList, resultdir, browserType, (SodaHash)cmdOpts.get("gvars"), (SodaHash)cmdOpts.get("hijacks"),
-						plugins, savehtml, downloadDir);
+						plugins, savehtml, downloadDir, assertpage);
 			}
 		} catch (Exception exp) {
 			exp.printStackTrace();
@@ -202,7 +203,8 @@ public class VooDooDriver {
 	}
 	
 	private static void RunTests(ArrayList<String> tests, String resultdir, SodaSupportedBrowser browserType,
-			SodaHash gvars, SodaHash hijacks, SodaEvents plugins, boolean savehtml, String downloaddir) {
+			SodaHash gvars, SodaHash hijacks, SodaEvents plugins, boolean savehtml, String downloaddir, 
+			String assertpage) {
 		File resultFD = null;
 		SodaBrowser browser = null;
 		int len = 0;
@@ -247,6 +249,9 @@ public class VooDooDriver {
 			
 			testobj = new SodaTest(tests.get(i), browser, gvars, hijacks, null, null, null, 
 					resultdir, savehtml);
+			if (assertpage != null) {
+				testobj.setAssertPage(assertpage);
+			}
 			testobj.setPlugins(plugins);
 			testobj.runTest(false);	
 		}
@@ -262,7 +267,7 @@ public class VooDooDriver {
 	
 	private static void RunSuites(ArrayList<String> suites, String resultdir, SodaSupportedBrowser browserType,
 			SodaHash gvars, SodaHash hijacks, SodaBlockList blockList, SodaEvents plugins, boolean savehtml,
-			String downloaddir) {
+			String downloaddir, String assertpage) {
 		int len = suites.size() -1;
 		File resultFD = null;
 		String report_file_name = resultdir;
@@ -374,6 +379,10 @@ public class VooDooDriver {
 				
 				testobj = new SodaTest(current_test, browser, gvars, hijacks, blockList, vars, 
 						suite_base_noext, resultdir, savehtml);
+				if (assertpage != null) {
+					testobj.setAssertPage(assertpage);
+				}
+				
 				
 				if (plugins != null) {
 					testobj.setPlugins(plugins);
