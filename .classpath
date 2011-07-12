@@ -33,6 +33,5 @@
 	<classpathentry kind="lib" path="lib/libs/protobuf-java-2.3.0.jar"/>
 	<classpathentry kind="lib" path="lib/libs/selenium-java-2.0rc3.jar"/>
 	<classpathentry kind="lib" path="lib/libs/webdriver-opera-v0.4.3.jar"/>
-	<classpathentry kind="src" path="/logReporter"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
