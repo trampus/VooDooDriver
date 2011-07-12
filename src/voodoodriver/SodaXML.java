@@ -223,6 +223,13 @@ public class SodaXML {
 				data = processAttributes(data, child);
 			}
 			
+			if (name.contains("javascript")) {
+				String tmp = child.getTextContent();
+				if (!tmp.isEmpty()) {
+					data.put("content", tmp);
+				}
+			}
+			
 			if (child.hasChildNodes()) {
 				if (name.contains("execute")) {
 					String[] list = processArgs(child.getChildNodes());

@@ -21,6 +21,7 @@ elements.  Example:
 9.)VooDooDriver now supports the <execute> command.  See Notes for more info on this.
 10.)assertPage: The assertPage code from Soda is now longer hardcoded into the product.  Now you have to use a command line
 option called: --assertpagefile=<some file>  See more on assertPage in the Notes section of this readme.
+11.)The <javascript> command now supports loading external js files.  See the Notes section for more info.
 
 Notes:
 
@@ -88,3 +89,9 @@ Notes:
    </checks>
 </soda> 
    
+(*)Javascript:
+   The <javascript> command now supports the "file" attribute which allows you to load a javascript file from the
+   file system.  Now having your javascript code in the contents of the <javascript> command will generate a warning.
+   It just seems to make more since having javascript code loaded from an external file, as using XML escape codes can
+   make debugging a pain.
+    

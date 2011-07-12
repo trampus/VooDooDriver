@@ -836,6 +836,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
    <javascript>
       <soda_attributes>
          <accessor type="string">content</accessor>
+         <accessor type="string">file</accessor>
       </soda_attributes>
    </javascript>
    

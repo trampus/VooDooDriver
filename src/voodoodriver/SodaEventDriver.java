@@ -29,7 +29,10 @@ should not be interpreted as representing official policies, either expressed or
 
 package voodoodriver;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -307,6 +310,9 @@ public class SodaEventDriver implements Runnable {
 		case EXECUTE:
 			result = executeEvent(event);
 			break;
+		case JAVASCRIPT:
+			result = javascriptEvent(event);
+			break;
 		default:
 			System.out.printf("(*)Unknown command: '%s'!\n", event.get("type").toString());
 			System.exit(1);
@@ -319,6 +325,44 @@ public class SodaEventDriver implements Runnable {
 		}
 		
 		this.assertPage(event);
+		
+		return result;
+	}
+	
+	private boolean javascriptEvent(SodaHash event) {
+		boolean result = false;
+		String scriptdata = "";
+		
+		this.report.Log("Javascript event starting.");
+		
+		if (event.containsKey("content")) {
+			this.report.Warn("Using javascript contents is deprecated, please use the file attribute!");
+			scriptdata = event.get("content").toString();
+		}
+		
+		if (event.containsKey("file")) {
+			scriptdata = "";
+			String filename = event.get("file").toString();
+			filename = this.replaceString(filename);
+			
+			File fd = new File(filename);
+			try {
+				BufferedReader reader = new BufferedReader(new FileReader(fd));
+				String tmp;
+				
+				while ( (tmp = reader.readLine()) != null) {
+					scriptdata = scriptdata.concat(tmp);
+				}
+				result = true;
+			} catch (Exception exp) {
+				this.report.ReportException(exp);
+				result = false;
+			}
+		}
+		
+		this.Browser.executeJS(scriptdata, null);
+		
+		this.report.Log("Javascript event finished.");
 		
 		return result;
 	}
