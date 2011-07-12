@@ -94,5 +94,3 @@ Notes:
    file system.  Now having your javascript code in the contents of the <javascript> command will generate a warning.
    It just seems to make more since having javascript code loaded from an external file, as using XML escape codes can
    make debugging a pain.
-    
-    fjdkjalef
