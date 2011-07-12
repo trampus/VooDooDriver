@@ -87,7 +87,7 @@
          </fileset>
          
          <manifest>
-            <attribute name="Main-Class" value="logreporter.LogReporter"/>
+            <attribute name="Main-Class" value="VooDooDriver"/>
             <attribute name="Class-Path" value="${jars.classes}"/>
          </manifest>
       </jar>
@@ -124,7 +124,7 @@
          </fileset>
          
          <manifest>
-            <attribute name="Main-Class" value="logreporter.LogReporter"/>
+            <attribute name="Main-Class" value="VooDooDriver"/>
             <attribute name="Class-Path" value="${jars.classes}"/>
          </manifest>
       </jar>
