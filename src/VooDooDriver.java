@@ -140,7 +140,10 @@ public class VooDooDriver {
 				assertpage = cmdOpts.get("assertpagefile").toString(); 	
 			}
 			
-			downloadDir = cmdOpts.get("downloaddir").toString();
+			if (cmdOpts.get("downloaddir") != null) {
+				downloadDir = cmdOpts.get("downloaddir").toString();
+			}
+			
 			savehtml = (Boolean)cmdOpts.get("savehtml");
 			System.out.printf("(*)SaveHTML: %s\n", savehtml);
 			
