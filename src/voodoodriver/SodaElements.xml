@@ -844,5 +844,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <soda_attributes type="string">src</soda_attributes>
       <soda_attributes type="string">dst</soda_attributes>
    </dnd>
+   
+   <plugin>
+      <soda_attributes type="string">name</soda_attributes>
+      <soda_attributes type="string">cmd</soda_attributes>
+      <soda_attributes type="string">file</soda_attributes>
+      <soda_attributes type="boolean">stayresident</soda_attributes>
+   </plugin>
 </soda>
 
