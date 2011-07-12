@@ -82,7 +82,8 @@ public enum SodaElements {
 	STAMP,
 	DND,
 	EXECUTE,
-	ARG;
+	ARG,
+	PLUGIN;
 	
 	static public boolean isMember(String aName) {
 		boolean result = false;
