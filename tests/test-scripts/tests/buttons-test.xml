@@ -26,10 +26,9 @@
 -->
 
 <soda>
-	<!--<csv file="tests/test-scripts/csvs/radio.csv" var="user" /> -->
-	<puts text="radio-test.xml starting." />
-	<browser url="{@global.url}/tests/test-data/radio.html" />
+	<puts text="buttons-test.xml starting." />
+	<browser url="{@global.url}/tests/test-data/butons.html" />
 	
-	<puts text="radio-test.xml finished." />
+	<puts text="buttons-test.xml finished." />
 	
 </soda>
