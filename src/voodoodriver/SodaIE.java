@@ -50,4 +50,17 @@ public class SodaIE extends SodaBrowser implements SodaBrowserInterface {
 		SodaOSInfo.killProcesses(SodaOSInfo.getProcessIDs("iexplorer"));
 		this.setBrowserClosed();
 	}
+	
+	public void alertHack(boolean alert) {
+		String alert_js =  "var old_alert = window.alert;\n" +
+			"var old_confirm = window.confirm;\n"+
+			"window.alert = function(){return " + alert + ";};\n"+
+			"window.confirm = function(){return " + alert + ";};\n"+
+			"window.onbeforeunload = null;\n"+
+			"var result = 0;\nresult;\n";
+		
+		this.executeJS(alert_js, null);
+	}
+	
+	
 }
