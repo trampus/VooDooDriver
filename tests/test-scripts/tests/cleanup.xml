@@ -25,7 +25,7 @@
   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
-<soda>        
-	<script fileset="tests/test-scripts/tests" />
-	<script file="tests/test-scripts/tests/cleanup.xml" />
+<soda>
+	<browser action="close" />
 </soda>
+
