@@ -33,16 +33,16 @@
 	<browser assert="status message" />
 	<button id="button" />
 	<browser assert="nothing clicked!" />
-	<radio id="r0" set="true" />
+	<radio id="r0" click="true" />
 	<browser assert="0" />
 	
-	<radio id="r1" set="true" />
+	<radio id="r1" click="true" />
 	<browser assert="1" />
 	
-	<radio id="r2" set="true" />
+	<radio id="r2" click="true" />
 	<browser assert="2" />
 	
-	<radio id="r3" set="true" />
+	<radio id="r3" click="true" />
 	<browser assert="3" />
 	
 	
