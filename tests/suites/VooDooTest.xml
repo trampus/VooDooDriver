@@ -26,6 +26,6 @@
 -->
 
 <soda>        
-	<script fileset="tests/test-scripts/tests" />
+	<script file="tests/test-scripts/tests/buttons-test.xml" />
 	<script file="tests/test-scripts/tests/cleanup.xml" />
 </soda>

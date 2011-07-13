@@ -27,7 +27,18 @@
 
 <soda>
 	<puts text="buttons-test.xml starting." />
-	<browser url="{@global.url}/tests/test-data/butons.html" />
+	<browser url="{@global.url}/tests/test-data/buttons.html" />
+	<puts text="Test: buttons-test.xml starting." />
+	
+	<browser assert="status message" />
+	<button id="noClick1" click="false" />
+	<browser assert="status message" />
+	<button id="doClick" />
+	<browser assert="passed" />
+	<button id="noClick2" />
+	<browser assert="failed!" />
+	<button id="noClick1"  />
+	<browser assert="failed!" />
 	
 	<puts text="buttons-test.xml finished." />
 	

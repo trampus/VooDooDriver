@@ -1,23 +1,9 @@
 <html>
-    <script type="text/javascript">
-        function checkRadio(){
-            if (radiotest.type[0].checked==""){
-                document.getElementById('status').innerHTML='clicked bananas!'
-            }
-            else{
-                document.getElementById('status').innerHTML='clicked!'
-            }
-        }
-    </script>
    <body>
-        <form id="radiotest">
-            <input type="radio" name="type" value="bananas" />bananas</br>
-            <input type="radio" name="type" value="apples" />apples </br >
-            <input type="radio" name="type" value="grapes" />grapes</br>
-            <input type="radio" name="type" value="pear" />pear</br>
-        </form>
-        <p><b id='status'>status message</b>
-        <input type="button" value="status check" onclick="checkRadio()"/>
+        <p><b id='status'>status message</b> <br />
+        <input type="button" id="noClick1" value="don't click" onclick="document.getElementById('status').innerHTML='failed!'"/><br />
+        <input type="button" id="doClick" value="click" onclick="document.getElementById('status').innerHTML='passed'"/><br />
+        <input type="button" id="noClick2" value="don't click" onclick="document.getElementById('status').innerHTML='failed!'"/>
         </p>
    </body>
 </html>
