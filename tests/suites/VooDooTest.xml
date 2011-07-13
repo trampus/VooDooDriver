@@ -26,8 +26,7 @@
 -->
 
 <soda>        
-	<csv file="{@global.scriptsdir}/test-sripts/table.csv" />
-	<script file="{@global.scriptsdir}/modules/lib/login.xml" />
+	<script fileset="tests/test-scripts/tests" />
 
 	<browser action="close" />
 </soda>
