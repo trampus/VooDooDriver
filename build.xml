@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="VooDooDriver" default="default-build" basedir=".">
+<project name="VooDooDriver" default="debug" basedir=".">
     <description>
         simple example build file for building soda-java into a jar file.
     </description>
@@ -91,6 +91,12 @@
             <attribute name="Class-Path" value="${jars.classes}"/>
          </manifest>
       </jar>
+   	<!-- LogReporter build -->
+   	<jar jarfile="${dist}/LogReporter.jar" basedir="${build}">
+   	   	 <manifest>
+   	   	    <attribute name="Main-Class" value="logreporter.LogReporter"/>
+   	   	 </manifest>
+   	s</jar>
    	
    	<copy todir="${dist}/lib">
    	         <fileset dir="lib/libs" />
