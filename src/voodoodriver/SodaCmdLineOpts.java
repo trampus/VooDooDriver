@@ -31,6 +31,8 @@ package voodoodriver;
 
 import java.util.ArrayList;
 
+import org.apache.commons.io.FilenameUtils;
+
 /**
  * A class for parsing all the of needed command line options for voodoodriver.
  * 
@@ -93,10 +95,12 @@ public class SodaCmdLineOpts {
 				} else if (args[i].contains("--resultdir")) {
 					args[i] = args[i].replaceAll("--resultdir=", "");
 					this.resultDir = args[i];
+					this.resultDir = FilenameUtils.separatorsToSystem(this.resultDir);
 					System.out.printf("(*)Result Dir: %s\n", this.resultDir);
 				} else if (args[i].contains("--blocklistfile")) {
 					args[i] = args[i].replaceAll("--blocklistfile=", "");
 					this.blocklistFile = args[i];
+					this.blocklistFile = FilenameUtils.separatorsToSystem(this.blocklistFile);
 					System.out.printf("(*)Blocklistfile: %s\n", this.blocklistFile);
 				} else if (args[i].contains("--testdelay")) {
 					this.testdelay = true;
@@ -116,14 +120,17 @@ public class SodaCmdLineOpts {
 				} else if (args[i].contains("--config")) {
 					this.configfile = args[i];
 					this.configfile = this.configfile.replace("--config=", "");
+					this.configfile = FilenameUtils.separatorsToSystem(this.configfile);
 					System.out.printf("(*)VooDooDriver Config File: %s\n", this.configfile);
 				} else if (args[i].contains("--downloaddir")) {
 						this.downloaddir = args[i];
 						this.downloaddir = this.downloaddir.replace("--downloaddir=", "");
+						this.downloaddir = FilenameUtils.separatorsToSystem(this.downloaddir);
 						System.out.printf("(*)Download Directory: %s\n", this.downloaddir);
 				 } else if (args[i].contains("--assertpagefile")) {
 						this.assertPageFile = args[i];
 						this.assertPageFile = this.assertPageFile.replace("--assertpagefile=", "");
+						this.assertPageFile = FilenameUtils.separatorsToSystem(this.assertPageFile);
 						System.out.printf("(*)Assertpagefile: %s\n", this.assertPageFile);
 				 }
 			}
@@ -184,6 +191,7 @@ public class SodaCmdLineOpts {
 	 */
 	private void handleTests(String str) {
 		str = str.replace("--test=", "");
+		str = FilenameUtils.separatorsToSystem(str);
 		this.tests.add(str);
 		System.out.printf("(*)Test Added: %s\n", str);
 	}
@@ -195,6 +203,7 @@ public class SodaCmdLineOpts {
 	 */
 	private void handleSuites(String str) {
 		str = str.replace("--suite=", "");
+		str = FilenameUtils.separatorsToSystem(str);
 		this.suites.add(str);
 		System.out.printf("(*)Suite Added: %s\n", str);
 	}
@@ -207,5 +216,4 @@ public class SodaCmdLineOpts {
 	public SodaHash getOptions() {
 		return this.options;
 	}
-	
 }

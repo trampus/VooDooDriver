@@ -39,6 +39,8 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.io.FilenameUtils;
+
 public class SodaReporter {
 	
 	private String resultDir = "";
@@ -76,6 +78,7 @@ public class SodaReporter {
 		}
 
 		reportLog = this.resultDir + "/" + reportName + "-" + date_str + ".log";
+		reportLog = FilenameUtils.separatorsToSystem(reportLog);
 		System.out.printf("ReportFile: %s\n", reportLog);
 		
 		try {
@@ -333,6 +336,7 @@ public class SodaReporter {
 		
 		new_save_file = htmldir;
 		new_save_file = new_save_file.concat(String.format("/savedhtml-%d.html", this.SavePageNum));
+		new_save_file = FilenameUtils.separatorsToSystem(new_save_file);
 		this.SavePageNum += 1;
 		
 		newfd = new File(new_save_file);

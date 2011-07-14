@@ -225,7 +225,6 @@ public abstract class SodaBrowser implements SodaBrowserInterface {
 		
 		return result;
 	}
-	
 
 	/**
 	 * Generates a browser event to be fired on a given control.

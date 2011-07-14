@@ -40,6 +40,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.commons.io.FilenameUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
@@ -525,6 +527,7 @@ public class SodaEventDriver implements Runnable {
 			if (event.containsKey("set")) {
 				String setvalue = event.get("set").toString();
 				setvalue = this.replaceString(setvalue);
+				setvalue = FilenameUtils.separatorsToSystem(setvalue);
 				this.report.Log(String.format("Setting filefield to: '%s'.", setvalue));
 				element.sendKeys(setvalue);
 				this.report.Log("Finished set.");
@@ -1876,7 +1879,9 @@ public class SodaEventDriver implements Runnable {
 
 			if (tmp.get("control").toString().contains((type.toString().toLowerCase()))) {
 				if (tmp.get("event").toString().contains(eventType.toString().toLowerCase())) {
-					String user_js = SodaUtils.FileToStr((String)tmp.get("jsfile"));
+					String jsfile = (String)tmp.get("jsfile");
+					jsfile = FilenameUtils.separatorsToSystem(jsfile);
+					String user_js = SodaUtils.FileToStr(jsfile);
 					if (user_js != null) {
 						js = js.concat(user_js);
 						result = true;
