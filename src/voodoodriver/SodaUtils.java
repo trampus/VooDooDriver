@@ -6,6 +6,7 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 /**
  * A simple class for housing one off needed util functions, that can
@@ -62,6 +63,8 @@ public class SodaUtils {
 	public static String FileToStr(String filename) {
 		String result = "";
 		BufferedReader reader = null;
+		
+		filename = FilenameUtils.separatorsToSystem(filename);
 		
 		try {
 			reader = new BufferedReader(new FileReader(filename));

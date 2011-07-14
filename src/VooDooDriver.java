@@ -36,6 +36,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.commons.io.FilenameUtils;
+
 import voodoodriver.SodaBlockList;
 import voodoodriver.SodaBlockListParser;
 import voodoodriver.SodaBrowser;
@@ -149,6 +152,7 @@ public class VooDooDriver {
 			
 			pluginFile = (String)cmdOpts.get("plugin");
 			if (pluginFile != null) {
+				pluginFile = FilenameUtils.separatorsToSystem(pluginFile);
 				System.out.printf("(*)Loading Plugins from file: '%s'.\n", pluginFile);
 				plugParser = new SodaPluginParser(pluginFile);
 				plugins = plugParser.parse();
@@ -164,6 +168,7 @@ public class VooDooDriver {
 			
 			blockListFile = (String)cmdOpts.get("blocklistfile");
 			if (blockListFile != null) {
+				blockListFile = FilenameUtils.separatorsToSystem(blockListFile);
 				SodaBlockListParser sbp = new SodaBlockListParser(blockListFile);
 				blockList = sbp.parse();
 			} else {
@@ -179,6 +184,7 @@ public class VooDooDriver {
 				String date_str = df.format(new Date());
 				cwd = cwd.concat("/");
 				cwd = cwd.concat(date_str);
+				cwd = FilenameUtils.separatorsToSystem(cwd);
 				resultdir = cwd;
 			}
 			
@@ -251,9 +257,11 @@ public class VooDooDriver {
 		
 		len = tests.size() -1;
 		for (int i = 0; i <= len; i++) {
-			System.out.printf("Starting Test: '%s'.\n", tests.get(i));
+			String test_file = tests.get(i);
+			test_file = FilenameUtils.separatorsToSystem(test_file);
+			System.out.printf("Starting Test: '%s'.\n", test_file);
 			
-			testobj = new SodaTest(tests.get(i), browser, gvars, hijacks, null, null, null, 
+			testobj = new SodaTest(test_file, browser, gvars, hijacks, null, null, null, 
 					resultdir, savehtml);
 			if (assertpage != null) {
 				testobj.setAssertPage(assertpage);
@@ -316,6 +324,7 @@ public class VooDooDriver {
 		df = new SimpleDateFormat("MM-d-yyyy-hh-m-s.S");
 		String date_str = df.format(new Date());
 		report_file_name += "/"+ hostname + "-" + date_str + ".xml";
+		report_file_name = FilenameUtils.separatorsToSystem(report_file_name);
 		
 		try {
 			suiteRptFD = new FileOutputStream(report_file_name);
