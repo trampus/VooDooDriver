@@ -1,0 +1,28 @@
+<html>
+    <script>
+    function mouseClick(){
+        document.getElementById('status').innerHTML = 'div1 button';  
+    }
+    </script>
+    <body>
+        <div id="div1">
+            div test <br />
+            <input type="button" id="button" value="button" onmouseup="mouseClick()" />
+            <br />
+        </div>
+        <hr />
+        <span class="span_class">
+            span test <br />
+            test message <br />
+        </span>
+        <hr />
+        <form id="test_form">
+            hidden test <br />
+            <input type="text" value="some text" /> <br />
+            <input type="hidden" name="hidden" value="hidden_value" />
+        </form>
+        
+        <p><b id="status">status message</b></p>
+    </body>
+</html>
+        

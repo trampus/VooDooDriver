@@ -26,38 +26,21 @@
 -->
 
 <soda>
-	<puts text="field-test.xml starting." />
-	<browser url="{@global.url}/tests/test-data/textfield.html" />
-	<puts text="Test: field-test.xml starting." />
+	<puts text="table-test.xml starting." />
+	<browser url="{@global.url}/tests/test-data/tables.html" />
+	<puts text="Test: table-test.xml starting." />
 	
 	<browser assert="status message" />
-	<button id="button" />
-	<browser assert="empty textfield!" />
+	<!-- test table -->
+	<table id="table" jscriptevent="onmouseover" />
+	<browser assert="table" />
+	<table id="table" jscriptevent="onmouseout" />
+	<browser assert="not table" />
 	
-	<csv file="tests/test-scripts/csvs/text.csv" var="text_record" >
-	<form id="textboxes">
-		<textfield id="1" set="{@text_record.box1}" />
-		<textfield id="2" set="{@text_record.box2}" />
-		<textfield id="3" set="{@text_record.box3}" />
-		<textfield id="4" set="{@text_record.box4}" />
-	</form>
-	<button id="button" />
-	<browser assert="good" />
-	
-	<browser asert="{@text_record.box1}" />
-	<browser asert="{@text_record.box2}" />
-	<browser asert="{@text_record.box3}" />
-	<browser asert="{@text_record.box4}" />
-	
-	<button id="button2" />
-	<browser assert="empty filefield!" />
-	<filefield id="file" set="{@text_record.file}" />
-	<wait />
-	<button id="button2" />
-	<browser assert="file:{@text_record.file}" />
-	
+	<!-- test table data -->
+	<csv file="tests/test-scripts/csvs/table.csv" var="table_record" >
 	
 	</csv>
-	<puts text="field-test.xml finished." />
+	<puts text="table-test.xml finished." />
 	
 </soda>
