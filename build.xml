@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="VooDooDriver" default="debug" basedir=".">
+<project name="VooDooDriver" default="default-build" basedir=".">
     <description>
         simple example build file for building soda-java into a jar file.
     </description>
