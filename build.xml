@@ -102,7 +102,7 @@
    	   	 <manifest>
    	   	    <attribute name="Main-Class" value="logreporter.LogReporter"/>
    	   	 </manifest>
-   	s</jar>
+   	</jar>
    	
    	<copy todir="${dist}/lib">
    		  <fileset dir="lib/libs" />
