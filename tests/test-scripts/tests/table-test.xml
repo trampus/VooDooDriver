@@ -30,6 +30,7 @@
 	<browser url="{@global.url}/tests/test-data/tables.html" />
 	<puts text="Test: table-test.xml starting." />
 	
+	<!-- test table -->
 	<browser assert="status message" />
 	<!-- test table -->
 	<table id="table" jscriptevent="onmouseover" />
@@ -38,9 +39,13 @@
 	<browser assert="not table" />
 	
 	<!-- test table data -->
-	<csv file="tests/test-scripts/csvs/table.csv" var="table_record" >
-	
-	</csv>
+	<var var="data1" />
+ 	<tr id="tr1">
+ 		<td name="1" save="{@data1}" />
+ 	</tr>
+ 	<textfield id="table_data" set="{@data1}" />
+ 	<wait />
+
 	<puts text="table-test.xml finished." />
 	
 </soda>
