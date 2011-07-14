@@ -28,8 +28,7 @@
 <soda>        
 	<!-- <script file="tests/test-scripts/tests/buttons-test.xml" /> 
 		<script file="tests/test-scripts/tests/radio-test.xml" />
-		<script file="tests/test-scripts/tests/select-test.xml" />
 	 -->
-	<script file="tests/test-scripts/tests/textfield-test.xml" />
+	<script file="tests/test-scripts/tests/field-test.xml" />
 	<script file="tests/test-scripts/tests/cleanup.xml" />
 </soda>

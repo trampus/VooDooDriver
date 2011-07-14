@@ -26,9 +26,9 @@
 -->
 
 <soda>
-	<puts text="textfield-test.xml starting." />
+	<puts text="field-test.xml starting." />
 	<browser url="{@global.url}/tests/test-data/textfield.html" />
-	<puts text="Test: textfield-test.xml starting." />
+	<puts text="Test: field-test.xml starting." />
 	
 	<browser assert="status message" />
 	<button id="button" />
@@ -48,7 +48,15 @@
 	<browser asert="{@text_record.box2}" />
 	<browser asert="{@text_record.box3}" />
 	<browser asert="{@text_record.box4}" />
+	
+	<button id="button2" />
+	<browser assert="empty filefield!" />
+	<filefield id="file" set="{@text_record.file}" />
+	<button id="button2" />
+	<browser assert="file:{@text_record.file}" />
+	
+	
 	</csv>
-	<puts text="textfield-test.xml finished." />
+	<puts text="field-test.xml finished." />
 	
 </soda>
