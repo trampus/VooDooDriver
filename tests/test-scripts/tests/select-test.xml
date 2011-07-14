@@ -25,11 +25,29 @@
   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
-<soda>        
-	<!-- <script file="tests/test-scripts/tests/buttons-test.xml" /> 
-		<script file="tests/test-scripts/tests/radio-test.xml" />
-		<script file="tests/test-scripts/tests/select-test.xml" />
-	 -->
-	<script file="tests/test-scripts/tests/textfield-test.xml" />
-	<script file="tests/test-scripts/tests/cleanup.xml" />
+<soda>
+	<puts text="select-test.xml starting." />
+	<browser url="{@global.url}/tests/test-data/selections.html" />
+	<puts text="Test: select-test.xml starting." />
+	
+	<browser assert="status message" />
+	<select_list id="list" set="zero" />
+	<button id="button" />
+	<browser assert="selected zero" />
+	
+	<select_list id="list" set="one" />
+	<button id="button" />
+	<browser assert="selected one" />
+	
+	<select_list id="list" set="two" />
+	<button id="button" />
+	<browser assert="selected two" />
+	
+	<select_list id="list" set="please select something" />
+	<button id="button" />
+	<browser assert="selected nothing" />
+	
+	
+	<puts text="select-test.xml finished." />
+	
 </soda>

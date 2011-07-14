@@ -25,11 +25,30 @@
   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
-<soda>        
-	<!-- <script file="tests/test-scripts/tests/buttons-test.xml" /> 
-		<script file="tests/test-scripts/tests/radio-test.xml" />
-		<script file="tests/test-scripts/tests/select-test.xml" />
-	 -->
-	<script file="tests/test-scripts/tests/textfield-test.xml" />
-	<script file="tests/test-scripts/tests/cleanup.xml" />
+<soda>
+	<puts text="textfield-test.xml starting." />
+	<browser url="{@global.url}/tests/test-data/textfield.html" />
+	<puts text="Test: textfield-test.xml starting." />
+	
+	<browser assert="status message" />
+	<button id="button" />
+	<browser assert="empty textfield!" />
+	
+	<csv file="tests/test-scripts/csvs/text.csv" var="text_record" >
+	<form id="textboxes">
+		<textfield id="1" set="{@text_record.box1}" />
+		<textfield id="2" set="{@text_record.box2}" />
+		<textfield id="3" set="{@text_record.box3}" />
+		<textfield id="4" set="{@text_record.box4}" />
+	</form>
+	<button id="button" />
+	<browser assert="good" />
+	
+	<browser asert="{@text_record.box1}" />
+	<browser asert="{@text_record.box2}" />
+	<browser asert="{@text_record.box3}" />
+	<browser asert="{@text_record.box4}" />
+	</csv>
+	<puts text="textfield-test.xml finished." />
+	
 </soda>
