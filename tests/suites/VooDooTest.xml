@@ -34,8 +34,9 @@
 	<script file="tests/test-scripts/tests/table-test.xml" />
 	<script file="tests/test-scripts/tests/checkbox-test.xml" />
 	<script file="tests/test-scripts/tests/select-test.xml" />
+	<script file="tests/test-scripts/tests/list-test.xml" />  
 	<script file="tests/test-scripts/tests/image-test.xml" />
 	-->
-	<script file="tests/test-scripts/tests/list-test.xml" />     
+	<script file="tests/test-scripts/tests/image-test.xml" />     
 		<script file="tests/test-scripts/tests/cleanup.xml" />
 </soda>

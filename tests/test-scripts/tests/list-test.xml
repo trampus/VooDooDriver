@@ -32,12 +32,12 @@
 	
 	<browser assert="status message" />
 	<!-- test UL -->
-	<ol id="ol">
+	<ul id="ul">
 		<li name="1" click="true" />
-		<browser assert="OL one" />
+		<browser assert="UL one" />
 		<li name="2" click="true" />
-		<browser assert="OL two" />
-	</ol>
+		<browser assert="UL two" />
+	</ul>
 	
 	<puts text="list-test.xml finished." />
 	

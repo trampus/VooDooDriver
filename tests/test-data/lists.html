@@ -8,13 +8,8 @@
             document.getElementById('status').innerHTML="UL two";
 
         }
-        else if (num == 3){
-            document.getElementById('status').innerHTML="OL one";
-
-        }
         else{
-            document.getElementById('status').innerHTML="OL two";
-
+            document.getElementById('status').innerHTML="status message";
         }
     }
     
@@ -24,11 +19,6 @@
             <li name="1" onclick="setStatus(1)">UL one</li>
             <li name="2" onclick="setStatus(2)">UL two</li>
         </ul>
-        <hr />
-        <ol id="ol">
-            <li name="1" onclick="setStatus(3)">OL one</li>
-            <li name="2" onclick="setStatus(4)">OL two</li>
-        </ol>
         <hr />
         <p><b id='status'>status message</b>
     </body>
