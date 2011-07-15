@@ -39,13 +39,42 @@
 	<browser assert="not table" />
 	
 	<!-- test table data -->
-	<var var="data1" />
- 	<tr id="tr1">
- 		<td name="1" save="{@data1}" />
- 	</tr>
- 	<textfield id="table_data" set="{@data1}" />
- 	<wait />
-
+	<table id="table" >
+		<csv file="tests/test-scripts/csvs/table.csv" var="table_record" >
+		<tr id="tr1">
+			<td name="1">
+				<textfield name="text1" set="{@table_record.data1}" />
+				<textfield name="text1" assert="{@table_record.data1}" />
+				<textfield name="text1" assertnot="{@table_record.data2}" />		
+			</td>
+			<td name="2">
+				<textfield name="text2" set="{@table_record.data2}" />
+				<textfield name="text2" assert="{@table_record.data2}" />
+				<textfield name="text2" assertnot="{@table_record.data1}" />
+			</td>
+		</tr>
+		</csv>
+		<tr id="tr2">
+			<td name="1">
+				<button name="button1" />
+				<browser assert="row two, col one" />
+			</td>
+			<td name="2">
+				<button name="button2" />
+				<browser assert="row two, col two" />
+			</td>
+		</tr>
+		<tr id="tr3">
+			<td name="1">
+				<link name="link1" />
+				<browser assert="row three, col one" />
+			</td>
+			<td name="2">
+				<button name="link2" />
+				<browser assert="row three, col two" />
+			</td>
+		</tr>
+	</table>
 	<puts text="table-test.xml finished." />
 	
 </soda>
