@@ -26,14 +26,28 @@
 -->
 
 <soda>
-	<puts text="buttons-test.xml starting." />
-	<browser url="{@global.url}/tests/test-data/buttons.html" />
-	<puts text="Test: buttons-test.xml starting." />
+	<puts text="checkboxes-test.xml starting." />
+	<browser url="{@global.url}/tests/test-data/checkboxes.html" />
+	<puts text="Test: checkboxes-test.xml starting." />
 	
 	<browser assert="status message" />
+	<!-- check checkboxes -->
+	<checkbox value="1" click="true"/>
+	<button id="button" />
+	<browser assert="checked 1 boxes" />
 	
+	<checkbox value="2" click="true"/>
+	<button id="button" />
+	<browser assert="checked 2 boxes" />
 	
+	<checkbox value="3" click="true"/>
+	<button id="button" />
+	<browser assert="checked 3 boxes" />
 	
-	<puts text="buttons-test.xml finished." />
+	<checkbox name="chkbox" click="true" />
+	<button id="button" />
+	<browser assert="checked 2 boxes" />
+	
+	<puts text="checkboxes-test.xml finished." />
 	
 </soda>
