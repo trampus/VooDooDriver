@@ -47,6 +47,12 @@
 	<form id="test_form">
 		<hidden name="hidden" />
 	</form>
+	
+	<!-- testing link -->
+	<link id="link" click="false" jscriptevent="onmouseover" />
+	<browser assert="link" />
+	<link id="link" click="false" jscriptevent="onmouseout" />
+	<browser assert="status message" />
 		
 	<puts text="misc-test.xml finished." />
 	

@@ -3,6 +3,12 @@
     function mouseClick(){
         document.getElementById('status').innerHTML = 'div1 button';  
     }
+    function linkMessage(){
+        document.getElementById('status').innerHTML = 'link';  
+    }
+    function resetStatus(){
+        document.getElementById('status').innerHTML = 'status message'; 
+    }
     </script>
     <body>
         <div id="div1">
@@ -22,6 +28,12 @@
             <input type="hidden" name="hidden" value="hidden_value" />
         </form>
         
+        <!-- links -->
+        <hr />
+        <a href="#top" id="link" onmouseover="linkMessage()" onmouseout="resetStatus()">Go to top of page</a>
+        
+        
+        <hr />
         <p><b id="status">status message</b></p>
     </body>
 </html>
