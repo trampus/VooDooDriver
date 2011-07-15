@@ -42,8 +42,6 @@
 		<browser assert="cube" />
 		<area id="area1" jscriptevent="onmouseout" />
 		<browser assert="status message" />
-		<!-- define new area, not yet supported -->
-		<!-- <area id="newarea" shape="rect" coords="50,50,75,75" alt="mudkips" onmouseover="overImage(3)"/> -->
 	</map>
 	
 	<puts text="image-test.xml finished." />
