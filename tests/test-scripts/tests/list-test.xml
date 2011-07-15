@@ -39,8 +39,6 @@
 		<browser assert="OL two" />
 	</ol>
 	
-	
-	
 	<puts text="list-test.xml finished." />
 	
 </soda>
