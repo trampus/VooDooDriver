@@ -37,6 +37,6 @@
 	<script file="tests/test-scripts/tests/list-test.xml" />  
 	<script file="tests/test-scripts/tests/image-test.xml" />
 	-->
-	<script file="tests/test-scripts/tests/image-test.xml" />     
+	<script file="tests/test-scripts/tests/list-test.xml" />     
 		<script file="tests/test-scripts/tests/cleanup.xml" />
 </soda>
