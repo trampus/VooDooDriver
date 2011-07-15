@@ -38,6 +38,7 @@ public enum SodaElements {
 	SCRIPT,
 	FILE_FIELD,
 	UL,
+	OL,
 	H4,
 	H5,
 	TIMESTAMP,

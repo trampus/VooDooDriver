@@ -267,6 +267,24 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       </soda_attributes>
    </ul>
 
+   <ol>
+      <accessor_attributes>
+         <accessor type="string">name</accessor>
+         <accessor type="string">class</accessor>
+         <accessor type="string">text</accessor>
+         <accessor type="string">id</accessor>
+         <accessor type="string">index</accessor>
+         <accessor type="string">xpath</accessor>
+         <accessor type="string">css</accessor>
+      </accessor_attributes>
+
+      <soda_attributes>
+         <accessor type="string">cssprop</accessor>
+         <accessor type="string">cssvalue</accessor>
+         <accessor type="string">save</accessor>
+      </soda_attributes>
+   </ol>
+
    <filefield>
       <accessor_attributes>
          <accessor type="string">name</accessor>
