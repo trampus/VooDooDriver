@@ -462,6 +462,10 @@ public class SodaEventDriver implements Runnable {
 				this.firePlugin(element, SodaElements.MAP, SodaPluginEventType.AFTERCLICK);
 				this.report.Log("Map click finished.");
 			}
+			
+			if (event.containsKey("children")) {
+				this.processEvents((SodaEvents)event.get("children"), element);
+			}
 		} catch (Exception exp) {
 			element = null;
 			this.report.ReportException(exp);
