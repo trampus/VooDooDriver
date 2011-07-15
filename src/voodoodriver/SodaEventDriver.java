@@ -315,6 +315,18 @@ public class SodaEventDriver implements Runnable {
 		case JAVASCRIPT:
 			result = javascriptEvent(event);
 			break;
+		case UL:
+			result = ulEvent(event);
+			break;
+		case OL:
+			result = olEvent(event);
+			break;
+		case MAP:
+			result = mapEvent(event);
+			break;
+		case AREA:
+			result = areaEvent(event);
+			break;
 		default:
 			System.out.printf("(*)Unknown command: '%s'!\n", event.get("type").toString());
 			System.exit(1);
@@ -329,6 +341,175 @@ public class SodaEventDriver implements Runnable {
 		this.assertPage(event);
 		
 		return result;
+	}
+	
+	private boolean ulEvent(SodaHash event) {
+		boolean required = true;
+		boolean click = false;
+		boolean result = false;
+		WebElement element = null;
+		
+		this.report.Log("UL event Started.");
+		this.resetThreadTime();
+		
+		if (event.containsKey("required")) {
+			required = this.clickToBool(event.get("required").toString());
+		}
+		
+		try {
+			element = this.findElement(event, null, required);
+			if (element == null) {
+				this.report.Log("UL event finished.");
+				result = false;
+				return result;
+			}
+			
+			if (event.containsKey("click")) {
+				click = this.clickToBool(event.get("click").toString());
+			}
+			
+			if (click) {
+				this.report.Log("UL click started.");
+				this.firePlugin(element, SodaElements.UL, SodaPluginEventType.BEFORECLICK);
+				element.click();
+				this.firePlugin(element, SodaElements.UL, SodaPluginEventType.AFTERCLICK);
+				this.report.Log("UL click finished.");
+			}
+		} catch (Exception exp) {
+			element = null;
+			this.report.ReportException(exp);
+		}
+		
+		this.report.Log("UL event Finished.");
+		
+		return result;	
+	}
+
+	private boolean areaEvent(SodaHash event) {
+		boolean required = true;
+		boolean click = false;
+		boolean result = false;
+		WebElement element = null;
+		
+		this.report.Log("Area event Started.");
+		this.resetThreadTime();
+		
+		if (event.containsKey("required")) {
+			required = this.clickToBool(event.get("required").toString());
+		}
+		
+		try {
+			element = this.findElement(event, null, required);
+			if (element == null) {
+				this.report.Log("Area event finished.");
+				result = false;
+				return result;
+			}
+			
+			if (event.containsKey("click")) {
+				click = this.clickToBool(event.get("click").toString());
+			}
+			
+			if (click) {
+				this.report.Log("Area click started.");
+				this.firePlugin(element, SodaElements.AREA, SodaPluginEventType.BEFORECLICK);
+				element.click();
+				this.firePlugin(element, SodaElements.AREA, SodaPluginEventType.AFTERCLICK);
+				this.report.Log("Area click finished.");
+			}
+		} catch (Exception exp) {
+			element = null;
+			this.report.ReportException(exp);
+		}
+		
+		this.report.Log("Area event Finished.");
+		
+		return result;	
+	}
+
+	
+	private boolean mapEvent(SodaHash event) {
+		boolean required = true;
+		boolean click = false;
+		boolean result = false;
+		WebElement element = null;
+		
+		this.report.Log("Map event Started.");
+		this.resetThreadTime();
+		
+		if (event.containsKey("required")) {
+			required = this.clickToBool(event.get("required").toString());
+		}
+		
+		try {
+			element = this.findElement(event, null, required);
+			if (element == null) {
+				this.report.Log("Map event finished.");
+				result = false;
+				return result;
+			}
+			
+			if (event.containsKey("click")) {
+				click = this.clickToBool(event.get("click").toString());
+			}
+			
+			if (click) {
+				this.report.Log("Map click started.");
+				this.firePlugin(element, SodaElements.MAP, SodaPluginEventType.BEFORECLICK);
+				element.click();
+				this.firePlugin(element, SodaElements.MAP, SodaPluginEventType.AFTERCLICK);
+				this.report.Log("Map click finished.");
+			}
+		} catch (Exception exp) {
+			element = null;
+			this.report.ReportException(exp);
+		}
+		
+		this.report.Log("Map event Finished.");
+		
+		return result;	
+	}
+	
+	private boolean olEvent(SodaHash event) {
+		boolean required = true;
+		boolean click = false;
+		boolean result = false;
+		WebElement element = null;
+		
+		this.report.Log("OL event Started.");
+		this.resetThreadTime();
+		
+		if (event.containsKey("required")) {
+			required = this.clickToBool(event.get("required").toString());
+		}
+		
+		try {
+			element = this.findElement(event, null, required);
+			if (element == null) {
+				this.report.Log("OL event finished.");
+				result = false;
+				return result;
+			}
+			
+			if (event.containsKey("click")) {
+				click = this.clickToBool(event.get("click").toString());
+			}
+			
+			if (click) {
+				this.report.Log("OL click started.");
+				this.firePlugin(element, SodaElements.OL, SodaPluginEventType.BEFORECLICK);
+				element.click();
+				this.firePlugin(element, SodaElements.OL, SodaPluginEventType.AFTERCLICK);
+				this.report.Log("OL click finished.");
+			}
+		} catch (Exception exp) {
+			element = null;
+			this.report.ReportException(exp);
+		}
+		
+		this.report.Log("OL event Finished.");
+		
+		return result;	
 	}
 	
 	private boolean javascriptEvent(SodaHash event) {
@@ -1144,6 +1325,7 @@ public class SodaEventDriver implements Runnable {
 				this.report.ReportError(msg);
 				result = false;
 				this.Browser.getDriver().switchTo().window(currentWindow);
+				Thread.sleep(2000); // helps control when the page is loaded, might remove this later... //
 				return result;
 			}
 			
