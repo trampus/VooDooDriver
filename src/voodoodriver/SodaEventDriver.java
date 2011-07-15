@@ -375,6 +375,10 @@ public class SodaEventDriver implements Runnable {
 				this.firePlugin(element, SodaElements.UL, SodaPluginEventType.AFTERCLICK);
 				this.report.Log("UL click finished.");
 			}
+			
+			if (event.containsKey("children")) {
+				this.processEvents((SodaEvents)event.get("children"), element);
+			}
 		} catch (Exception exp) {
 			element = null;
 			this.report.ReportException(exp);
@@ -422,12 +426,10 @@ public class SodaEventDriver implements Runnable {
 			this.report.ReportException(exp);
 		}
 		
-		this.report.Log("Area event Finished.");
-		
+		this.report.Log("Area event Finished.");		
 		return result;	
 	}
 
-	
 	private boolean mapEvent(SodaHash event) {
 		boolean required = true;
 		boolean click = false;
@@ -545,8 +547,7 @@ public class SodaEventDriver implements Runnable {
 		
 		this.Browser.executeJS(scriptdata, null);
 		
-		this.report.Log("Javascript event finished.");
-		
+		this.report.Log("Javascript event finished.");	
 		return result;
 	}
 	
@@ -639,7 +640,6 @@ public class SodaEventDriver implements Runnable {
 			//action.moveToElement(Edst);
 			//action.release(Edst);
 			System.out.printf("Finished DND!\n");
-		
 		}
 		
 		return result;
@@ -680,8 +680,7 @@ public class SodaEventDriver implements Runnable {
 			this.report.ReportException(exp);
 		}
 		
-		this.report.Log("Image event Finished.");
-		
+		this.report.Log("Image event Finished.");	
 		return element;
 	}
 	
@@ -719,8 +718,7 @@ public class SodaEventDriver implements Runnable {
 		}		
 		
 		this.report.Log("FileField event finished..");
-		this.resetThreadTime();
-		
+		this.resetThreadTime();	
 		return element;
 	}
 	
@@ -965,9 +963,7 @@ public class SodaEventDriver implements Runnable {
 		}
 		
 		this.report.Log("Span event finished.");
-		
 		return element;
-		
 	}
 
 	private WebElement radioEvent(SodaHash event, WebElement parent) {
@@ -1041,7 +1037,6 @@ public class SodaEventDriver implements Runnable {
 		}
 		
 		this.report.Log("Radio event finished.");
-		
 		return element;		
 	}
 
@@ -1171,7 +1166,6 @@ public class SodaEventDriver implements Runnable {
 		}
 		
 		this.report.Log("Form event finished.");
-		
 		return element;
 	}
 	
@@ -1234,8 +1228,7 @@ public class SodaEventDriver implements Runnable {
 			element = null;
 		}
 		
-		this.report.Log("Table event finished.");
-		
+		this.report.Log("Table event finished.");	
 		return element;
 	}
 	
@@ -1424,7 +1417,6 @@ public class SodaEventDriver implements Runnable {
 				Thread.sleep(1000);
 				this.report.Log("Javascript event finished.");
 			}
-			// http://192.168.50.178/sugar2?module=ModuleBuilder&action=index&type=studio#mbContent=module%3DModuleBuilder%26action%3DeditLayout%26view%3Ddetailview%26view_module%3DAccounts
 			
 			if (event.containsKey("children")) {
 				this.processEvents((SodaEvents)event.get("children"), element);
@@ -1435,8 +1427,7 @@ public class SodaEventDriver implements Runnable {
 			element = null;
 		}
 		
-		this.report.Log("Div event finished.");
-		
+		this.report.Log("Div event finished.");	
 		return element;
 	}
 	
@@ -1562,7 +1553,6 @@ public class SodaEventDriver implements Runnable {
 		}
 		
 		this.resetThreadTime();
-		
 		return element;
 	}
 	
@@ -1631,7 +1621,6 @@ public class SodaEventDriver implements Runnable {
 		}
 		
 		this.resetThreadTime();
-		
 		this.report.Log("Link Event Finished.");
 		return element;
 	}
@@ -1672,7 +1661,6 @@ public class SodaEventDriver implements Runnable {
 		}
 		
 		this.resetThreadTime();
-		
 		return result;
 	}
 	
@@ -1680,8 +1668,7 @@ public class SodaEventDriver implements Runnable {
 		boolean result = false;
 		int default_timeout = 5;
 		
-		this.resetThreadTime();
-		
+		this.resetThreadTime();	
 		this.report.Log("Starting Wait event.");
 		
 		if (event.containsKey("timeout")) {
@@ -1712,7 +1699,6 @@ public class SodaEventDriver implements Runnable {
 		
 		this.resetThreadTime();
 		this.report.Log("Wait event finished.");
-		
 		return result;
 	}
 
@@ -1803,9 +1789,7 @@ public class SodaEventDriver implements Runnable {
 		}
 
 		this.resetThreadTime();
-		
 		this.report.Log("Browser Event finished.");
-		
 		return result;
 	}
 	
@@ -2018,7 +2002,6 @@ public class SodaEventDriver implements Runnable {
 		return element;
 	}
 	
-	
 	/*
 	 * clickToBool -- method
 	 * 	This method converts a string into a boolean type.
@@ -2101,8 +2084,7 @@ public class SodaEventDriver implements Runnable {
 		boolean required = true;
 		WebElement element = null;
 		
-		this.resetThreadTime();
-		
+		this.resetThreadTime();	
 		this.report.Log("Starting button event.");
 		
 		if (event.containsKey("required")) {
@@ -2218,19 +2200,15 @@ public class SodaEventDriver implements Runnable {
 		}
 		
 		this.resetThreadTime();
-		
 		this.report.Log("Finished textarea event.");
-		
 		return element;
 	}
-	
 	
 	private WebElement textfieldEvent(SodaHash event, WebElement parent) {
 		boolean required = true;
 		WebElement element = null;
 		
 		this.resetThreadTime();
-		
 		this.report.Log("Starting textfield event.");
 		
 		if (event.containsKey("required")) {
@@ -2284,9 +2262,7 @@ public class SodaEventDriver implements Runnable {
 		}
 		
 		this.resetThreadTime();
-		
 		this.report.Log("Finished textfield event.");
-		
 		return element;
 	}
 	
@@ -2294,15 +2270,11 @@ public class SodaEventDriver implements Runnable {
 		boolean result = false;
 		String msg = "";
 		
-		this.resetThreadTime();
-		
+		this.resetThreadTime();		
 		msg = this.replaceString(event.get("text").toString());
-		
 		this.report.Log(msg);
 		result = true;
-		
 		this.resetThreadTime();
-		
 		return result;
 	}
 }
