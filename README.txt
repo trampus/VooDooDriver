@@ -23,8 +23,12 @@ elements.  Example:
 option called: --assertpagefile=<some file>  See more on assertPage in the Notes section of this readme.
 11.)The <javascript> command now supports loading external js files.  See the Notes section for more info.
 
-Notes:
+Known Issues:
+Windows:
+(*)http://code.google.com/p/selenium/issues/detail?id=2064
+(*)http://code.google.com/p/selenium/issues/detail?id=1884
 
+Notes:
 (*)Browser Closing:
    Currently if you are using the --test command line option the browser you are using will be closed
    for you after each test is run even if you do now call the SODA command <browser action="close" />.  
