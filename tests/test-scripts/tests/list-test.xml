@@ -25,15 +25,22 @@
   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
-<soda>     
-	<!-- <script file="tests/test-scripts/tests/list-test.xml" /> -->    
-	<script file="tests/test-scripts/tests/buttons-test.xml" /> 
-	<script file="tests/test-scripts/tests/radio-test.xml" />
-	<script file="tests/test-scripts/tests/field-test.xml" />
-	<script file="tests/test-scripts/tests/misc-test.xml" />
-	<script file="tests/test-scripts/tests/table-test.xml" />
-	<script file="tests/test-scripts/tests/checkbox-test.xml" />
-	<script file="tests/test-scripts/tests/select-test.xml" />
-	<script file="tests/test-scripts/tests/image-test.xml" />
-	<script file="tests/test-scripts/tests/cleanup.xml" />
+<soda>
+	<puts text="list-test.xml starting." />
+	<browser url="{@global.url}/tests/test-data/lists.html" />
+	<puts text="Test: list-test.xml starting." />
+	
+	<browser assert="status message" />
+	<!-- test UL -->
+	<ol id="ol">
+		<li name="1" click="true" />
+		<browser assert="OL one" />
+		<li name="2" click="true" />
+		<browser assert="OL two" />
+	</ol>
+	
+	
+	
+	<puts text="list-test.xml finished." />
+	
 </soda>
