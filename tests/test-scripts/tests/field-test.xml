@@ -49,13 +49,17 @@
 	<browser asert="{@text_record.box3}" />
 	<browser asert="{@text_record.box4}" />
 	
+	<!-- test filefield -->
 	<button id="button2" />
 	<browser assert="empty filefield!" />
 	<filefield id="file" set="{@text_record.file}" />
-	<wait />
 	<button id="button2" />
-	<browser assert="file:{@text_record.file}" />
+	<browser assert="file exists" />
 	
+	<!-- test textarea -->
+	<textarea id="textarea" assert="" />
+	<textarea id="textarea" set="{@text_record.textarea}" />
+	<textarea id="textarea" assert="{@text_record.textarea}" />
 	
 	</csv>
 	<puts text="field-test.xml finished." />

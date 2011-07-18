@@ -47,6 +47,22 @@
 	<form id="test_form">
 		<hidden name="hidden" />
 	</form>
+	
+	<!-- testing link -->
+	<link id="link" click="false" jscriptevent="onmouseover" />
+	<browser assert="link" />
+	<link id="link" click="false" jscriptevent="onmouseout" />
+	<browser assert="status message" />
+	
+	<!-- testing popup -->
+	<link id="popup" click="true" />
+	<attach title="popup">
+		<browser assert="this is a popup" />
+		<browser action="close" />
+	</attach>
+	<browser assert="popup clicked" />
+	<browser action="close" />
+	
 		
 	<puts text="misc-test.xml finished." />
 	

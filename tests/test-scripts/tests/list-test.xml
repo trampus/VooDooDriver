@@ -26,55 +26,19 @@
 -->
 
 <soda>
-	<puts text="table-test.xml starting." />
-	<browser url="{@global.url}/tests/test-data/tables.html" />
-	<puts text="Test: table-test.xml starting." />
+	<puts text="list-test.xml starting." />
+	<browser url="{@global.url}/tests/test-data/lists.html" />
+	<puts text="Test: list-test.xml starting." />
 	
-	<!-- test table -->
 	<browser assert="status message" />
-	<!-- test table -->
-	<table id="table" jscriptevent="onmouseover" />
-	<browser assert="table" />
-	<table id="table" jscriptevent="onmouseout" />
-	<browser assert="not table" />
+	<!-- test UL -->
+	<ul id="ul">
+		<li name="1" click="true" />
+		<browser assert="UL one" />
+		<li name="2" click="true" />
+		<browser assert="UL two" />
+	</ul>
 	
-	<!-- test table data -->
-	<table id="table" >
-		<csv file="tests/test-scripts/csvs/table.csv" var="table_record" >
-		<tr id="tr1">
-			<td name="1">
-				<textfield name="text1" set="{@table_record.data1}" />
-				<textfield name="text1" assert="{@table_record.data1}" />
-				<textfield name="text1" assertnot="{@table_record.data2}" />		
-			</td>
-			<td name="2">
-				<textfield name="text2" set="{@table_record.data2}" />
-				<textfield name="text2" assert="{@table_record.data2}" />
-				<textfield name="text2" assertnot="{@table_record.data1}" />
-			</td>
-		</tr>
-		</csv>
-		<tr id="tr2">
-			<td name="1">
-				<button name="button1" />
-				<browser assert="row two, col one" />
-			</td>
-			<td name="2">
-				<button name="button2" />
-				<browser assert="row two, col two" />
-			</td>
-		</tr>
-		<tr id="tr3">
-			<td name="1">
-				<link name="link1" />
-				<browser assert="row three, col one" />
-			</td>
-			<td name="2">
-				<button name="link2" />
-				<browser assert="row three, col two" />
-			</td>
-		</tr>
-	</table>
-	<puts text="table-test.xml finished." />
+	<puts text="list-test.xml finished." />
 	
 </soda>

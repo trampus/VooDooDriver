@@ -15,7 +15,7 @@
             document.getElementById('status').innerHTML = "empty filefield!"; 
         }
         else{
-            document.getElementById('status').innerHTML = "file:"+document.getElementById('file').value;
+            document.getElementById('status').innerHTML = "file exists";
         }
         
     }
@@ -27,13 +27,16 @@
             <input type='text' id='3' /><br />
             <input type='text' id='4' /><br />
             File: <input type="file" id='file' />
+            <br />
+            <textarea id="textarea"></textarea>
         </form>
         
-        <p><b id='status'>status message</b>
-            <br />
-            <input type='button' id="button" value='check boxes' onclick="checkTextfield()" />
+        <hr />
+        <input type='button' id="button" value='check boxes' onclick="checkTextfield()" />
             <br />
             <input type='button' id='button2' value='check file field' onclick='checkFilefield()' />
+            <br /><hr />
+              <p><b id='status'>status message</b>
         </p>
     </body>
 </html>
