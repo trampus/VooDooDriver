@@ -12,7 +12,10 @@
    <select id="666" included="99" />
    <select id="666" notincluded="10" />
    
-   <wait timeout="5" />
+   <radio name="radio" value="5" click="true" />
+   <radio name="radio" value="5" checked="true" />
+   <radio name="radio" value="5" checked="false" />
+   <wait timeout="8" />
    <browser action="close" />
    
 </soda>

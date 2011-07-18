@@ -974,6 +974,7 @@ public class SodaEventDriver implements Runnable {
 	private WebElement radioEvent(SodaHash event, WebElement parent) {
 		boolean required = true;
 		boolean click = false;
+		boolean set = true;
 		WebElement element = null;
 
 		this.report.Log("Radio event starting.");
@@ -1035,6 +1036,16 @@ public class SodaEventDriver implements Runnable {
 				this.Browser.fire_event(element, event.get("jscriptevent").toString());
 				Thread.sleep(1000);
 				this.report.Log("Javascript event finished.");
+			}
+			
+			if (event.containsKey("checked")) {
+				boolean ischecked = element.isSelected();
+				boolean expected = this.clickToBool(event.get("checked").toString());
+				String msg = "";
+				msg = String.format("Radio control's current checked state: '%s', was expecting: '%s'!", 
+						ischecked, expected);
+				this.report.Assert(msg, ischecked, expected);
+
 			}
 		} catch (Exception exp) {
 			this.report.ReportException(exp);
@@ -1115,18 +1126,18 @@ public class SodaEventDriver implements Runnable {
 						if (assert_direction) {
 							if (options.get(found).isSelected()) {
 								msg = String.format("Select option: '%s' is selected.", assert_value);
-								this.report.Assert(msg, true);
+								this.report.Assert(msg, true, true);
 							} else {
 								msg = String.format("Select option: '%s' is not selected.", assert_value);
-								this.report.Assert(msg, false);
+								this.report.Assert(msg, false, true);
 							}
 						} else {
 							if (options.get(found).isSelected()) {
 								msg = String.format("Select option: '%s' is selected.", assert_value);
-								this.report.Assert(msg, false);
+								this.report.Assert(msg, false, true);
 							} else {
 								msg = String.format("Select option: '%s' is not selected.", assert_value);
-								this.report.Assert(msg, true);
+								this.report.Assert(msg, true, true);
 							}
 						}
 					}
@@ -1163,18 +1174,18 @@ public class SodaEventDriver implements Runnable {
 					if (included_direction) {
 						if (found) {
 							msg = String.format("Found Select list option: '%s'.", included_value);
-							this.report.Assert(msg, true);
+							this.report.Assert(msg, true, true);
 						} else {
 							msg = String.format("Failed to find Select list option: '%s'.", included_value);
-							this.report.Assert(msg, false);
+							this.report.Assert(msg, false, true);
 						}
 					} else {
 						if (found) {
 							msg = String.format("Found Select list option: '%s', when it wasn't expected!", included_value);
-							this.report.Assert(msg, false);
+							this.report.Assert(msg, false, false);
 						} else {
 							msg = String.format("Failed to find Select list option: '%s', as expected.", included_value);
-							this.report.Assert(msg, true);
+							this.report.Assert(msg, true, true);
 						}
 					}
 				}

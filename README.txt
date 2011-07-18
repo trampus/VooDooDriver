@@ -23,7 +23,7 @@ elements.  Example:
 option called: --assertpagefile=<some file>  See more on assertPage in the Notes section of this readme.
 11.)The <javascript> command now supports loading external js files.  See the Notes section for more info.
 12.)<select> now supports assert & assertnot, assert(not) checks that a given option is selected or not.
-
+13.)<radio> now supports checked="true/false", for asserting if the control is checked or not.
 
 Known Issues:
 Windows:

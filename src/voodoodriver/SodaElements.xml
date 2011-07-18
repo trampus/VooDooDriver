@@ -500,6 +500,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          <accessor type="string">cssprop</accessor>
          <accessor type="string">cssvalue</accessor>
          <accessor type="string">save</accessor>
+         <accessor type="boolean">checked</accessor>
       </soda_attributes>
    </radio>
 

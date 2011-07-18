@@ -234,13 +234,15 @@ public class SodaReporter {
 		return result;
 	}
 	
-	public boolean Assert(String msg, boolean state) {
+	public boolean Assert(String msg, boolean state, boolean expected) {
 		boolean result = false;
 		String status = "";
 		
-		if (state) {
+		if (state == expected) {
+			this.PassedAsserts += 1;
 			status = "(*)Assert Passed: ";
 		} else {
+			this.FailedAsserts += 1;
 			status = "(!)Assert Failed: ";
 		}
 		
