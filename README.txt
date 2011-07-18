@@ -22,6 +22,8 @@ elements.  Example:
 10.)assertPage: The assertPage code from Soda is now longer hardcoded into the product.  Now you have to use a command line
 option called: --assertpagefile=<some file>  See more on assertPage in the Notes section of this readme.
 11.)The <javascript> command now supports loading external js files.  See the Notes section for more info.
+12.)<select> now supports assert & assertnot, assert(not) checks that a given option is selected or not.
+
 
 Known Issues:
 Windows:
