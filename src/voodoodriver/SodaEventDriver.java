@@ -47,6 +47,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.Select;
 
 public class SodaEventDriver implements Runnable {
 
@@ -1058,11 +1059,9 @@ public class SodaEventDriver implements Runnable {
 		}
 		
 		try {
-			List<WebElement> list = null;
 			element = this.findElement(event, parent, required);
 			if (element != null) {
-				list = element.findElements(By.tagName("option"));
-				int len = list.size() -1;
+				Select sel = new Select(element);
 				
 				if (event.containsKey("set")) {
 					setvalue = event.get("set").toString();
@@ -1070,59 +1069,68 @@ public class SodaEventDriver implements Runnable {
 				}
 				
 				if (setvalue != null) {
-					for (int i = 0; i <= len; i++) {
-						String tmp = list.get(i).getText();
-						if (setvalue.equals(tmp)) {
-							msg = String.format("Setting Select value to: '%s'.", setvalue);
-							this.report.Log(msg);
-							list.get(i).click();
-							this.firePlugin(element, SodaElements.SELECT, SodaPluginEventType.AFTERSET);
-							was_set = true;
-							break;
-						}
-					}
-					
-					if (!was_set) {
-						this.report.ReportError(String.format("Failed to find option in select with text matching: '%s'!", setvalue));
-					}
+					sel.selectByValue(setvalue);
+					this.firePlugin(element, SodaElements.SELECT, SodaPluginEventType.AFTERSET);
+					was_set = true;
 				}
 				
 				if (event.containsKey("assert")) {
-					String assvalue = event.get("assert").toString();
-					assvalue = this.replaceString(assvalue);
+					String assert_val = event.get("assert").toString();
+					assert_val = this.replaceString(assert_val);
+					boolean found = false;
+					List<WebElement> options = sel.getOptions();
+					int opt_len = options.size() -1;
+					String opt_val = "";
 					
-					List<WebElement> opts = element.findElements(By.tagName("option"));
-					int opts_len = opts.size() -1;
-					String select_val = "";
-					
-					for (int opts_index = 0; opts_index <= opts_len; opts_index++) {
-						if (opts.get(opts_index).isSelected()) {
-							select_val = opts.get(opts_index).getText();
+					for (int i = 0; i <= opt_len; i++) {
+						opt_val = options.get(i).getText();
+						if (opt_val.contains(assert_val)) {
+							found = true;
+							if (options.get(i).isSelected()) {
+								msg = String.format("Select option: '%s' is selected.", assert_val);
+								this.report.Assert(msg, true);
+							} else {
+								msg = String.format("Select option: '%s' is not selected.", assert_val);
+								this.report.Assert(msg, false);
+							}
 							break;
 						}
 					}
 					
-					this.report.Assert(assvalue, select_val);
+					if (!found) {
+						msg = String.format("Failed to find select option: '%s'!", assert_val);
+						this.report.ReportError(msg);
+					}
 				}
 				
 				if (event.containsKey("assertnot")) {
-					String assvalue = event.get("assertnot").toString();
-					assvalue = this.replaceString(assvalue);
+					String assert_val = event.get("assertnot").toString();
+					assert_val = this.replaceString(assert_val);
+					boolean found = false;
+					List<WebElement> options = sel.getOptions();
+					int opt_len = options.size() -1;
+					String opt_val = "";
 					
-					List<WebElement> opts = element.findElements(By.tagName("option"));
-					int opts_len = opts.size() -1;
-					String select_val = "";
-					
-					for (int opts_index = 0; opts_index <= opts_len; opts_index++) {
-						if (opts.get(opts_index).isSelected()) {
-							select_val = opts.get(opts_index).getText();
+					for (int i = 0; i <= opt_len; i++) {
+						opt_val = options.get(i).getText();
+						if (opt_val.contains(assert_val)) {
+							found = true;
+							if (options.get(i).isSelected()) {
+								msg = String.format("Select option: '%s' is selected.", assert_val);
+								this.report.Assert(msg, false);
+							} else {
+								msg = String.format("Select option: '%s' is not selected.", assert_val);
+								this.report.Assert(msg, true);
+							}
 							break;
 						}
 					}
 					
-					this.report.AssertNot(assvalue, select_val);
+					if (!found) {
+						msg = String.format("Failed to find select option: '%s'!", assert_val);
+						this.report.ReportError(msg);
+					}
 				}
-				
 			}
 		} catch (Exception exp) {
 			this.report.ReportException(exp);

@@ -234,6 +234,22 @@ public class SodaReporter {
 		return result;
 	}
 	
+	public boolean Assert(String msg, boolean state) {
+		boolean result = false;
+		String status = "";
+		
+		if (state) {
+			status = "(*)Assert Passed: ";
+		} else {
+			status = "(!)Assert Failed: ";
+		}
+		
+		status = status.concat(msg);
+		this._log(status);
+		
+		return result;
+	}
+	
 	public boolean Assert(String value, String src) {
 		boolean result = false;
 		String msg = "";

@@ -1,54 +1,14 @@
 <soda>
-   <browser url="http://192.168.50.142/sugar" />
-   <textfield id="user_name" set="admin" />
-   <textfield id="user_password" set="admin" />
-   <button id="login_button" />
-   <wait timeout="2" />
-
-   <link text="Admin" />
-   <link text="Studio" />
+   <browser url="http://192.168.50.196/select.html" />
    
-   <puts text="In Studio..." />
+   <select id="666" set="3" />
+   <select id="666" set="5" />
+   
+   <select id="666" assert="3" />
+   <select id="666" assertnot="2" />
+   <select id="666" assertnot="3" />
+   
    <wait timeout="5" />
+   <browser action="close" />
    
-   <table id="ygtvtableel1">
-	   <tr class="ygtvrow">
-	     <td id="ygtvt1" click="true" />
-	   </tr>
-   </table>
-   
-   <table id="ygtvtableel5">
-      <tr class="ygtvrow">
-         <td id="ygtvt5" click="true" />
-         <wait timeout="2" />
-      </tr>
-   </table>
-   
-	<table id="ygtvtableel6">
-	  <tr class="ygtvrow">
-	     <td id="ygtvcontentel6">
-	        <link text="EditView" />
-	     </td>
-	     
-	     <puts text="before no action" />
-	     <td id="ygtvcontentel6" />
-	     <puts text="after no action" />
-	  </tr>
-	</table>
-   
-   <div id="toolbox">
-      <wait timeout="2" />
-      <div class="le_panel special" save="d1" />
-   </div>   
-   <wait timeout="2" />
-   
-   <div id="panels" save="d2" />
-   
-   <wait timeout="3" />
-   
-   <dnd src="d1" dst="d2" />
-   
-   <wait timeout="10" />
-
-   <!--  <browser action="close" /> -->
 </soda>
