@@ -1086,7 +1086,9 @@ public class SodaEventDriver implements Runnable {
 				}
 				
 				if (setvalue != null) {
-					sel.selectByValue(setvalue);
+					//sel.selectByValue(setvalue);
+					// this is to work with soda //
+					sel.selectByVisibleText(setvalue);
 					this.firePlugin(element, SodaElements.SELECT, SodaPluginEventType.AFTERSET);
 					was_set = true;
 				}
