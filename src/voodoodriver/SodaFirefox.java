@@ -52,7 +52,8 @@ public class SodaFirefox extends SodaBrowser implements SodaBrowserInterface {
 			profile = new FirefoxProfile();
 			
 			if (this.downloadDirecotry != null) {
-				profile.setPreference("browser.download.defaultFolder", this.downloadDirecotry);
+				profile.setPreference("browser.download.dir", this.downloadDirecotry);
+				profile.setPreference("app.update.enabled", false);
 				profile.setPreference("browser.download.manager.closeWhenDone", true);
 				profile.setPreference("browser.download.manager.retention", 0);
 				profile.setPreference("browser.download.manager.showAlertOnComplete", false);

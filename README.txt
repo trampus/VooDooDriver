@@ -25,6 +25,7 @@ option called: --assertpagefile=<some file>  See more on assertPage in the Notes
 12.)<select> now supports assert & assertnot, assert(not) checks that a given option is selected or not.
 13.)<radio> now supports checked="true/false", for asserting if the control is checked or not.
 14.)<select> setreal: see the Notes section about this.
+15.)Finding elements using regex's is not supported by VooDooDriver at all.  You can however use css selectors for doing just this.
 
 Known Issues:
 Windows:
