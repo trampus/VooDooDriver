@@ -1066,6 +1066,7 @@ public class SodaEventDriver implements Runnable {
 		boolean assert_direction = true;
 		boolean included = false;
 		boolean included_direction = true;
+		boolean real = false;
 		String assert_value = "";
 		String included_value = "";
 		
@@ -1085,10 +1086,18 @@ public class SodaEventDriver implements Runnable {
 					setvalue = this.replaceString(setvalue);
 				}
 				
+				if (event.containsKey("realvalue")) {
+					setvalue = event.get("realset").toString();
+					setvalue = this.replaceString(setvalue);
+					real = true;
+				}
+				
 				if (setvalue != null) {
-					//sel.selectByValue(setvalue);
-					// this is to work with soda //
-					sel.selectByVisibleText(setvalue);
+					if (real) {
+						sel.selectByValue(setvalue);
+					} else {
+						sel.selectByVisibleText(setvalue);
+					}
 					this.firePlugin(element, SodaElements.SELECT, SodaPluginEventType.AFTERSET);
 					was_set = true;
 				}

@@ -24,6 +24,7 @@ option called: --assertpagefile=<some file>  See more on assertPage in the Notes
 11.)The <javascript> command now supports loading external js files.  See the Notes section for more info.
 12.)<select> now supports assert & assertnot, assert(not) checks that a given option is selected or not.
 13.)<radio> now supports checked="true/false", for asserting if the control is checked or not.
+14.)<select> setreal: see the Notes section about this.
 
 Known Issues:
 Windows:
@@ -100,3 +101,12 @@ Notes:
    file system.  Now having your javascript code in the contents of the <javascript> command will generate a warning.
    It just seems to make more since having javascript code loaded from an external file, as using XML escape codes can
    make debugging a pain.
+   
+(*)Select: "setreal":   
+   Soda would use the attribute "value" for selecting a value from a select list but it would use the displayed value
+   in the select list, not the HTML element "value".  In order to keeps tests working across platforms this is still the
+   case will VooDooDriver.  If you want to select an option based the the HTML element's real value you can now use the 
+   "setreal" for selecting which value you want to click.
+   
+   
+   

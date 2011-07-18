@@ -381,6 +381,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
       <soda_attributes>
          <accessor type="string">set</accessor>
+         <accessor type="string">setreal</accessor>
          <accessor type="string">assert</accessor>
          <accessor type="string">assertnot</accessor>
          <accessor type="boolean">required</accessor>
