@@ -1053,7 +1053,10 @@ public class SodaEventDriver implements Runnable {
 		boolean was_set = false;
 		boolean do_assert = false;
 		boolean assert_direction = true;
+		boolean included = false;
+		boolean included_direction = true;
 		String assert_value = "";
+		String included_value = "";
 		
 		this.report.Log("Select event Started.");
 		
@@ -1125,6 +1128,53 @@ public class SodaEventDriver implements Runnable {
 								msg = String.format("Select option: '%s' is not selected.", assert_value);
 								this.report.Assert(msg, true);
 							}
+						}
+					}
+				}
+				
+				if (event.containsKey("included")) {
+					included = true;
+					included_direction = true;
+					included_value = event.get("included").toString();
+					included_value = this.replaceString(included_value);
+				}
+				
+				if (event.containsKey("notincluded")) {
+					included = true;
+					included_direction = false;
+					included_value = event.get("notincluded").toString();
+					included_value = this.replaceString(included_value);
+				}
+				
+				if (included) {
+					sel = new Select(element);
+					List<WebElement> options = sel.getOptions(); 
+					int sel_len = options.size() -1;
+					boolean found = false;
+					
+					for (int i = 0; i <= sel_len; i++) {
+						String opt_value = options.get(i).getText();
+						if (opt_value.contains(included_value)) {
+							found = true;
+							break;
+						}
+					}
+					
+					if (included_direction) {
+						if (found) {
+							msg = String.format("Found Select list option: '%s'.", included_value);
+							this.report.Assert(msg, true);
+						} else {
+							msg = String.format("Failed to find Select list option: '%s'.", included_value);
+							this.report.Assert(msg, false);
+						}
+					} else {
+						if (found) {
+							msg = String.format("Found Select list option: '%s', when it wasn't expected!", included_value);
+							this.report.Assert(msg, false);
+						} else {
+							msg = String.format("Failed to find Select list option: '%s', as expected.", included_value);
+							this.report.Assert(msg, true);
 						}
 					}
 				}

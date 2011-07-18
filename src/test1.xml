@@ -8,6 +8,10 @@
    <select id="666" assertnot="2" />
    <select id="666" assertnot="3" />
    
+   <select id="666" included="5" />
+   <select id="666" included="99" />
+   <select id="666" notincluded="10" />
+   
    <wait timeout="5" />
    <browser action="close" />
    
