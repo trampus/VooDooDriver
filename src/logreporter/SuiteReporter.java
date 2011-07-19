@@ -152,7 +152,7 @@ public class SuiteReporter {
 		else {
 			repFile.println("\t<td class=\"_data\">Blocked</td>");
 		}
-		repFile.println("\t<td class=\"td_report_data\"><a href=\""+folder.getAbsolutePath()+"/Report-"+fileName+".html\">Report Log</a></td>");
+		repFile.println("\t<td class=\"td_report_data\"><a href='Report-"+fileName+".html'>Report Log</a></td>");
 		repFile.println("</tr>");
 	}
 	
