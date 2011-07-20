@@ -873,9 +873,5 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
    <javaplugin>
       <soda_attributes type="string">classname</soda_attributes>
    </javaplugin>
-   
-   <arg>
-      <soda_attributes type="string">name</soda_attributes>
-   </arg>
 </soda>
 

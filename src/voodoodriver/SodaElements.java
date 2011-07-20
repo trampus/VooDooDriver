@@ -85,7 +85,8 @@ public enum SodaElements {
 	EXECUTE,
 	ARG,
 	PLUGIN,
-	PLUGINLOADER;
+	PLUGINLOADER,
+	JAVAPLUGIN;
 	
 	static public boolean isMember(String aName) {
 		boolean result = false;

@@ -334,6 +334,9 @@ public class SodaEventDriver implements Runnable {
 		case PLUGINLOADER:
 			result = pluginloaderEvent(event);
 			break;
+		case JAVAPLUGIN:
+			result = javapluginEvent(event, parent);
+			break;
 		default:
 			System.out.printf("(*)Unknown command: '%s'!\n", event.get("type").toString());
 			System.exit(1);
@@ -346,6 +349,14 @@ public class SodaEventDriver implements Runnable {
 		}
 		
 		this.assertPage(event);
+		
+		return result;
+	}
+	
+	private boolean javapluginEvent(SodaHash event, WebElement parent) {
+		boolean result = false;
+		
+		
 		
 		return result;
 	}
