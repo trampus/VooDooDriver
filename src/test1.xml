@@ -1,6 +1,9 @@
 <soda>
    <browser url="http://192.168.50.196/select.html" />
    
+   <pluginloader file="/Users/trichmond/Documents/workspace/WebDriver-Issues/bin/FakeClass.class" 
+      classname="FakeClass" />
+
    <select id="666" set="3" />
    <select id="666" set="5" />
    
@@ -17,5 +20,7 @@
    <radio name="radio" value="5" checked="false" />
    <wait timeout="8" />
    <browser action="close" />
+  
    
+
 </soda>

@@ -29,78 +29,10 @@ should not be interpreted as representing official policies, either expressed or
 
 package voodoodriver;
 
-public enum SodaElements {
-	WHITELIST,
-	BUTTON,
-	LABEL,
-	H3,
-	NAME,
-	SCRIPT,
-	FILE_FIELD,
-	UL,
-	OL,
-	H4,
-	H5,
-	TIMESTAMP,
-	PRE,
-	SELECT_LIST,
-	H6,
-	WAIT,
-	ACTION,
-	CHECKBOX,
-	P,
-	RADIO,
-	TABLE,
-	TD,
-	JAVASCRIPT,
-	ASSERT,
-	EXCEPTION,
-	AREA,
-	DIV,
-	FORM,
-	FRAME,
-	MAP,
-	TEXTAREA,
-	TEXTFIELD,
-	PUTS,
-	CSV,
-	LI,
-	VAR,
-	RUBY,
-	LINK,
-	TR,
-	SELECT,
-	BROWSER,
-	IMAGE,
-	H1,
-	DIALOG,
-	HIDDEN,
-	SPAN,
-	TEXT_FIELD,
-	H2,
-	FILEFIELD,
-	ATTACH,
-	STAMP,
-	DND,
-	EXECUTE,
-	ARG,
-	PLUGIN,
-	PLUGINLOADER;
+import java.util.HashMap;
+
+public interface VDDPluginInterface {
 	
-	static public boolean isMember(String aName) {
-		boolean result = false;
-		SodaElements[] values = SodaElements.values();
-		
-		for (SodaElements amethod : values) {
-			if (amethod.name().equals(aName)) {
-				result = true;
-				break;
-			}
-		}
-
-		return result;
-	}
+	public int execute(HashMap<String, String> data, SodaBrowser browser);
+	
 }
-
-
-

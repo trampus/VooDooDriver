@@ -35,6 +35,7 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -60,6 +61,7 @@ public class SodaEventDriver implements Runnable {
 	private volatile Thread runner;
 	private volatile Boolean threadStop = false;
 	private SodaEvents plugIns = null;
+	private ArrayList<SodaHash> JavaPlugings = null;
 	private SodaHash ElementStore = null;
 	
 	public SodaEventDriver(SodaBrowser browser, SodaEvents events, SodaReporter reporter, SodaHash gvars,
@@ -69,6 +71,8 @@ public class SodaEventDriver implements Runnable {
 		this.report = reporter;
 		this.hijacks = hijacks;
 		
+		this.JavaPlugings = new ArrayList<SodaHash>();
+		
 		if (oldvars != null) {
 			sodaVars = oldvars;
 		} else {
@@ -76,7 +80,6 @@ public class SodaEventDriver implements Runnable {
 		}
 		
 		this.ElementStore = new SodaHash();
-		
 		this.plugIns = plugins;
 		
 		if (gvars != null) {
@@ -328,6 +331,9 @@ public class SodaEventDriver implements Runnable {
 		case AREA:
 			result = areaEvent(event);
 			break;
+		case PLUGINLOADER:
+			result = pluginloaderEvent(event);
+			break;
 		default:
 			System.out.printf("(*)Unknown command: '%s'!\n", event.get("type").toString());
 			System.exit(1);
@@ -340,6 +346,48 @@ public class SodaEventDriver implements Runnable {
 		}
 		
 		this.assertPage(event);
+		
+		return result;
+	}
+	
+	private boolean pluginloaderEvent(SodaHash event) {
+		boolean result = false;
+		String filename = "";
+		String classname = "";
+		File tmp = null;
+		SodaHash data = null;
+		
+		this.report.Log("PluginLoader event started.");
+		
+		if (!event.containsKey("file")) {
+			this.report.ReportError("Error: Missing 'file' attribute for pluginloader command!");
+			this.report.Log("PluginLoader event finished.");
+			return false;
+		}
+		
+		if (!event.containsKey("classname")) {
+			this.report.ReportError("Error: Missing 'classname' attribute for pluginloader command!");
+			this.report.Log("PluginLoader event finished.");
+			return false;
+		}
+		
+		filename = event.get("file").toString();
+		filename = this.replaceString(filename);
+		classname = event.get("classname").toString();
+		classname = this.replaceString(classname);
+		
+		tmp = new File(filename);
+		if (!tmp.exists()) {
+			String msg = String.format("Error: failed to find file: '%s'!", filename);
+			this.report.ReportError(msg);
+			return false;
+		}
+		
+		data = new SodaHash();
+		data.put("file", filename);
+		data.put("classname", classname);
+		this.JavaPlugings.add(data);
+		this.report.Log("PluginLoader event finished.");
 		
 		return result;
 	}
