@@ -81,6 +81,7 @@ public class SodaPluginParser {
 			SodaHash tmp = new SodaHash();
 			
 			int clen = child.getChildNodes().getLength() -1;
+			String controls = "";
 			for (int cindex = 0; cindex <= clen; cindex++) {
 				Node info = child.getChildNodes().item(cindex);
 				String cname = info.getNodeName();
@@ -90,10 +91,30 @@ public class SodaPluginParser {
 					continue;
 				}
 				
+				if (cname.contains("control")) {
+					controls = info.getTextContent();
+					continue;
+				}
+				
 				String value = info.getTextContent();
 				tmp.put(cname, value);
 			}
-			data.add(tmp);
+			
+			if (controls.contains(",")) {
+				String[] control_data = controls.split(",");
+				int cdata_len = control_data.length -1;
+				
+				for (int p = 0; p <= cdata_len; p++) {
+					SodaHash newdata = new SodaHash();
+					newdata.putAll(tmp);
+					newdata.put("control", control_data[p]);
+					data.add(newdata);
+					System.out.printf("Adding control permute: %s\n", control_data[p]);
+				}
+			} else {
+				tmp.put("control", controls);
+				data.add(tmp);
+			}
 		}
 		
 		return data;
