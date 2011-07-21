@@ -395,7 +395,7 @@ public class SodaEventDriver implements Runnable {
 				int len = args.length -1;
 				
 				for (int i = 0; i <= len; i++) {
-					System.out.printf("ARG: %s\n", args[i]);
+					args[i] = this.replaceString(args[i]);
 				}
 			}
 		}
