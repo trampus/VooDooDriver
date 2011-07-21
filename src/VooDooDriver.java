@@ -227,7 +227,6 @@ public class VooDooDriver {
 		resultFD = new File(resultdir);
 		if (!resultFD.exists()) {
 			System.out.printf("(*)Result directory doesn't exists, trying to create dir: '%s'\n", resultdir);
-			
 			try {
 				resultFD.mkdirs();
 			} catch (Exception exp) {

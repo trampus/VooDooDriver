@@ -4,6 +4,11 @@
    <pluginloader file="/Users/trichmond/Documents/workspace/WebDriver-Issues/bin/FakeClass.class" 
       classname="FakeClass" />
 
+   <javaplugin classname="FakeClass">
+      <arg>foobar</arg>
+      <arg>666</arg>
+   </javaplugin>
+
    <select id="666" set="3" />
    <select id="666" set="5" />
    

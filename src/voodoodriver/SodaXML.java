@@ -229,7 +229,7 @@ public class SodaXML {
 			}
 			
 			if (child.hasChildNodes()) {
-				if (name.contains("execute")) {
+				if (name.contains("execute") || name.contains("javaplugin")) {
 					String[] list = processArgs(child.getChildNodes());
 					data.put("args", list);
 				} else {

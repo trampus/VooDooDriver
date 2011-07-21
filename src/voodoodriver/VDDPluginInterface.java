@@ -29,8 +29,10 @@ should not be interpreted as representing official policies, either expressed or
 
 package voodoodriver;
 
+import org.openqa.selenium.WebElement;
+
 public interface VDDPluginInterface {
 	
-	public int execute(String[] args, SodaBrowser browser);
+	public int execute(String[] args, SodaBrowser browser, WebElement element);
 	
 }
