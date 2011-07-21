@@ -11,10 +11,10 @@ Question:
 What does the program allow you access to?
 
 Answer:
-The plugin allows access to VDD’s SodaBrowser instance, also if the plugin is parented by other VDD command’s such as :
+The plugin allows access to VDD's SodaBrowser instance, also if the plugin is parented by other VDD command’s such as :
 
-<div id=”foo”>
-  <javaplugin classname=”myclass” />
+<div id="foo">
+  <javaplugin classname="myclass" />
 </div>
 
 Then the plugin will get passed the WebElement for the div in the parent argument.  See below for more examples on how to use java plugins.
