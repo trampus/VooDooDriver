@@ -1219,7 +1219,6 @@ public class SodaEventDriver implements Runnable {
 		WebElement element = null;
 		String setvalue = null;
 		String msg = "";
-		boolean was_set = false;
 		boolean do_assert = false;
 		boolean assert_direction = true;
 		boolean included = false;
@@ -1258,7 +1257,6 @@ public class SodaEventDriver implements Runnable {
 						sel.selectByVisibleText(setvalue);
 					}
 					this.firePlugin(element, SodaElements.SELECT, SodaPluginEventType.AFTERSET);
-					was_set = true;
 				}
 				
 				if (event.containsKey("assert")) {
