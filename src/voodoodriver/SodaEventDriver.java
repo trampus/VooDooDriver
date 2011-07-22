@@ -61,6 +61,7 @@ public class SodaEventDriver implements Runnable {
 	private SodaEvents plugIns = null;
 	private SodaHash JavaPlugings = null;
 	private SodaHash ElementStore = null;
+	private VDDPluginsHash loadedPlugins = null;
 	
 	public SodaEventDriver(SodaBrowser browser, SodaEvents events, SodaReporter reporter, SodaHash gvars,
 			SodaHash hijacks, SodaHash oldvars, SodaEvents plugins) {
@@ -70,6 +71,7 @@ public class SodaEventDriver implements Runnable {
 		this.hijacks = hijacks;
 		
 		this.JavaPlugings = new SodaHash();
+		this.loadedPlugins = new VDDPluginsHash();
 		
 		if (oldvars != null) {
 			sodaVars = oldvars;
@@ -79,6 +81,9 @@ public class SodaEventDriver implements Runnable {
 		
 		this.ElementStore = new SodaHash();
 		this.plugIns = plugins;
+		if (this.plugIns == null) {
+			this.plugIns = new SodaEvents();
+		}
 		
 		if (gvars != null) {
 			int len = gvars.keySet().size();
@@ -91,10 +96,33 @@ public class SodaEventDriver implements Runnable {
 			}
 		}
 		
+		this.loadJavaEventPlugins();
 		this.stampEvent();
 		this.threadTime = new Date();
 		this.runner = new Thread(this, "SodaEventDriver-Thread");
 		runner.start();
+	}
+	
+	private void loadJavaEventPlugins() {
+		int len = this.plugIns.size() -1;
+		
+		for (int i = 0; i <= len; i++) {
+			SodaHash tmp = this.plugIns.get(i);
+			if (!tmp.containsKey("classname")) {
+				continue;
+			}
+			
+			String classname = tmp.get("classname").toString();
+			String classfile = tmp.get("classfile").toString();
+			VDDClassLoader loader = new VDDClassLoader(ClassLoader.getSystemClassLoader());
+			
+			try {
+				Class tmp_class = loader.loadClass(classname, classfile);
+				this.loadedPlugins.put(classname, tmp_class);
+			} catch (Exception exp) {
+				this.report.ReportException(exp);
+			}
+		}
 	}
 	
 	private void assertPage(SodaHash event) {
@@ -400,9 +428,8 @@ public class SodaEventDriver implements Runnable {
 			}
 		}
 		
-		VDDClassLoader loader = new VDDClassLoader(ClassLoader.getSystemClassLoader());
-		
 		try {
+			VDDClassLoader loader = new VDDClassLoader(ClassLoader.getSystemClassLoader());
 			Class tmp_class = loader.loadClass(classname, classfile);
 			VDDPluginInterface inner = (VDDPluginInterface) tmp_class.newInstance();
 			this.report.Log("Executing plugin now.");
@@ -453,6 +480,19 @@ public class SodaEventDriver implements Runnable {
 			String msg = String.format("Error: failed to find file: '%s'!", filename);
 			this.report.ReportError(msg);
 			return false;
+		}
+		
+		// load & store plugin //
+		if (!this.loadedPlugins.containsKey(classname)) {
+			try {
+				System.out.printf("Loading class into memory: '%s'!\n", classname);
+				VDDClassLoader loader = new VDDClassLoader(ClassLoader.getSystemClassLoader());
+				Class tmp_class = loader.loadClass(classname, filename);
+				this.loadedPlugins.put(classname, tmp_class);
+			} catch (ClassNotFoundException exp) {
+				this.report.ReportException(exp);
+				result = false;
+			}
 		}
 		
 		data = new SodaHash();
@@ -1094,7 +1134,6 @@ public class SodaEventDriver implements Runnable {
 	private WebElement radioEvent(SodaHash event, WebElement parent) {
 		boolean required = true;
 		boolean click = false;
-		boolean set = true;
 		WebElement element = null;
 
 		this.report.Log("Radio event starting.");
@@ -1200,6 +1239,7 @@ public class SodaEventDriver implements Runnable {
 			element = this.findElement(event, parent, required);
 			if (element != null) {
 				Select sel = new Select(element);
+				this.firePlugin(element, SodaElements.SELECT, SodaPluginEventType.AFTERFOUND);
 				
 				if (event.containsKey("set")) {
 					setvalue = event.get("set").toString();
@@ -2233,6 +2273,7 @@ public class SodaEventDriver implements Runnable {
 		boolean result = false;
 		int len = 0;
 		String js = "var CONTROL = arguments[0];\n\n";
+		int index = -1;
 		
 		if (this.plugIns == null) {
 			return true;
@@ -2245,24 +2286,30 @@ public class SodaEventDriver implements Runnable {
 
 			if (tmp.get("control").toString().contains((type.toString().toLowerCase()))) {
 				if (tmp.get("event").toString().contains(eventType.toString().toLowerCase())) {
-					String jsfile = (String)tmp.get("jsfile");
-					jsfile = FilenameUtils.separatorsToSystem(jsfile);
-					String user_js = SodaUtils.FileToStr(jsfile);
-					if (user_js != null) {
-						js = js.concat(user_js);
-						result = true;
-						break;
+					
+					if (tmp.containsKey("jsfile")) {
+						String jsfile = (String)tmp.get("jsfile");
+						jsfile = FilenameUtils.separatorsToSystem(jsfile);
+						String user_js = SodaUtils.FileToStr(jsfile);
+						if (user_js != null) {
+							js = js.concat(user_js);
+							result = true;
+							break;
+						} else {
+							String msg = String.format("Failed trying to read plugin source file: '%s'!", 
+									(String)tmp.get("jsfile"));
+							this.report.ReportError(msg);
+							result = false;
+						}
 					} else {
-						String msg = String.format("Failed trying to read plugin source file: '%s'!", 
-								(String)tmp.get("jsfile"));
-						this.report.ReportError(msg);
-						result = false;
+						index = i;
+						break;
 					}
 				}
 			}
 		}
 		
-		if (result) {
+		if (result && index < 0) {
 			this.report.Log("Plugin Event Started.");
 			Object res = this.Browser.executeJS(js, element);
 			int tmp = Integer.valueOf(res.toString());
@@ -2275,6 +2322,21 @@ public class SodaEventDriver implements Runnable {
 			}
 			
 			this.report.Log("Plugin Event Finished.");
+		}
+		
+		if (index > -1) {
+			SodaHash data = this.plugIns.get(index);
+			String classname = data.get("classname").toString();
+			Class tmp_class = this.loadedPlugins.get(classname);
+			
+			try {
+				VDDPluginInterface inst = (VDDPluginInterface)tmp_class.newInstance();
+				int err = inst.execute(null, this.Browser, element);
+			} catch (Exception exp) {
+				this.report.ReportException(exp);
+				result = false;
+			}
+			
 		}
 		
 		return result;

@@ -12,4 +12,11 @@
       <event>afterfound</event>
       <jsfile>/Users/trichmond/Documents/workspace/Soda-Project/plugins/button-highlight.js</jsfile>
    </plugin>
+
+   <plugin>
+      <classname>FakeClass</classname>
+      <control>button,div,radio,checkbox,select</control>
+      <event>afterfound</event>
+      <classfile>/Users/trichmond/Desktop/FakeClass.class</classfile>
+   </plugin>
 </data>

@@ -35,4 +35,18 @@ Once a plugin has been loaded it will no be unloaded until after VooDooDriver ha
 
 (*)Control element access:
 You will be able to access the internal control that was found for your Control, but using the Javascript var called CONTROL.
+When setting the controls you want to use in order to keep plugin files smaller you can set the control element to use more 
+then one control by making it a comma delimited list of control names.
+
+(*)Plugin using Java classes
+You can also load and execte a plugin using compiled Java Classes.
+
+(*)Example Plugin XML file loading Java classes:
+<plugin>
+   <classname>FakeClass</classname>
+   <control>button,div,radio,checkbox,select</control>
+   <event>afterfound</event>
+   <classfile>/Users/trichmond/Desktop/FakeClass.class</classfile>
+</plugin>
+
 
