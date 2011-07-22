@@ -1,4 +1,4 @@
-<!--
+/*
   Copyright (c) 2011, SugarCRM, Inc.
   All rights reserved.
 
@@ -23,18 +23,44 @@
   ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
--->
+*/
 
-<soda>     
-	<script file="tests/test-scripts/tests/buttons-test.xml" /> 
-	<script file="tests/test-scripts/tests/radio-test.xml" />
-	<script file="tests/test-scripts/tests/field-test.xml" />
-	<script file="tests/test-scripts/tests/misc-test.xml" />
-	<script file="tests/test-scripts/tests/table-test.xml" />
-	<script file="tests/test-scripts/tests/checkbox-test.xml" />
-	<script file="tests/test-scripts/tests/select-test.xml" />
-	<script file="tests/test-scripts/tests/list-test.xml" />  
-	<script file="tests/test-scripts/tests/image-test.xml" />  
-	<script file="tests/test-scripts/tests/javaplugin-test.xml" />
-	<script file="tests/test-scripts/tests/cleanup.xml" />
-</soda>
+package javaplugins;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+
+import voodoodriver.SodaBrowser;
+import voodoodriver.VDDPluginInterface;
+
+/**
+ * a simple example Java plugin for use with VDD. This plugin demonstrates VDD's functionality of interacting with WebElement, and performing
+ * actions that are not possible with standard VDD elements.
+ * 
+ * @author Lehan Huang
+ */
+public class JavaPluginTest implements VDDPluginInterface {
+
+	@Override
+	public int execute(String[] args, SodaBrowser browser, WebElement element) {
+		System.out.printf("(*)Plugin: Starting VDD JavaPluginTest...\n");
+		
+		if (args == null && element == null){
+			return 1;
+		}
+		else if (args == null){
+			element.findElement(By.id("text1")).clear();
+			element.findElement(By.id("text1")).sendKeys("voodoo");
+		}
+		else{
+			System.out.printf("(*)Plugin: arg size: "+args.length+"\n");
+			element.findElement(By.id("text1")).clear();
+			element.findElement(By.id("text1")).sendKeys(args[0]);
+		}
+		
+		System.out.printf("(*)Plugin: JavaPluginTest finished.\n");
+		
+		return 0;
+	}
+
+}
