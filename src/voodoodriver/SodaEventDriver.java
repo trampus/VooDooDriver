@@ -34,7 +34,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -117,7 +116,7 @@ public class SodaEventDriver implements Runnable {
 			VDDClassLoader loader = new VDDClassLoader(ClassLoader.getSystemClassLoader());
 			
 			try {
-				Class tmp_class = loader.loadClass(classname, classfile);
+				Class<VDDPluginInterface> tmp_class = loader.loadClass(classname, classfile);
 				this.loadedPlugins.put(classname, tmp_class);
 			} catch (Exception exp) {
 				this.report.ReportException(exp);
@@ -430,8 +429,8 @@ public class SodaEventDriver implements Runnable {
 		
 		try {
 			VDDClassLoader loader = new VDDClassLoader(ClassLoader.getSystemClassLoader());
-			Class tmp_class = loader.loadClass(classname, classfile);
-			VDDPluginInterface inner = (VDDPluginInterface) tmp_class.newInstance();
+			Class<VDDPluginInterface> tmp_class = loader.loadClass(classname, classfile);
+			VDDPluginInterface inner = tmp_class.newInstance();
 			this.report.Log("Executing plugin now.");
 			err = inner.execute(args, this.Browser, parent);
 			if (err != 0) {
@@ -487,7 +486,7 @@ public class SodaEventDriver implements Runnable {
 			try {
 				System.out.printf("Loading class into memory: '%s'!\n", classname);
 				VDDClassLoader loader = new VDDClassLoader(ClassLoader.getSystemClassLoader());
-				Class tmp_class = loader.loadClass(classname, filename);
+				Class<VDDPluginInterface> tmp_class = loader.loadClass(classname, filename);
 				this.loadedPlugins.put(classname, tmp_class);
 			} catch (ClassNotFoundException exp) {
 				this.report.ReportException(exp);
@@ -1220,7 +1219,6 @@ public class SodaEventDriver implements Runnable {
 		WebElement element = null;
 		String setvalue = null;
 		String msg = "";
-		boolean was_set = false;
 		boolean do_assert = false;
 		boolean assert_direction = true;
 		boolean included = false;
@@ -1259,7 +1257,6 @@ public class SodaEventDriver implements Runnable {
 						sel.selectByVisibleText(setvalue);
 					}
 					this.firePlugin(element, SodaElements.SELECT, SodaPluginEventType.AFTERSET);
-					was_set = true;
 				}
 				
 				if (event.containsKey("assert")) {
@@ -2327,11 +2324,15 @@ public class SodaEventDriver implements Runnable {
 		if (index > -1) {
 			SodaHash data = this.plugIns.get(index);
 			String classname = data.get("classname").toString();
-			Class tmp_class = this.loadedPlugins.get(classname);
+			Class<VDDPluginInterface> tmp_class = this.loadedPlugins.get(classname);
 			
 			try {
-				VDDPluginInterface inst = (VDDPluginInterface)tmp_class.newInstance();
+				VDDPluginInterface inst = tmp_class.newInstance();
 				int err = inst.execute(null, this.Browser, element);
+				if (err != 0) {
+					String msg = String.format("Plugin Classname: '%s' failed returning error code: '%d'!", classname, err);
+					this.report.ReportError(msg);
+				}
 			} catch (Exception exp) {
 				this.report.ReportException(exp);
 				result = false;

@@ -34,32 +34,23 @@ import java.io.*;
  *
  */
 public class SuiteReporter {
-	private File folder;
+	
+	@SuppressWarnings("unused")
+	private File folder = null;
 	private File[] filesList;
 	private int count;
 	private String suiteName;
-	
-	/**
-	 * file reading stuff
-	 */
 	private FileReader input;
 	private BufferedReader br;
 	private String strLine, tmp;
-	
-	/**
-	 * file output stuff
-	 */
 	private FileOutputStream output;
 	private PrintStream repFile;
 	
-	//////////////////////////////
-	//Constructors
-	//////////////////////////////
 	/**
 	 * default constructor
 	 */
 	public SuiteReporter(){
-		folder = new File("");
+		this.folder = new File("");
 		filesList = new File[0];
 		count = 0;
 	}
@@ -87,9 +78,6 @@ public class SuiteReporter {
 		
 	}
 	
-	/////////////////////////////
-	//report-generating methods
-	/////////////////////////////
 	/**
 	 * generates a html report file
 	 */
@@ -140,7 +128,8 @@ public class SuiteReporter {
 	 */
 	public void generateTableRow(String fileName, int status){
 		count ++;
-		repFile.println("<tr id=\""+count+"\" onMouseOver=\"this.className='highlight'\" onMouseOut=\"this.className='tr_normal'\" class=\"tr_normal\" >");
+		repFile.println("<tr id=\""+count+"\" onMouseOver=\"this.className='highlight'\" "+
+				"onMouseOut=\"this.className='tr_normal'\" class=\"tr_normal\" >");
 		repFile.println("\t<td class=\"td_file_data\">"+count+"</td>");
 		repFile.println("\t<td class=\"td_file_data\">"+fileName+".xml</td>");
 		if (status == 0){
