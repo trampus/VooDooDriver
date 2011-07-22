@@ -25,16 +25,38 @@
   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
-<soda>     
-	<script file="tests/test-scripts/tests/buttons-test.xml" /> 
-	<script file="tests/test-scripts/tests/radio-test.xml" />
-	<script file="tests/test-scripts/tests/field-test.xml" />
-	<script file="tests/test-scripts/tests/misc-test.xml" />
-	<script file="tests/test-scripts/tests/table-test.xml" />
-	<script file="tests/test-scripts/tests/checkbox-test.xml" />
-	<script file="tests/test-scripts/tests/select-test.xml" />
-	<script file="tests/test-scripts/tests/list-test.xml" />  
-	<script file="tests/test-scripts/tests/image-test.xml" />  
-	<script file="tests/test-scripts/tests/javaplugin-test.xml" />
-	<script file="tests/test-scripts/tests/cleanup.xml" />
+<soda>
+	<puts text="javaplugin-test.xml starting." />
+	<browser url="{@global.url}/tests/test-data/javaplugin.html" />
+	<puts text="Test: javaplugin-test.xml starting." />
+	
+	<browser assert="status message" />
+	<!-- load java plugin into VDD -->
+	<pluginloader file="plugins/java/JavaPluginTest.class" classname="javaplugins.JavaPluginTest" />
+	
+	<!-- test loading with parent element -->
+	<button id="button" />
+	<browser assert="empty!" />
+	<form id="form1">
+		<!-- fill textfield with loaded plugin -->
+		<javaplugin classname="javaplugins.JavaPluginTest" />
+	</form>
+	<button id="button" />
+	<browser assert="textfield: voodoo" />
+	
+	<!-- test loading with provided argument -->
+	<form id="form1">
+		<javaplugin classname="javaplugins.JavaPluginTest">
+			<arg>bananas</arg>
+			<arg>apples</arg>
+		</javaplugin>
+	</form>
+	<wait timeout="1" />
+	<button id="button" />
+	<browser assert="textfield: bananas" />
+	
+	
+	
+	<puts text="javaplugin-test.xml finished." />
+	
 </soda>
