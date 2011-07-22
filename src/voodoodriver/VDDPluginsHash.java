@@ -33,6 +33,8 @@ import java.util.HashMap;
 
 public class VDDPluginsHash extends HashMap<String, Class>{
 
+	private static final long serialVersionUID = 1L;
+
 	public VDDPluginsHash () {
 		super();
 	}

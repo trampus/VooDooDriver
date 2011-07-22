@@ -34,7 +34,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -2332,6 +2331,10 @@ public class SodaEventDriver implements Runnable {
 			try {
 				VDDPluginInterface inst = (VDDPluginInterface)tmp_class.newInstance();
 				int err = inst.execute(null, this.Browser, element);
+				if (err != 0) {
+					String msg = String.format("Plugin Classname: '%s' failed returning error code: '%d'!", classname, err);
+					this.report.ReportError(msg);
+				}
 			} catch (Exception exp) {
 				this.report.ReportException(exp);
 				result = false;

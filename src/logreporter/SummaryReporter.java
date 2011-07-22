@@ -102,12 +102,6 @@ public class SummaryReporter {
 			System.err.println("Error writing to summary.html");
 			e.printStackTrace();
 		}
-		
-		/**
-		 * sorts the arraylist into alphabetical order
-		xmlFiles = sortFiles(xmlFiles);
-		*/
-		
 	}
 	
 	/////////////////////////////////
@@ -891,30 +885,6 @@ public class SummaryReporter {
 		
 		name = name.substring(0, name.indexOf("."));
 		return name;
-	}
-	
-	/**
-	 * takes in an ArrayList of File and sorts it according to filename, a to z
-	 * @param files - ArrayList of File to be sorted
-	 * @return a sorted ArrayList of File containing data from the original ArrayList
-	 */
-	private ArrayList<File> sortFiles(ArrayList<File> files){
-		ArrayList<File> sorted = new ArrayList<File>();
-		sorted.add(files.get(0));
-		for (int i = 0; i < files.size(); i ++){
-			int j = 0;
-			while (j < sorted.size() && files.get(i).getName().compareToIgnoreCase(sorted.get(j).getName()) > 0){
-				j++;
-			}
-			if (j >= sorted.size()){
-				sorted.add(files.get(i));
-			}
-			else {
-				sorted.add(j, files.get(i));
-			}
-		}
-		
-		return sorted;
 	}
 	
 }
