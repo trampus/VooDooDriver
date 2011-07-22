@@ -51,7 +51,6 @@ public class SodaPageAsserter {
 		this.ignores = new ArrayList<String>();
 		this.checkes = new ArrayList<String>();
 		Document doc = null;
-		File suiteFD = null;
 		DocumentBuilderFactory dbf = null;
 		DocumentBuilder db = null;
 		

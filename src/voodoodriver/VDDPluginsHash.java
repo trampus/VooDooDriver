@@ -31,7 +31,7 @@ package voodoodriver;
 
 import java.util.HashMap;
 
-public class VDDPluginsHash extends HashMap<String, Class>{
+public class VDDPluginsHash extends HashMap<String, Class<VDDPluginInterface>>{
 
 	private static final long serialVersionUID = 1L;
 

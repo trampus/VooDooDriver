@@ -94,6 +94,7 @@ public class VooDooDriver {
 		System.out.printf("%s\n", msg);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 		String sodaConfigFile = "soda-config.xml";
 		File sodaConfigFD = null;

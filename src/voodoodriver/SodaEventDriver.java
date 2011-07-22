@@ -116,7 +116,7 @@ public class SodaEventDriver implements Runnable {
 			VDDClassLoader loader = new VDDClassLoader(ClassLoader.getSystemClassLoader());
 			
 			try {
-				Class tmp_class = loader.loadClass(classname, classfile);
+				Class<VDDPluginInterface> tmp_class = loader.loadClass(classname, classfile);
 				this.loadedPlugins.put(classname, tmp_class);
 			} catch (Exception exp) {
 				this.report.ReportException(exp);
@@ -429,8 +429,8 @@ public class SodaEventDriver implements Runnable {
 		
 		try {
 			VDDClassLoader loader = new VDDClassLoader(ClassLoader.getSystemClassLoader());
-			Class tmp_class = loader.loadClass(classname, classfile);
-			VDDPluginInterface inner = (VDDPluginInterface) tmp_class.newInstance();
+			Class<VDDPluginInterface> tmp_class = loader.loadClass(classname, classfile);
+			VDDPluginInterface inner = tmp_class.newInstance();
 			this.report.Log("Executing plugin now.");
 			err = inner.execute(args, this.Browser, parent);
 			if (err != 0) {
@@ -486,7 +486,7 @@ public class SodaEventDriver implements Runnable {
 			try {
 				System.out.printf("Loading class into memory: '%s'!\n", classname);
 				VDDClassLoader loader = new VDDClassLoader(ClassLoader.getSystemClassLoader());
-				Class tmp_class = loader.loadClass(classname, filename);
+				Class<VDDPluginInterface> tmp_class = loader.loadClass(classname, filename);
 				this.loadedPlugins.put(classname, tmp_class);
 			} catch (ClassNotFoundException exp) {
 				this.report.ReportException(exp);
@@ -2324,10 +2324,10 @@ public class SodaEventDriver implements Runnable {
 		if (index > -1) {
 			SodaHash data = this.plugIns.get(index);
 			String classname = data.get("classname").toString();
-			Class tmp_class = this.loadedPlugins.get(classname);
+			Class<VDDPluginInterface> tmp_class = this.loadedPlugins.get(classname);
 			
 			try {
-				VDDPluginInterface inst = (VDDPluginInterface)tmp_class.newInstance();
+				VDDPluginInterface inst = tmp_class.newInstance();
 				int err = inst.execute(null, this.Browser, element);
 				if (err != 0) {
 					String msg = String.format("Plugin Classname: '%s' failed returning error code: '%d'!", classname, err);

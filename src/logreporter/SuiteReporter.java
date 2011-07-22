@@ -35,6 +35,7 @@ import java.io.*;
  */
 public class SuiteReporter {
 	
+	@SuppressWarnings("unused")
 	private File folder = null;
 	private File[] filesList;
 	private int count;

@@ -53,8 +53,9 @@ public class VDDClassLoader extends ClassLoader {
 	 * @return Class
 	 * @throws ClassNotFoundException
 	 */
-	public Class loadClass(String className, String classFile) throws ClassNotFoundException {
-		Class result = null;
+	@SuppressWarnings("unchecked")
+	public Class<VDDPluginInterface> loadClass(String className, String classFile) throws ClassNotFoundException {
+		Class<VDDPluginInterface> result = null;
 		byte[] classData;
 		
 		try {
@@ -70,7 +71,7 @@ public class VDDClassLoader extends ClassLoader {
 		    fin.close();
 		    
 		    classData = buffer.toByteArray();
-		    result = defineClass(className, classData, 0, classData.length);
+		    result = (Class<VDDPluginInterface>)defineClass(className, classData, 0, classData.length);
 			
 		} catch (Exception exp) {
 			exp.printStackTrace();
@@ -80,11 +81,12 @@ public class VDDClassLoader extends ClassLoader {
 		return result;
 	}
 	
-	public Class loadClass(String className, byte[] classData) {
-		Class result = null;
+	@SuppressWarnings("unchecked")
+	public Class<VDDPluginInterface> loadClass(String className, byte[] classData) {
+		Class<VDDPluginInterface> result = null;
 		
 		try {
-			result = defineClass(className, classData, 0, classData.length);
+			result = (Class<VDDPluginInterface>)defineClass(className, classData, 0, classData.length);
 		} catch (Exception exp) {
 			exp.printStackTrace();
 			result = null;
