@@ -607,85 +607,87 @@ public class LogConverter{
 	 */
 	private void generateHtmlHeader(){
 		final String title = "SODA Test report";
-		repFile.println("<html>");
-		repFile.println("<script language=javascript type='text/javascript'>");
-		repFile.println("function hidediv(name, href_id) {");
-		repFile.println("\t document.getElementById(name).style.display = 'none';");
-		repFile.println("\t document.getElementById(href_id).innerHTML=\"[ Expand Backtrace ]<b>+</b>\";");
-		repFile.println("\t document.getElementById(href_id).href=\"javascript:showdiv('\" + name +\"', '\" + href_id + \"')\";"); 
-		repFile.println("}");
-		repFile.println("function showdiv(name, href_id) {");
-		repFile.println("\t document.getElementById(name).style.display = 'inline';");
-		repFile.println("\t document.getElementById(href_id).innerHTML=\"[ Collapse Backtrace ]<b>-</b>\";");
-		repFile.println("\t document.getElementById(href_id).href=\"javascript:hidediv('\" + name + \"', '\" + href_id + \"')\";");
-		repFile.println("}");
-		repFile.println("</script>");
-		repFile.println("<style type=\"text/css\">");
-		repFile.println("body{");
-		repFile.println("\t margin: 0px;");
-		repFile.println("\t font-family: Arial, Verdana, Helvetica, sans-serif;");
-		repFile.println("}");
-		repFile.println("fieldset, table, pre{");
-		repFile.println("\t margin-bottom:0;");
-		repFile.println("}");
-		repFile.println("p{");
-		repFile.println("\t margin-top: 0px;");
-		repFile.println("\t margin-bottom: 0px;");
-		repFile.println("}");
-		repFile.println("textarea{");
-		repFile.println("\t fontfamily: Arial, Verdana,Helvetica,sans-serif;");
-		repFile.println("}");
-		repFile.println("td{");
-		repFile.println("\t text-align:left;");
-		repFile.println("\t vertical-align: top;");
-		repFile.println("}");
-		repFile.println(".td_msgtype{");
-		repFile.println("\t text-align: center;");
-		repFile.println("\t vertical-align: middle;");
-		repFile.println("}");
-		repFile.println(".tr_normal{");
-		repFile.println("\t background: #e5eef3;");
-		repFile.println("}");
-		repFile.println(".tr_header{");
-		repFile.println("\t background: #a4a4a4;");
-		repFile.println("}");
-		repFile.println(".tr_module{");
-		repFile.println("\t background: #3c78c8;");
-		repFile.println("}");
-		repFile.println(".tr_error{");
-		repFile.println("\t background: #ff0000;");
-		repFile.println("}");
-		repFile.println(".tr_warning{");
-		repFile.println("\t background: #eeff30;");
-		repFile.println("}");
-		repFile.println(".tr_assert_passed{");
-		repFile.println("\t background: #7ff98a;");
-		repFile.println("}");
-		repFile.println(".highlight {");
-		repFile.println("\t background-color: #8888FF;");
-		repFile.println("}");
-		repFile.println(".highlight_report {");
-		repFile.println("\t background-color: #5dec6d;");
-		repFile.println("}");
-		repFile.println("table {");
-		repFile.println("\t background: #ffff;");
-		repFile.println("\t border: 1px solid black;");
-		repFile.println("\t border-bottom: 1px solid #0000;");
-		repFile.println("\t border-right: 1px solid #0000;");
-		repFile.println("\t color: #0000;");
-		repFile.println("\t padding: 4px;");
-		repFile.println("\t font-size: 11px;");
-		repFile.println("}");
-		repFile.println("</style>");
-		repFile.println("<title>"+title+"</title>");
-		repFile.println("<body>");
-		repFile.println("<table>");
-		repFile.println("<tr class=\"tr_header\">");
-		repFile.println("\t <td nowrap> <b>Date Time: </b></td>");
-		repFile.println("\t <td nowrap> <b>Message Type: </b></td>");
-		repFile.println("\t <td> <b>Message: </b></td>");
-		repFile.println("</tr >");
-		repFile.println("");
+		String temp = "";
+		temp += "<html> \n" +
+				"<script language=javascript type='text/javascript'> \n" +
+		 		"function hidediv(name, href_id) { \n" +
+		 		"\t document.getElementById(name).style.display = 'none'; \n" +
+		 		"\t document.getElementById(href_id).innerHTML=\"[ Expand Backtrace ]<b>+</b>\"; \n" +
+		 		"\t document.getElementById(href_id).href=\"javascript:showdiv('\" + name +\"', '\" + href_id + \"')\";\n" +
+		 		"} \n" +
+		 		"function showdiv(name, href_id) { \n" +
+		 		"\t document.getElementById(name).style.display = 'inline'; \n" +
+				"\t document.getElementById(href_id).innerHTML=\"[ Collapse Backtrace ]<b>-</b>\"; \n" +
+				"\t document.getElementById(href_id).href=\"javascript:hidediv('\" + name + \"', '\" + href_id + \"')\"; \n" +
+				"} \n" +
+				"</script> \n" +
+				"<style type=\"text/css\"> \n" +
+				"body{ \n" +
+				"\t margin: 0px; \n" +
+				"\t font-family: Arial, Verdana, Helvetica, sans-serif; \n" +
+				"} \n" +
+				"fieldset, table, pre{ \n" +
+				"\t margin-bottom:0; \n" +
+				"} \n" +
+				"p{ \n" +
+				"\t margin-top: 0px; \n" +
+				"\t margin-bottom: 0px; \n" +
+				"} \n" +
+				"textarea{ \n" +
+				"\t fontfamily: Arial, Verdana,Helvetica,sans-serif; \n" +
+				"} \n" +
+				"td{ \n" +
+				"\t text-align:left; \n" +
+				"\t vertical-align: top; \n" +
+				"} \n" +
+				".td_msgtype{ \n" +
+				"\t text-align: center; \n" +
+				"\t vertical-align: middle; \n" +
+				"} \n" +
+				".tr_normal{ \n" +
+				"\t background: #e5eef3; \n" +
+				"} \n" +
+				".tr_header{ \n" +
+				"\t background: #a4a4a4; \n"+
+				"} \n" +
+				".tr_module{ \n" +
+				"\t background: #3c78c8; \n" +
+				"} \n" +
+				".tr_error{ \n" +
+				"\t background: #ff0000; \n" +
+				"} \n" +
+				".tr_warning{ \n" +
+				"\t background: #eeff30; \n" +
+				"} \n" +
+				".tr_assert_passed{ \n" +
+				"\t background: #7ff98a; \n" +
+				"} \n" +
+				".highlight { \n" +
+				"\t background-color: #8888FF; \n" +
+				"} \n" +
+				".highlight_report { \n" +
+				"\t background-color: #5dec6d; \n" +
+				"} \n" +
+				"table { \n" +
+				"\t background: #ffff; \n" +
+				"\t border: 1px solid black; \n" +
+				"\t border-bottom: 1px solid #0000; \n" +
+				"\t border-right: 1px solid #0000; \n" +
+				"\t color: #0000; \n" +
+				"\t padding: 4px; \n" +
+				"\t font-size: 11px; \n" +
+				"} \n" +
+				"</style> \n" +
+				"<title>"+title+"</title> \n" +
+				"<body> \n" +
+				"<table> \n" +
+				"<tr class=\"tr_header\"> \n" +
+				"\t <td nowrap> <b>Date Time: </b></td> \n" +
+				"\t <td nowrap> <b>Message Type: </b></td> \n" +
+				"\t <td> <b>Message: </b></td> \n" +
+				"</tr > \n";
+		
+		repFile.print(temp);
 	}
 	
 	/**
