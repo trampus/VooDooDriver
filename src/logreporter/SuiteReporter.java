@@ -150,110 +150,113 @@ public class SuiteReporter {
 	 */
 	private void generateHTMLHeader(){
 		final String title = "suite "+suiteName+".xml test results";
-		repFile.println("<html>");
-		repFile.println("<style type=\"text/css\">");
-		repFile.println("table {");
-		repFile.println("\twidth: 100%;");
-		repFile.println("\tborder: 2px solid black;");
-		repFile.println("\tborder-collapse: collapse;");
-		repFile.println("\tpadding: 0px;");
-		repFile.println("\tbackground: #FFFFFF;");
-		repFile.println("}");
-		repFile.println(".td_header_master {");
-		repFile.println("\twhite-space: nowrap;");
-		repFile.println("\tbackground: #b6dde8;");
-		repFile.println("\ttext-align: center;");
-		repFile.println("\tfont-family: Arial;");
-		repFile.println("\tfont-weight: bold;");
-		repFile.println("\tfont-size: 12px;");
-		repFile.println("\tborder-left: 0px solid black;");
-		repFile.println("\tborder-right: 2px solid black;");
-		repFile.println("\tborder-bottom: 2px solid black;");
-		repFile.println("}");
-		repFile.println(".td_file_data {");
-		repFile.println("\twhite-space: nowrap;");
-		repFile.println("\ttext-align: left;");
-		repFile.println("\tfont-family: Arial;");
-		repFile.println("\tfont-weight: bold;");
-		repFile.println("\tfont-size: 12px;");
-		repFile.println("\tborder-left: 0px solid black;");
-		repFile.println("\tborder-right: 2px solid black;");
-		repFile.println("\tborder-bottom: 2px solid black;");
-		repFile.println("}");
-		repFile.println(".td_passed_data {");
-		repFile.println("\twhite-space: nowrap;");
-		repFile.println("\ttext-align: center;");
-		repFile.println("\tfont-family: Arial;");
-		repFile.println("\tfont-weight: bold;");
-		repFile.println("\tcolor: #00cc00;");
-		repFile.println("\tfont-size: 12px;");
-		repFile.println("\tborder-left: 0px solid black;");
-		repFile.println("\tborder-right: 2px solid black;");
-		repFile.println("\tborder-bottom: 2px solid black;");
-		repFile.println("}");
-		repFile.println("._data {");
-		repFile.println("\twhite-space: nowrap;");
-		repFile.println("\ttext-align: center;");
-		repFile.println("\tfont-family: Arial;");
-		repFile.println("\tfont-weight: bold;");
-		repFile.println("\tcolor: #FFCF10;");
-		repFile.println("\tfont-size: 12px;");
-		repFile.println("\tborder-left: 0px solid black;");
-		repFile.println("\tborder-right: 2px solid black;");
-		repFile.println("\tborder-bottom: 2px solid black;");
-		repFile.println("}");
-		repFile.println(".td_failed_data {");
-		repFile.println("\twhite-space: nowrap;");
-		repFile.println("\ttext-align: center;");
-		repFile.println("\tfont-family: Arial;");
-		repFile.println("\tfont-weight: bold;");
-		repFile.println("\tcolor: #FF0000;");
-		repFile.println("\tfont-size: 12px;");
-		repFile.println("\tborder-left: 0px solid black;");
-		repFile.println("\tborder-right: 2px solid black;");
-		repFile.println("\tborder-bottom: 2px solid black;");
-		repFile.println("}");
-		repFile.println(".td_failed_data_zero {");
-		repFile.println("\twhite-space: nowrap;");
-		repFile.println("\ttext-align: center;");
-		repFile.println("\tfont-family: Arial;");
-		repFile.println("\tfont-weight: normal;");
-		repFile.println("\tcolor: #FFFFFF;");
-		repFile.println("\tfont-size: 12px;");
-		repFile.println("\tborder-left: 0px solid black;");
-		repFile.println("\tborder-right: 2px solid black;");
-		repFile.println("\tborder-bottom: 2px solid black;");
-		repFile.println("}");		
-		repFile.println(".td_report_data {");
-		repFile.println("\twhite-space: nowrap;");
-		repFile.println("\ttext-align: center;");
-		repFile.println("\tfont-family: Arial;");
-		repFile.println("\tfont-weight: normal;");
-		repFile.println("\tfont-size: 12px;");
-		repFile.println("\tborder-left: 0px solid black;");
-		repFile.println("\tborder-right: 2px solid black;");
-		repFile.println("\tborder-bottom: 2px solid black;");
-		repFile.println("}");
-		repFile.println(".highlight {");
-		repFile.println("\tbackground-color: #8888FF;");
-		repFile.println("}");
-		repFile.println(".tr_normal {");
-		repFile.println("\tbackground-color: #e5eef3;");
-		repFile.println("}");
-		repFile.println("</style>");
-		repFile.println("<title>"+title+"</title>");
-		repFile.println("<body>");
-		repFile.println("<table id=\"tests\">");
-		repFile.println("<tr id=\"header\">");
-		repFile.println("\t<td class=\"td_header_master\" colspan=\"4\">");
-		repFile.println("\tSuite:"+suiteName+".xml Test Results");
-		repFile.println("</td>");
-		repFile.println("<tr id=\"header_key\">");
-		repFile.println("\t<td class=\"td_header_master\"></td>");
-		repFile.println("\t<td class=\"td_header_master\">Test File</td>");
-		repFile.println("\t<td class=\"td_header_master\">Status</td>");
-		repFile.println("\t<td class=\"td_header_master\">Report Log</td>");
-		repFile.println("</tr>");
+		String header = "";
+		header += "<html> \n" +
+				"<style type=\"text/css\"> \n" +
+				"table { \n" +
+				"\twidth: 100%; \n" +
+				"\tborder: 2px solid black; \n" +
+				"\tborder-collapse: collapse; \n" +
+				"\tpadding: 0px; \n" +
+				"\tbackground: #FFFFFF; \n" +
+				"} \n" +
+				".td_header_master { \n" +
+				"\twhite-space: nowrap; \n" +
+				"\tbackground: #b6dde8; \n" +
+				"\ttext-align: center; \n" +
+				"\tfont-family: Arial; \n" +
+				"\tfont-weight: bold; \n" +
+				"\tfont-size: 12px; \n" +
+				"\tborder-left: 0px solid black; \n" +
+				"\tborder-right: 2px solid black; \n" +
+				"\tborder-bottom: 2px solid black; \n" +
+				"} \n" +
+				".td_file_data { \n" +
+				"\twhite-space: nowrap; \n" +
+				"\ttext-align: left; \n" +
+				"\tfont-family: Arial; \n" +
+				"\tfont-weight: bold; \n" +
+				"\tfont-size: 12px; \n" +
+				"\tborder-left: 0px solid black; \n" +
+				"\tborder-right: 2px solid black; \n" +
+				"\tborder-bottom: 2px solid black; \n" +
+				"} \n" +
+				".td_passed_data { \n" +
+				"\twhite-space: nowrap; \n" +
+				"\ttext-align: center; \n" +
+				"\tfont-family: Arial; \n" +
+				"\tfont-weight: bold; \n" +
+				"\tcolor: #00cc00; \n" +
+				"\tfont-size: 12px; \n" +
+				"\tborder-left: 0px solid black; \n" +
+				"\tborder-right: 2px solid black; \n" +
+				"\tborder-bottom: 2px solid black; \n" +
+				"} \n" +
+				"._data { \n" +
+				"\twhite-space: nowrap; \n" +
+				"\ttext-align: center; \n" +
+				"\tfont-family: Arial; \n" +
+				"\tfont-weight: bold; \n" +
+				"\tcolor: #FFCF10; \n" +
+				"\tfont-size: 12px; \n" +
+				"\tborder-left: 0px solid black; \n" +
+				"\tborder-right: 2px solid black; \n" +
+				"\tborder-bottom: 2px solid black; \n" +
+				"} \n" +
+				".td_failed_data { \n" +
+				"\twhite-space: nowrap; \n" +
+				"\ttext-align: center; \n" +
+				"\tfont-family: Arial; \n" +
+				"\tfont-weight: bold; \n" +
+				"\tcolor: #FF0000; \n" +
+				"\tfont-size: 12px; \n" +
+				"\tborder-left: 0px solid black; \n" +
+				"\tborder-right: 2px solid black; \n" +
+				"\tborder-bottom: 2px solid black; \n" +
+				"} \n" +
+				".td_failed_data_zero { \n" +
+				"\twhite-space: nowrap; \n" +
+				"\ttext-align: center; \n" +
+				"\tfont-family: Arial; \n" +
+				"\tfont-weight: normal; \n" +
+				"\tcolor: #FFFFFF; \n" +
+				"\tfont-size: 12px; \n" +
+				"\tborder-left: 0px solid black; \n" +
+				"\tborder-right: 2px solid black; \n" +
+				"\tborder-bottom: 2px solid black; \n" +
+				"} \n" +		
+				".td_report_data { \n" +
+				"\twhite-space: nowrap; \n" +
+				"\ttext-align: center; \n" +
+				"\tfont-family: Arial; \n" +
+				"\tfont-weight: normal; \n" +
+				"\tfont-size: 12px; \n" +
+				"\tborder-left: 0px solid black; \n"+
+				"\tborder-right: 2px solid black; \n" +
+				"\tborder-bottom: 2px solid black; \n" +
+				"} \n" +
+				".highlight { \n" +
+				"\tbackground-color: #8888FF; \n" +
+				"} \n" +
+				".tr_normal { \n" +
+				"\tbackground-color: #e5eef3; \n" +
+				"} \n" +
+				"</style> \n" +
+				"<title>"+title+"</title> \n" +
+				"<body> \n" +
+				"<table id=\"tests\"> \n" +
+				"<tr id=\"header\"> \n" +
+				"\t<td class=\"td_header_master\" colspan=\"4\"> \n" +
+				"\tSuite: "+suiteName+".xml Test Results \n" +
+				"</td> \n" +
+				"<tr id=\"header_key\"> \n" +
+				"\t<td class=\"td_header_master\"></td> \n" +
+				"\t<td class=\"td_header_master\">Test File</td> \n" +
+				"\t<td class=\"td_header_master\">Status</td> \n" +
+				"\t<td class=\"td_header_master\">Report Log</td> \n" +
+				"</tr> \n";
+				
+				repFile.print(header);
 	}
 	
 	/////////////////////////////
